@@ -19,4 +19,14 @@
 	3、jquery.js
 	4、basic.js：猜测是整个系统中统一公用到的函数。
 	5、font-awesome.css：有关图标的统一样式。
-（9）
+（9）安装步骤：
+	1、将系统的文件放在xampp的根目录(htdocs)下
+	2、在本地MySql下引入数据库文件（savsoftquiz_v4_0.sql）
+	3、打开application/config/sq_config.php文件
+		a)将$sq_base_url值写为本地服务器路径，如：$sq_base_url='http://localhost:8081/';
+		b)$sq_hostname='localhost'（本地不用修改）
+		c)将$sq_dbname的值改为第二步中编辑的数据库名，如：$sq_dbname='savsoftquiz_v4_0';
+		d)修改数据库用户名和密码，$sq_dbusername、$sq_dbpassword;
+	4、将application/controllers/Install.php文件重命名为Renamed_Install.php
+	5、设置photo、xls、upload三个文件夹的操作权限为可写
+	
