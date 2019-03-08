@@ -20,13 +20,37 @@
 	4、basic.js：猜测是整个系统中统一公用到的函数。
 	5、font-awesome.css：有关图标的统一样式。
 （9）安装步骤：
+	方案一(该方法不能直接将项目直接放在根目录下)：
+	1、打开application/config/sq_config.php文件
+		a)将$sq_base_url值写为本地服务器项目路径，如：$sq_base_url='http://localhost:8081/'
+	2、打开链接：http://YOUR_DOMAIN_NAME/savsoftquiz_v4.0/index.php/install/ 如：http://localhost:8081/savsoftquiz_v4.0/index.php/install/ 
+	3、填写base url和数据库信息，点击‘Install Now’按钮即可
+
+	方案二：
 	1、将系统的文件放在xampp的根目录(htdocs)下
 	2、在本地MySql下引入数据库文件（savsoftquiz_v4_0.sql）
 	3、打开application/config/sq_config.php文件
-		a)将$sq_base_url值写为本地服务器路径，如：$sq_base_url='http://localhost:8081/';
+		a)将$sq_base_url值写为本地服务器项目路径，如：$sq_base_url='http://localhost:8081/';
 		b)$sq_hostname='localhost'（本地不用修改）
 		c)将$sq_dbname的值改为第二步中编辑的数据库名，如：$sq_dbname='savsoftquiz_v4_0';
 		d)修改数据库用户名和密码，$sq_dbusername、$sq_dbpassword;
 	4、将application/controllers/Install.php文件重命名为Renamed_Install.php
 	5、设置photo、xls、upload三个文件夹的操作权限为可写
+
+	注意：若经过任一一种方案后，打开浏览器一直重定向到login界面，无法登录的话，很有可能是应用不能够建立codeigniter的session，必须使用初始的session库。
+	请将/application/libraries/rename_to_Session_if_session_not_work.php重命名为Session.php。
+	如果不存在这个文件，请到官方下载session文件（大概6.49KB）并放入到该目录。
+
+	或者还有另外一种解决方案（未测试）：
+	1）changed PHP mode from PHP-FPM to CGI. 
+	2）downgraded from PHP 7.0 to PHP 5.6
+
+（10）在生产环境中需要多做一步事情，就是禁用 PHP 错误报告以及所有其他仅在开发环境使用的功能。
+	在 CodeIgniter 中，可以通过设置 ENVIRONMENT 常量来做到这一点，这在 安全 这篇指南中有着更详细的介绍。
+
+（11）
+
+
+
+
 	

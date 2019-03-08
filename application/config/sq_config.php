@@ -1,5 +1,4 @@
 <?php 
-		// $sq_base_url='http://localhost/savsoftquiz_v4.0_advance/';
 		$sq_base_url='http://localhost:8081/savsoftquiz/';
 		$sq_hostname='localhost';
 		// $sq_dbname='sqtry2';
