@@ -15,6 +15,7 @@
 	<script>
 	
 	var base_url="<?php echo base_url();?>";
+  console.log("base_url 为： ",base_url);
 
 	</script>
 	
@@ -35,7 +36,9 @@
  </head>
   <body  class='login'  >
   	
-	<?php 
+  <?php 
+      // 如果用户是登陆态,才展示导航栏
+      //而且 URI 不等于 ‘quiz/attempt’ (这步还不理解)，则将 session 中的数据缓存到 $logged_in 变量
 			if($this->session->userdata('logged_in')){
 				if(($this->uri->segment(1).'/'.$this->uri->segment(2))!='quiz/attempt'){
 				$logged_in=$this->session->userdata('logged_in');
@@ -55,7 +58,7 @@
             <ul class="nav navbar-nav">
               <?php  
 				if($logged_in['su']==1){
-			?>
+			?> 
 			  
 			  <li <?php if($this->uri->segment(1)=='dashboard'){ echo "class='active'"; } ?> ><a href="<?php echo site_url('dashboard');?>"><?php echo $this->lang->line('dashboard');?></a></li>
             

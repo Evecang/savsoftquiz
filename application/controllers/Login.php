@@ -10,6 +10,7 @@ class Login extends CI_Controller {
 	   $this->load->model("user_model");
 	    $this->load->model("quiz_model");
 	   $this->lang->load('basic', $this->config->item('language'));
+	   // 如果数据库为空，则重定向到 install 界面
 		if($this->db->database ==''){
 		redirect('install');	
 		}
@@ -22,8 +23,10 @@ class Login extends CI_Controller {
 
 	public function index()
 	{
-		
+		//加载 url 辅助类函数
 		$this->load->helper('url');
+		//如果用户已经登录
+		//则根据 $logged_in['su']=='1' （判断是管理人员还是学生？）决定重定向到 dashboard 首页还是 quiz 测试页面
 		if($this->session->userdata('logged_in')){
 			$logged_in=$this->session->userdata('logged_in');
 			if($logged_in['su']=='1'){
@@ -43,7 +46,8 @@ class Login extends CI_Controller {
 		$this->load->view('login',$data);
 		$this->load->view('footer',$data);
 	}
-	
+
+	//设置重新发送邮箱的页面？
 	public function resend()
 	{
 		
@@ -114,7 +118,7 @@ class Login extends CI_Controller {
 			// validate if user assigned to paid group
 			if($user['price'] > '0'){
 				
-				// user assigned to paid group now validate expiry date.
+				// user assigned to paid group now validate expiry date(到期时间).
 				if($user['subscription_expired'] <= time()){
 					// eubscription expired, redirect to payment page
 					
