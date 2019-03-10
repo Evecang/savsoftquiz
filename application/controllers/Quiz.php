@@ -15,7 +15,7 @@ class Quiz extends CI_Controller {
 	 }
 
 	public function index($limit='0',$list_view='grid')
-	{
+	{//第二个参数的含义是，展示考试信息的形式：grid->格子，table->表格
 		
 		// redirect if not loggedin
 		if(!$this->session->userdata('logged_in')){
@@ -437,7 +437,7 @@ function open_quiz($limit='0'){
 		$gid=$logged_in['gid'];
 		$data['title']=$this->lang->line('attempt').' '.$this->lang->line('quiz');
 		
-		$data['quiz']=$this->quiz_model->get_quiz($quid);
+		$data['quiz']=$this->quiz_model->get_quiz($quid);	//得到指定试卷的所有信息，从savsoft_quiz表中查询
 		$this->load->view('header',$data);
 		$this->load->view('quiz_detail',$data);
 		$this->load->view('footer',$data);

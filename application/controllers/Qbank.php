@@ -26,19 +26,19 @@ class Qbank extends CI_Controller {
 	{
 		$this->load->helper('form');
 		$logged_in=$this->session->userdata('logged_in');
-			if($logged_in['su']!='1'){
+			if($logged_in['su']!='1'){	//如果不是管理员，没有权限
 			exit($this->lang->line('permission_denied'));
 			}
 			
-			 $data['category_list']=$this->qbank_model->category_list();
-		 $data['level_list']=$this->qbank_model->level_list();
+		$data['category_list']=$this->qbank_model->category_list();	//返回所有的科目
+		$data['level_list']=$this->qbank_model->level_list();	//返回所有的难易程度
 		
 		$data['limit']=$limit;
-		$data['cid']=$cid;
-		$data['lid']=$lid;
+		$data['cid']=$cid;	//科目的id
+		$data['lid']=$lid;	//难易程度的id
 		 
 		
-		$data['title']=$this->lang->line('qbank');
+		$data['title']=$this->lang->line('qbank');	//Question Bank
 		// fetching user list
 		$data['result']=$this->qbank_model->question_list($limit,$cid,$lid);
 		$this->load->view('header',$data);

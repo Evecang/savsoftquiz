@@ -7,25 +7,27 @@ $logged_in=$this->session->userdata('logged_in');
    
  <h3><?php echo $title;?></h3>
     <?php 
-	if($logged_in['su']=='1'){
+	if($logged_in['su']=='1'){  //如果是管理员（多显示以下部分）：
 		?>
 		<div class="row">
  
   <div class="col-lg-6">
+    <!-- $list_view='grid',即访问quiz控制器的index(0,'grid') -->
     <form method="post" action="<?php echo site_url('quiz/index/0/'.$list_view);?>">
-	<div class="input-group">
-    <input type="text" class="form-control" name="search" placeholder="<?php echo $this->lang->line('search');?>...">
-      <span class="input-group-btn">
-        <button class="btn btn-default" type="submit"><?php echo $this->lang->line('search');?></button>
-      </span>
-	 
-	  
-    </div><!-- /input-group -->
-	 </form>
-  </div><!-- /.col-lg-6 -->
+      <div class="input-group">
+        <input type="text" class="form-control" name="search" placeholder="<?php echo $this->lang->line('search');?>...">
+          <span class="input-group-btn">
+            <button class="btn btn-default" type="submit"><?php echo $this->lang->line('search');?></button>
+          </span>
+      </div><!-- /input-group -->
+
+   </form>
+  </div><!-- /.col-lg-6搜索框 -->
+
   <div class="col-lg-6">
-  <p style="float:right;">
+    <p style="float:right;">
   <?php 
+  //这里选择展示考试列表的形式：格子/表格
   if($list_view=='grid'){
 	  ?>
 	  <a href="<?php echo site_url('quiz/index/'.$limit.'/table');?>"><?php echo $this->lang->line('table_view');?></a>
@@ -46,6 +48,7 @@ $logged_in=$this->session->userdata('logged_in');
 	}
 ?>
 
+
   <div class="row">
  
 <div class="col-md-12">
@@ -58,30 +61,30 @@ $logged_in=$this->session->userdata('logged_in');
 		<?php 
   if($list_view=='table'){
 	  ?>
-<table class="table table-bordered">
-<tr>
- <th>#</th>
- <th><?php echo $this->lang->line('quiz_name');?></th>
-<th><?php echo $this->lang->line('noq');?></th>
-<th><?php echo $this->lang->line('action');?> </th>
-</tr>
+    <table class="table table-bordered">
+      <tr>
+        <th>#</th>
+        <th><?php echo $this->lang->line('quiz_name');?></th>
+        <th><?php echo $this->lang->line('noq');?></th>
+        <th><?php echo $this->lang->line('action');?> </th>
+      </tr>
 <?php 
-if(count($result)==0){
+if(count($result)==0){  //没有数据时
 	?>
-<tr>
- <td colspan="3"><?php echo $this->lang->line('no_record_found');?></td>
-</tr>	
+      <tr>
+        <td colspan="3"><?php echo $this->lang->line('no_record_found');?></td>
+      </tr>	
 	
 	
 	<?php
 }
 foreach($result as $key => $val){
 ?>
-<tr>
- <td><?php echo $val['quid'];?></td>
- <td><?php echo substr(strip_tags($val['quiz_name']),0,50);?></td>
-<td><?php echo $val['noq'];?></td>
- <td>
+      <tr>
+        <td><?php echo $val['quid'];?></td>
+        <td><?php echo substr(strip_tags($val['quiz_name']),0,50);?></td>
+        <td><?php echo $val['noq'];?></td>
+        <td>
 <a href="<?php echo site_url('quiz/quiz_detail/'.$val['quid']);?>" class="btn btn-success"  ><?php echo $this->lang->line('attempt');?> </a>
 
 <?php 

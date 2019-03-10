@@ -386,10 +386,10 @@ Class Qbank_model extends CI_Model
  
  
  
- // category function start
+ // category function start ???????
  function category_list(){
-	 $this->db->order_by('cid','desc');
-	 $query=$this->db->get('savsoft_category');
+	 $this->db->order_by('cid','desc');	//??
+	 $query=$this->db->get('savsoft_category');	//SELECT * FROM savsoft_category
 	 return $query->result_array();
 	 
  }
@@ -455,7 +455,7 @@ Class Qbank_model extends CI_Model
 
  
  
-// level function start
+// level function start ?????????
  function level_list(){
 	  $query=$this->db->get('savsoft_level');
 	 return $query->result_array();
