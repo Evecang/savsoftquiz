@@ -118,6 +118,7 @@ class Login extends CI_Controller {
 			
 			
 			// validate if user assigned to paid group
+			// 如果是付费组的用户，检测是否过期，如果过期则重定向到充值页面，不过期则不做处理
 			if($user['price'] > '0'){
 				
 				// user assigned to paid group now validate expiry date(到期时间).
