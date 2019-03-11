@@ -44,7 +44,7 @@ Installation: https://savsoftquiz.com/docs/installation.php
 
 If you like Savsoft Quiz and want to help us to keep it free and upgradeable then please get professional installation service at https://savsoftquiz.com/commercial.php
 
-页面以及接口路由文档:
+一、页面以及接口路由文档:
 index                            默认路由，导到 Login 类的index 函数，登陆页
 login/verifylogin                登陆页的登陆按钮
 login/pre_registration           用户注册按钮
@@ -54,7 +54,7 @@ user                             list 按钮：
 
 
 
-重要点:
+二、重要点:
 
 1) $this->session->userdata('item')   s详见：http://codeigniter.org.cn/user_guide/libraries/sessions.html
 在之前的 CodeIgniter 版本中，常规的 session 数据被称之为 'userdata' ，当文档中出现这个词时请记住这一点,即
@@ -82,9 +82,42 @@ userdata() 方法不会返回 flashdata 数据。
 如果你要确保你读取的就是 "flashdata" 数据，而不是其他类型的数据，可以使用 flashdata() 方法:
 $this->session->flashdata('item');
 
+4)$this->db->where()
+1、简单的 key/value 方式:
+$this->db->where('name', $name); // Produces: WHERE name = 'Joe'
+注意自动为你加上了等号。
+如果你多次调用该方法，那么多个 WHERE 条件将会使用 AND 连接起来：
+$this->db->where('name', $name);
+$this->db->where('title', $title);
+$this->db->where('status', $status);
+// WHERE name = 'Joe' AND title = 'boss' AND status = 'active'
+2、自定义 key/value 方式:
+为了控制比较，你可以在第一个参数中包含一个比较运算符：
+$this->db->where('name !=', $name);
+$this->db->where('id <', $id); // Produces: WHERE name != 'Joe' AND id < 45
+3、关联数组方式:
+$array = array('name' => $name, 'title' => $title, 'status' => $status);
+$this->db->where($array);
+// Produces: WHERE name = 'Joe' AND title = 'boss' AND status = 'active'
+你也可以在这个方法里包含你自己的比较运算符：
+$array = array('name !=' => $name, 'id <' => $id, 'date >' => $date);
+$this->db->where($array);
+4、自定义字符串:
+你可以完全手工编写 WHERE 子句:
+$where = "name='Joe' AND status='boss' OR status='active'";
+$this->db->where($where);
+$this->db->where() 方法有一个可选的第三个参数，如果设置为 FALSE，CodeIgniter 将不保护你的表名和字段名。
+$this->db->where('MATCH (field) AGAINST ("value")', NULL, FALSE);
 
+5)$this->db->limit()
+$this->db->limit()
+该方法用于限制你的查询返回结果的数量:
+$this->db->limit(10);  // Produces: LIMIT 10
+第二个参数可以用来设置偏移。
+// Produces: LIMIT 20, 10 (in MySQL.  Other databases have slightly different syntax)
+$this->db->limit(10, 20);
 
-CI 项目启动路线以及各个文件作用：
+三、CI 项目启动路线以及各个文件作用：
 application\config\routes.php : 这里定义了后台路由，$route['default_controller'] = 'login'; 这个默认路由将所有请求页面导向登陆界面 -> Login.php 中的 Login 
 application\controllers\Login.php ： 这里定义了登陆页面的页面路由index ，还有登陆界面的许多后台接口，包括 login/verifyLogin 这些接口
 application\views\header_login.php  首页（不包括登陆页）的头部组件 <header></header>部分

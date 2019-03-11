@@ -84,7 +84,7 @@ function open_quiz($limit='0'){
 	 
 		$data['title']=$this->lang->line('add_new').' '.$this->lang->line('quiz');
 		// fetching group list
-		$data['group_list']=$this->user_model->group_list();
+		$data['group_list']=$this->user_model->group_list();	//返回所有的（gid升序）班级/组别
 		$this->load->view('header',$data);
 		$this->load->view('new_quiz',$data);
 		$this->load->view('footer',$data);
@@ -329,15 +329,14 @@ function open_quiz($limit='0'){
 		$this->session->unset_userdata('logged_in');		
 		redirect('login');
 		}
-		
-	 
-	
-	
-		
-			$logged_in=$this->session->userdata('logged_in');
-			if($logged_in['su']!='1'){
-				exit($this->lang->line('permission_denied'));
-			}
+
+		$logged_in=$this->session->userdata('logged_in');
+		if($logged_in['su']!='1'){
+			exit($this->lang->line('permission_denied'));
+		}
+
+
+		//
 		$this->load->library('form_validation');
 		$this->form_validation->set_rules('quiz_name', 'quiz_name', 'required');
            if ($this->form_validation->run() == FALSE)

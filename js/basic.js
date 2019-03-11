@@ -1,5 +1,5 @@
  
-function remove_entry(redir_cont){
+function remove_entry(redir_cont){		//删除时，添加一个弹窗再次confirm
 	
 	if(confirm("Do you really want to remove entry?")){
 		window.location=base_url+"index.php/"+redir_cont;
@@ -577,7 +577,7 @@ function assign_score(rid,qno,score){
 }
 
 
-
+//展示问题的简要描述状态，如果被打开则关闭，如果关闭则打开
 function show_question_stat(id){
 	var did="#stat-"+id;
 	 

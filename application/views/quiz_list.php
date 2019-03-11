@@ -89,6 +89,7 @@ foreach($result as $key => $val){
 
 <?php 
 if($logged_in['su']=='1'){
+  //仅管理员才有编辑和删除功能
 	?>
 			
 <a href="<?php echo site_url('quiz/edit_quiz/'.$val['quid']);?>"><img src="<?php echo base_url('images/edit.png');?>"></a>
@@ -106,57 +107,57 @@ if($logged_in['su']=='1'){
 
   <?php 
   }else{
+    //当选择展示考试列表为格子形式时：
 	  ?>
 	  <?php 
-if(count($result)==0){
-	?>
-<?php echo $this->lang->line('no_record_found');?>
-	<?php
-}
-$cc=0;
-$colorcode=array(
-'success',
-'warning',
-'info',
-'danger'
-);
-foreach($result as $key => $val){
-?>
+      if(count($result)==0){  //没有数据
+        ?>
+          <?php echo $this->lang->line('no_record_found');?>
+    <?php
+      }
+      //cc和colorcode主要设置表头的颜色，无实际作用
+      $cc=0;
+      $colorcode=array(
+      'success',
+      'warning',
+      'info',
+      'danger'
+      );
+      foreach($result as $key => $val){
+    ?>
 	  
-	                <!-- item -->
-                <div class="col-md-4 text-center">
-                    <div class="panel panel-<?php echo $colorcode[$cc];?> panel-pricing">
-                        <div class="panel-heading">
-                            <i class="fa fa-desktop"></i>
-                            <h3><?php echo substr(strip_tags($val['quiz_name']),0,50);?></h3>
-                        </div>
-                        <div class="panel-body text-center">
-                            <p><strong><?php echo $this->lang->line('duration');?> <?php echo $val['duration'];?></strong></p>
-                        </div>
-                        <ul class="list-group text-center">
-                            <li class="list-group-item"><i class="fa fa-check"></i> <?php echo $this->lang->line('noq');?>:  <?php echo $val['noq'];?></li>
-                            <li class="list-group-item"><i class="fa fa-check"></i> <?php echo $this->lang->line('maximum_attempts');?>: <?php echo $val['maximum_attempts'];?></li>
-                            </ul>
-                        <div class="panel-footer">
-                         
-						 
-<a href="<?php echo site_url('quiz/quiz_detail/'.$val['quid']);?>" class="btn btn-success"  ><?php echo $this->lang->line('attempt');?> </a>
+	    <!-- item -->
+      <div class="col-md-4 text-center">
+        <div class="panel panel-<?php echo $colorcode[$cc];?> panel-pricing">
+          <div class="panel-heading">
+              <i class="fa fa-desktop"></i>
+              <h3><?php echo substr(strip_tags($val['quiz_name']),0,50);?></h3>
+          </div>
+          <div class="panel-body text-center">
+              <p><strong><?php echo $this->lang->line('duration');?> <?php echo $val['duration'];?></strong></p>
+          </div>
+          <ul class="list-group text-center">
+              <li class="list-group-item"><i class="fa fa-check"></i> <?php echo $this->lang->line('noq');?>:  <?php echo $val['noq'];?></li>
+              <li class="list-group-item"><i class="fa fa-check"></i> <?php echo $this->lang->line('maximum_attempts');?>: <?php echo $val['maximum_attempts'];?></li>
+          </ul>
+          <div class="panel-footer">
+          <a href="<?php echo site_url('quiz/quiz_detail/'.$val['quid']);?>" class="btn btn-success"  ><?php echo $this->lang->line('attempt');?> </a>
 
 <?php 
-if($logged_in['su']=='1'){
+if($logged_in['su']=='1'){  //如果是管理员，添加编辑还有删除功能
 	?>
 			
-<a href="<?php echo site_url('quiz/edit_quiz/'.$val['quid']);?>"><img src="<?php echo base_url('images/edit.png');?>"></a>
-<a href="javascript:remove_entry('quiz/remove_quiz/<?php echo $val['quid'];?>');"><img src="<?php echo base_url('images/cross.png');?>"></a>
+          <a href="<?php echo site_url('quiz/edit_quiz/'.$val['quid']);?>"><img src="<?php echo base_url('images/edit.png');?>"></a>
+          <a href="javascript:remove_entry('quiz/remove_quiz/<?php echo $val['quid'];?>');"><img src="<?php echo base_url('images/cross.png');?>"></a>
 <?php 
 }
 ?>
 
 
-                        </div>
-                    </div>
-                </div>
-                <!-- /item --> 
+          </div>
+        </div>
+      </div>
+      <!-- /item --> 
 	  
 	  
 	  <?php 
@@ -177,7 +178,13 @@ if($logged_in['su']=='1'){
 <br><br>
 
 <?php
-if(($limit-($this->config->item('number_of_rows')))>=0){ $back=$limit-($this->config->item('number_of_rows')); }else{ $back='0'; } ?>
+//number_of_rows=30
+if( ( $limit-($this->config->item('number_of_rows')) ) >=0){ 
+  $back=$limit-($this->config->item('number_of_rows')); 
+}else{ 
+  $back='0'; 
+} 
+?>
 
 <a href="<?php echo site_url('quiz/index/'.$back.'/'.$list_view);?>"  class="btn btn-primary"><?php echo $this->lang->line('back');?></a>
 &nbsp;&nbsp;

@@ -40,14 +40,15 @@ class Qbank extends CI_Controller {
 		
 		$data['title']=$this->lang->line('qbank');	//Question Bank
 		// fetching user list
-		$data['result']=$this->qbank_model->question_list($limit,$cid,$lid);
+		$data['result']=$this->qbank_model->question_list($limit,$cid,$lid);	//返回符合筛选后的问题列表
 		$this->load->view('header',$data);
 		$this->load->view('question_list',$data);
 		$this->load->view('footer',$data);
 	}
 	
-	public function remove_question($qid){
+	public function remove_question($qid){	//删除题目
 
+			//管理员才有权限
 			$logged_in=$this->session->userdata('logged_in');
 			if($logged_in['su']!='1'){
 				exit($this->lang->line('permission_denied'));
@@ -66,7 +67,7 @@ class Qbank extends CI_Controller {
 	
 	
 	
-	function pre_question_list($limit='0',$cid='0',$lid='0'){
+	function pre_question_list($limit='0',$cid='0',$lid='0'){	//这是用户选择了category/level 筛选条件之后执行的函数，实际上又是调用了index()
 		$cid=$this->input->post('cid');
 		$lid=$this->input->post('lid');
 		redirect('qbank/index/'.$limit.'/'.$cid.'/'.$lid);
@@ -271,9 +272,9 @@ class Qbank extends CI_Controller {
 	
 	
 	
+	//修改题型：1->单选题  2->多选题  3->匹配  4->简答题  5->长答题
 	
-	
-		public function edit_question_1($qid)
+	public function edit_question_1($qid)
 	{
 		
 			$logged_in=$this->session->userdata('logged_in');
@@ -366,7 +367,7 @@ class Qbank extends CI_Controller {
 	}
 	
 	
-		public function edit_question_4($qid)
+	public function edit_question_4($qid)
 	{
 		
 			$logged_in=$this->session->userdata('logged_in');
@@ -397,7 +398,7 @@ class Qbank extends CI_Controller {
 	}
 	
 	
-			public function edit_question_5($qid)
+	public function edit_question_5($qid)
 	{
 		
 			$logged_in=$this->session->userdata('logged_in');

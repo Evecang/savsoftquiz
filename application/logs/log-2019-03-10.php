@@ -33,3 +33,4 @@ ERROR - 2019-03-10 14:53:07 --> Severity: error --> Exception: Too few arguments
 ERROR - 2019-03-10 16:43:06 --> Severity: Warning --> Division by zero D:\XAMPP\htdocs\savsoftquiz\application\views\dashboard.php 231
 ERROR - 2019-03-10 17:15:08 --> Severity: Warning --> Division by zero D:\XAMPP\htdocs\savsoftquiz\application\views\dashboard.php 231
 ERROR - 2019-03-10 17:15:14 --> Severity: Warning --> Division by zero D:\XAMPP\htdocs\savsoftquiz\application\views\dashboard.php 231
+ERROR - 2019-03-10 17:53:11 --> Severity: Warning --> Division by zero D:\XAMPP\htdocs\savsoftquiz\application\views\dashboard.php 231

@@ -2,28 +2,27 @@
 Class Qbank_model extends CI_Model
 {
  
-  function question_list($limit,$cid='0',$lid='0'){
-	 if($this->input->post('search')){
-		 $search=$this->input->post('search');
-		 $this->db->or_where('savsoft_qbank.qid',$search);
-		 $this->db->or_like('savsoft_qbank.question',$search);
-		 $this->db->or_like('savsoft_qbank.description',$search);
+  function question_list($limit,$cid='0',$lid='0'){	//????????????
+	if($this->input->post('search')){
+		$search=$this->input->post('search');
+		$this->db->or_where('savsoft_qbank.qid',$search);
+		$this->db->or_like('savsoft_qbank.question',$search);
+		$this->db->or_like('savsoft_qbank.description',$search);	//WHERE savsoft_qbank.qid = $search OR savsoft_qbank.question LIKE $search OR ...
 
-	 }
-	 if($cid!='0'){
-		  $this->db->where('savsoft_qbank.cid',$cid);
-	 }
-	 if($lid!='0'){
-		  $this->db->where('savsoft_qbank.lid',$lid);
-	 }
-		 $this->db->join('savsoft_category','savsoft_category.cid=savsoft_qbank.cid');
-	 $this->db->join('savsoft_level','savsoft_level.lid=savsoft_qbank.lid');
-	 $this->db->limit($this->config->item('number_of_rows'),$limit);
-		$this->db->order_by('savsoft_qbank.qid','desc');
-		$query=$this->db->get('savsoft_qbank');
-		return $query->result_array();
+	}
+	if($cid!='0'){
+		$this->db->where('savsoft_qbank.cid',$cid);
+	}
+	if($lid!='0'){
+		$this->db->where('savsoft_qbank.lid',$lid);
+	}
+	$this->db->join('savsoft_category','savsoft_category.cid=savsoft_qbank.cid');	//SELECT savsoft_category.* JOIN savsoft_qbank ON savsoft_category.cid=savsoft_qbank.cid
+	$this->db->join('savsoft_level','savsoft_level.lid=savsoft_qbank.lid');
+	$this->db->limit($this->config->item('number_of_rows'),$limit);		//limit(n,m)->??m+1?????n????arg1->?????arg2->?????
+	$this->db->order_by('savsoft_qbank.qid','desc');
+	$query=$this->db->get('savsoft_qbank');		//FROM savsoft_qbank
+	return $query->result_array();
 		
-	 
  }
  
  
@@ -54,29 +53,29 @@ Class Qbank_model extends CI_Model
 	 
 	 $this->db->where('qid',$qid);
 	 if($this->db->delete('savsoft_qbank')){
-		  $this->db->where('qid',$qid);
-			$this->db->delete('savsoft_options');
+		$this->db->where('qid',$qid);		//WHERE qid=$qid
+		$this->db->delete('savsoft_options');	//DELETE FROM savsoft_options
 			
-						
-	$qr=$this->db->query("select * from savsoft_quiz where FIND_IN_SET($qid, qids) ");
+		//????????????????????????,?????????????,?????haystack????????????????				
+		$qr=$this->db->query("select * from savsoft_quiz where FIND_IN_SET($qid, qids) ");	//qids?????????????????
 	 
-			foreach($qr->result_array() as $k =>$val){
-			
+		foreach($qr->result_array() as $k =>$val){
+		
 			$quid=$val['quid'];
-			$qids=explode(',',$val['qids']);
+			$qids=explode(',',$val['qids']);	//explode?????????????js?split()
 			$nqids=array();
 			foreach($qids as $qk => $qv){
-			if($qv != $qid){
-			$nqids[]=$qv;
-			}
+				if($qv != $qid){
+					$nqids[]=$qv;
+				}
 			}
 			$noq=count($nqids);
 			$nqids=implode(',',$nqids);
 			$this->db->query(" update savsoft_quiz set qids='$nqids', noq='$noq' where quid='$quid' ");
-			}
-			
-			
-		 return true;
+		}
+		
+		
+		return true;
 	 }else{
 		 
 		 return false;

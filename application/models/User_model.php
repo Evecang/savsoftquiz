@@ -280,7 +280,7 @@ return $revenue;
  }
  
  
- function group_list(){
+ function group_list(){	//返回所有的（gid升序）班级
 	 $this->db->order_by('gid','asc');
 	$query=$this->db->get('savsoft_group');
 		return $query->result_array();

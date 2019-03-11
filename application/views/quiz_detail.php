@@ -33,7 +33,7 @@
 
 <?php 
 if($this->session->userdata('logged_in')){
-if($quiz['camera_req']==1 && $this->config->item('webcam')==true){
+	if($quiz['camera_req']==1 && $this->config->item('webcam')==true){	//webcam是照片捕捉功能，在config文件中默认为true
 ?>
 <div style="color:#ff0000;"><?php echo $this->lang->line('camera_instructions');?></div>
 <div id="my_photo" style="width:500px;height:500px;background:#212121;padding:2px;border:1px solid #666666;color:red"></div>
