@@ -13,7 +13,7 @@ Class User_model extends CI_Model
    $this->db->where('savsoft_users.password', MD5($password));
    }
 
-   //下面的查询逻辑相当于 
+   //下面的查询逻辑相当于 SQL 语句：
    // select * from savsoft_users limit 1 join savsoft_group on savsoft_users.gid=savsoft_group.gid
    //where $password = savsoft_users.password and $username = savsoft_users.email
    if (strpos($username, '@') !== false) {
@@ -294,7 +294,7 @@ return $revenue;
  }
  
  
- function group_list(){	//�������еģ�gid���򣩰༶
+ function group_list(){	//�������еģ�gid���򣩰༶
 	 $this->db->order_by('gid','asc');
 	$query=$this->db->get('savsoft_group');
 		return $query->result_array();
@@ -357,21 +357,22 @@ return $revenue;
 		'gid'=>$this->input->post('gid'),
 		'su'=>'0'		
 		);
+		//如果需要验证邮箱，$this->config->item('verify_code') == true 的话，就要设置用户表中的 verify_code 为非0，验证完置0？
 		$veri_code=rand('1111','9999');
 		 if($this->config->item('verify_email')){
 			$userdata['verify_code']=$veri_code;
 		 }
-		 		if($this->session->userdata('logged_in_raw')){
-					$userraw=$this->session->userdata('logged_in_raw');
-					$userraw_uid=$userraw['uid'];
-					$this->db->where('uid',$userraw_uid);
-				$rresult=$this->db->update('savsoft_users',$userdata);
-				if($this->session->userdata('logged_in_raw')){
-				$this->session->unset_userdata('logged_in_raw');	
-				}		
-				}else{
-				$rresult=$this->db->insert('savsoft_users',$userdata);
-				}
+		if($this->session->userdata('logged_in_raw')){
+			$userraw=$this->session->userdata('logged_in_raw');
+			$userraw_uid=$userraw['uid'];
+			$this->db->where('uid',$userraw_uid);
+		$rresult=$this->db->update('savsoft_users',$userdata);
+		if($this->session->userdata('logged_in_raw')){
+		$this->session->unset_userdata('logged_in_raw');	
+		}		
+		}else{
+		$rresult=$this->db->insert('savsoft_users',$userdata);
+		}
 		if($rresult){
 			 if($this->config->item('verify_email')){
 				 // send verification link in email
