@@ -445,7 +445,7 @@ class Qbank extends CI_Controller {
 	}
 	
 	
-		public function insert_category()
+	public function insert_category()
 	{
 		
 		
@@ -464,7 +464,7 @@ class Qbank extends CI_Controller {
 	
 	}
 	
-			public function update_category($cid)
+	public function update_category($cid)
 	{
 		
 		
@@ -645,132 +645,122 @@ $this->db->query(" update savsoft_qbank set lid='$mlid' where lid='$lid' ");
 	
 	
 	
-	function import()
-		{	
-			$logged_in=$this->session->userdata('logged_in');
-			if($logged_in['su']!='1'){
-				exit($this->lang->line('permission_denied'));
-			} 	
+	function import()	//xls批量引入问题
+	{	
+		$logged_in=$this->session->userdata('logged_in');
+		if($logged_in['su']!='1'){
+			exit($this->lang->line('permission_denied'));
+		} 	
 
-   $this->load->helper('xlsimport/php-excel-reader/excel_reader2');
-   $this->load->helper('xlsimport/spreadsheetreader.php');
+		//引入库文件，可以到ReadMe中查看一些关于spreadsheetreader的用法。
+		$this->load->helper('xlsimport/php-excel-reader/excel_reader2');
+		$this->load->helper('xlsimport/spreadsheetreader.php');
 
+		if(isset($_FILES['xlsfile'])){	//如果上传文件成功
 
-   
-if(isset($_FILES['xlsfile'])){
+			$config['upload_path']          = './xls/';	//根目录里的xls
+			$config['allowed_types']        = 'xls';	//允许的文件类型
+			$config['max_size']             = 10000;	//允许上传文件大小KB
+			$this->load->library('upload', $config);	//初始化文件上传类 CI框架------->初始化之后，文件上传类的对象就可以这样访问:$this->upload
+			// $this->upload->initialize($config);
 
-                $config['upload_path']          = './xls/';
-                $config['allowed_types']        = 'xls';
-                $config['max_size']             = 10000;
-                $this->load->library('upload', $config);
-                if ( ! $this->upload->do_upload('xlsfile'))
-                {
-                        $error = array('error' => $this->upload->display_errors());
- $this->session->set_flashdata('message', "<div class='alert alert-danger'>".$error['error']." </div>");
-		redirect('qbank');				
-                      exit;
-                }
-                else
-                {
-$data = array('upload_data' => $this->upload->data());
-$targets = 'xls/';
-$targets = $targets . basename($data['upload_data']['file_name']);
-$Filepath = $targets;
-			 
-$allxlsdata = array();
-	date_default_timezone_set('UTC');
-
-	$StartMem = memory_get_usage();
-	//echo '---------------------------------'.PHP_EOL;
-	//echo 'Starting memory: '.$StartMem.PHP_EOL;
-	//echo '---------------------------------'.PHP_EOL;
-
-	try
-	{
-		$Spreadsheet = new SpreadsheetReader($Filepath);
-		$BaseMem = memory_get_usage();
-
-		$Sheets = $Spreadsheet -> Sheets();
-
-		//echo '---------------------------------'.PHP_EOL;
-		//echo 'Spreadsheets:'.PHP_EOL;
-		//print_r($Sheets);
-		//echo '---------------------------------'.PHP_EOL;
-		//echo '---------------------------------'.PHP_EOL;
-
-		foreach ($Sheets as $Index => $Name)
-		{
-			//echo '---------------------------------'.PHP_EOL;
-			//echo '*** Sheet '.$Name.' ***'.PHP_EOL;
-			//echo '---------------------------------'.PHP_EOL;
-
-			$Time = microtime(true);
-
-			$Spreadsheet -> ChangeSheet($Index);
-
-			foreach ($Spreadsheet as $Key => $Row)
+			if ( ! $this->upload->do_upload('xlsfile'))	//xlsfile为前端上传文件input的name
 			{
-				//echo $Key.': ';
-				if ($Row)
-				{
-					//print_r($Row);
-					$allxlsdata[] = $Row;
-				}
-				else
-				{
-					var_dump($Row);
-				}
-				$CurrentMem = memory_get_usage();
-		
-				//echo 'Memory: '.($CurrentMem - $BaseMem).' current, '.$CurrentMem.' base'.PHP_EOL;
+				$error = array('error' => $this->upload->display_errors());	//display_errors:如果 do_upload()方法返回 FALSE,可以使用该方法来获取错误信息。
+				$this->session->set_flashdata('message', "<div class='alert alert-danger'>".$error['error']." </div>");
+				redirect('qbank');				
+				exit;
+			}else{
+
+				//TODO:文件重名怎么办
+				$data = array('upload_data' => $this->upload->data());	//data():该方法返回一个数组，包含你上传的文件的所有信息.[file_name、file_type、file_path、full_path、raw_name、orig_name、client_name、file_ext、file_size、is_image...]
+				$targets = 'xls/';
+				$targets = $targets . basename($data['upload_data']['file_name']);	//basename()返回路径中的文件名部分
+				$Filepath = $targets;	//存放文件的路径：xls/文件名
+			 
+				$allxlsdata = array();
+				date_default_timezone_set('UTC');	//函数设置脚本中所有日期/时间函数使用的默认时区。
+
+				$StartMem = memory_get_usage();		//返回当前分配给你的 PHP 脚本的内存量，单位是字节（byte）
 				//echo '---------------------------------'.PHP_EOL;
-		
-				if ($Key && ($Key % 500 == 0))
+				//echo 'Starting memory: '.$StartMem.PHP_EOL;
+				//echo '---------------------------------'.PHP_EOL;
+
+				try
 				{
+					$Spreadsheet = new SpreadsheetReader($Filepath);
+					$BaseMem = memory_get_usage();
+
+					$Sheets = $Spreadsheet -> Sheets();
+
 					//echo '---------------------------------'.PHP_EOL;
-					//echo 'Time: '.(microtime(true) - $Time);
+					//echo 'Spreadsheets:'.PHP_EOL;
+					//print_r($Sheets);
 					//echo '---------------------------------'.PHP_EOL;
+					//echo '---------------------------------'.PHP_EOL;
+
+					foreach ($Sheets as $Index => $Name)
+					{
+						//echo '---------------------------------'.PHP_EOL;
+						//echo '*** Sheet '.$Name.' ***'.PHP_EOL;
+						//echo '---------------------------------'.PHP_EOL;
+
+						$Time = microtime(true);	//返回当前 Unix 时间戳和微秒数
+
+						$Spreadsheet -> ChangeSheet($Index);
+
+						foreach ($Spreadsheet as $Key => $Row)
+						{
+							//echo $Key.': ';
+							if ($Row)
+							{
+								//print_r($Row);
+								$allxlsdata[] = $Row;
+							}
+							else
+							{
+								var_dump($Row);		//返回变量的数据类型和值
+							}
+							$CurrentMem = memory_get_usage();	//返回当前分配给你的 PHP 脚本的内存量，单位是字节（byte）
+					
+							//echo 'Memory: '.($CurrentMem - $BaseMem).' current, '.$CurrentMem.' base'.PHP_EOL;
+							//echo '---------------------------------'.PHP_EOL;
+					
+							if ($Key && ($Key % 500 == 0))
+							{
+								//echo '---------------------------------'.PHP_EOL;
+								//echo 'Time: '.(microtime(true) - $Time);
+								//echo '---------------------------------'.PHP_EOL;
+							}
+						}
+					
+					//	echo PHP_EOL.'---------------------------------'.PHP_EOL;
+						//echo 'Time: '.(microtime(true) - $Time);
+						//echo PHP_EOL;
+
+						//echo '---------------------------------'.PHP_EOL;
+						//echo '*** End of sheet '.$Name.' ***'.PHP_EOL;
+						//echo '---------------------------------'.PHP_EOL;
+					}
+					
 				}
+				catch (Exception $E)
+				{
+					echo $E -> getMessage();
+				}
+
+
+				$this->qbank_model->import_question($allxlsdata);   
+		
 			}
-		
-		//	echo PHP_EOL.'---------------------------------'.PHP_EOL;
-			//echo 'Time: '.(microtime(true) - $Time);
-			//echo PHP_EOL;
-
-			//echo '---------------------------------'.PHP_EOL;
-			//echo '*** End of sheet '.$Name.' ***'.PHP_EOL;
-			//echo '---------------------------------'.PHP_EOL;
-		}
-		
-	}
-	catch (Exception $E)
-	{
-		echo $E -> getMessage();
-	}
-
-
-$this->qbank_model->import_question($allxlsdata);   
-		
-				}
 			
-				}
-				
-			else{
+		}else{
 			echo "Error: " . $_FILES["file"]["error"];
-			}	
-  $this->session->set_flashdata('message', "<div class='alert alert-success'>".$this->lang->line('data_imported_successfully')." </div>");
-  redirect('qbank');
+		}	
+  		$this->session->set_flashdata('message', "<div class='alert alert-success'>".$this->lang->line('data_imported_successfully')." </div>");
+  		redirect('qbank');
 	}
 
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	
 	

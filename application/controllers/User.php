@@ -42,7 +42,7 @@ class User extends CI_Controller {
 		$this->load->view('footer',$data);
 	}
 	
-	public function new_user()
+	public function new_user()	//添加新用户
 	{
 		
 			$logged_in=$this->session->userdata('logged_in');
@@ -51,7 +51,7 @@ class User extends CI_Controller {
 			}
 			
 			
-		 $data['title']=$this->lang->line('add_new').' '.$this->lang->line('user');
+		$data['title']=$this->lang->line('add_new').' '.$this->lang->line('user');
 		// fetching group list
 		$data['group_list']=$this->user_model->group_list();
 		 $this->load->view('header',$data);
@@ -59,7 +59,7 @@ class User extends CI_Controller {
 		$this->load->view('footer',$data);
 	}
 	
-		public function insert_user()
+	public function insert_user()
 	{
 	 	
 		

@@ -35,7 +35,7 @@
 				<?php 
 					foreach($category_list as $key => $val){
 				?>
-				<!-- ����������if($val['cid']==$cid){ echo 'selected';}������ -->
+				<!-- ？？：这里if($val['cid']==$cid){ echo 'selected';}不理解 -->
 				<option value="<?php echo $val['cid'];?>" <?php if($val['cid']==$cid){ echo 'selected';} ?> ><?php echo $val['category_name'];?></option>
 				<?php 
 					}
@@ -68,7 +68,7 @@
 </tr>
 <?php 
 if(count($result)==0){
-	//û������ʱ
+	//没有数据时
 	?>
 <tr>
 	<td colspan="3"><?php echo $this->lang->line('no_record_found');?></td>
@@ -111,7 +111,7 @@ foreach($result as $key => $val){
 
 	<td>
 	<?php 
-	$qn=1;	//�޸����ͣ�1->��ѡ��  2->��ѡ��  3->ƥ��  4->�����  5->������
+	$qn=1;	//修改题型：1->单选题  2->多选题  3->匹配  4->简答题  5->长答题
 	if($val['question_type']==$this->lang->line('multiple_choice_single_answer')){
 		$qn=1;
 	}
@@ -156,90 +156,94 @@ if(($limit-($this->config->item('number_of_rows')))>=0){ $back=$limit-($this->co
 
 
 
-
-
-
+<!-- 批量地添加问题	 -->
 <br><br><br><br>
 <div class="login-panel panel panel-default">
 	<div class="panel-heading">
-<h4><?php echo $this->lang->line('import_question');?></h4> 
-</div>
+		<h4><?php echo $this->lang->line('import_question');?></h4> 
+	</div>
+
 	<div class="panel-body"> 
+		<!-- 通过xls文档批量引入问题 -->
+		<?php echo form_open('qbank/import',array('enctype'=>'multipart/form-data')); //这里相当于打开了一个表单<form method="post" action="http://../index.php/qbank/import" enctype='multipart/form-data'>?>
+		
+		<select name="cid"  required >
+			<option value=""><?php echo $this->lang->line('select_category');?></option>
+			<?php 
+				foreach($category_list as $key => $val){
+			?>
+			<option value="<?php echo $val['cid'];?>" <?php if($val['cid']==$cid){ echo 'selected';} ?> ><?php echo $val['category_name'];?></option>
+			<?php 
+				}
+			?>
+		</select>
 
-<?php echo form_open('qbank/import',array('enctype'=>'multipart/form-data')); ?>
-  
- <select name="cid"  required >
- <option value=""><?php echo $this->lang->line('select_category');?></option>
-<?php 
-					foreach($category_list as $key => $val){
-						?>
-						
-						<option value="<?php echo $val['cid'];?>" <?php if($val['cid']==$cid){ echo 'selected';} ?> ><?php echo $val['category_name'];?></option>
-						<?php 
-					}
-					?></select>
- <select name="did"  required >
- <option value=""><?php echo $this->lang->line('select_level');?></option>
-<?php 
-					foreach($level_list as $key => $val){
-						?>
-						
-						<option value="<?php echo $val['lid'];?>"  <?php if($val['lid']==$lid){ echo 'selected';} ?> ><?php echo $val['level_name'];?></option>
-						<?php 
-					}
-					?>
-					</select> 
+		<select name="did"  required >
+			<option value=""><?php echo $this->lang->line('select_level');?></option>
+			<?php 
+				foreach($level_list as $key => $val){
+			?>
+			<option value="<?php echo $val['lid'];?>"  <?php if($val['lid']==$lid){ echo 'selected';} ?> ><?php echo $val['level_name'];?></option>
+			<?php 
+				}
+			?>
+		</select> 
 
-<?php echo $this->lang->line('upload_excel');?>
-	<input type="hidden" name="size" value="3500000">
-	<input type="file" name="xlsfile" style="width:150px;float:left;margin-left:10px;">
-	<div style="clear:both;"></div>
-	<input type="submit" value="Import" style="margin-top:5px;" class="btn btn-default">
-	
-<a href="<?php echo base_url();?>sample/sample.xls" target="new">Click here</a> <?php echo $this->lang->line('upload_excel_info');?> 
-</form>
+		<?php echo $this->lang->line('upload_excel');?>
+
+		<input type="hidden" name="size" value="3500000">
+		<input type="file" name="xlsfile" style="width:150px;float:left;margin-left:10px;">
+		<div style="clear:both;"></div>
+		<input type="submit" value="Import" style="margin-top:5px;" class="btn btn-default">
+		
+		<a href="<?php echo base_url();?>sample/sample.xls" target="new">Click here</a> <?php echo $this->lang->line('upload_excel_info');?> 
+
+		
+		</form><!-- 对应form_open的form -->
+
+	</div>
 
 </div>
 
 
-
-
-
-</div>
-
-
-
+<!-- 通过word文档批量引入问题 -->
 <div class="login-panel panel panel-default">
+
 <div class="panel-heading">
 <h4><?php echo $this->lang->line('import_question2');?></h4> 
 </div>
-		<div class="panel-body"> 
 
-<?php echo form_open('word_import',array('enctype'=>'multipart/form-data')); ?>
+<div class="panel-body"> 
+
+	<?php echo form_open('word_import',array('enctype'=>'multipart/form-data'));	//action='http://...//word_import' ?>
  
-<div class="alert alert-danger"> <?php echo $this->lang->line('wordimportinfo');?></div>
+	<div class="alert alert-danger"> <?php echo $this->lang->line('wordimportinfo');?></div>
 
- <select name="cid"  required >
- <option value=""><?php echo $this->lang->line('select_category');?></option>
-<?php 
-					foreach($category_list as $key => $val){
-						?>
+	<select name="cid"  required >
+		<option value=""><?php echo $this->lang->line('select_category');?></option>
+		<?php 
+			foreach($category_list as $key => $val){
+		?>
 						
-						<option value="<?php echo $val['cid'];?>" <?php if($val['cid']==$cid){ echo 'selected';} ?> ><?php echo $val['category_name'];?></option>
-						<?php 
-					}
-					?></select>
- <select name="lid" required >
- <option value=""><?php echo $this->lang->line('select_level');?></option>
-<?php 
-					foreach($level_list as $key => $val){
-						?>
-						
-						<option value="<?php echo $val['lid'];?>"  <?php if($val['lid']==$lid){ echo 'selected';} ?> ><?php echo $val['level_name'];?></option>
-						<?php 
-					}
-					?>
-					</select> 
+		<option value="<?php echo $val['cid'];?>" <?php if($val['cid']==$cid){ echo 'selected';} ?> ><?php echo $val['category_name'];?></option>
+		<?php 
+			}
+		?>
+
+	</select>
+
+	<select name="lid" required >
+		<option value=""><?php echo $this->lang->line('select_level');?></option>
+		<?php 
+			foreach($level_list as $key => $val){
+		?>
+		<option value="<?php echo $val['lid'];?>"  <?php if($val['lid']==$lid){ echo 'selected';} ?> ><?php echo $val['level_name'];?></option>
+		<?php 
+			}
+		?>
+
+	</select> 
+
 
 <?php echo $this->lang->line('upload_doc');?>
 	<input type="hidden" name="size" value="3500000">
@@ -257,11 +261,14 @@ if(($limit-($this->config->item('number_of_rows')))>=0){ $back=$limit-($this->co
 	
 	<input type="submit" value="Import" style="margin-top:5px;" class="btn btn-default">
 	
-<a href="<?php echo base_url();?>sample/sample.docx" target="new">Click here</a> <?php echo $this->lang->line('upload_doc_info');?> 
-</form>
+	<a href="<?php echo base_url();?>sample/sample.docx" target="new">Click here</a> <?php echo $this->lang->line('upload_doc_info');?> 
+		
+</form><!-- 通过word批量引入问题 -->
 
 </div>
-<div class="alert alert-warning"> Free version doesn't support Math equations while importing Ms Word file. You can upgrade to <a href="https://savsoftquiz.com/?ref=<?php echo base_url();?>">Enterprise  Version</a> with OMML plugin to support math equations.</div>
+
+<!-- <div class="alert alert-warning"> Free version doesn't support Math equations while importing Ms Word file. You can upgrade to <a href="https://savsoftquiz.com/?ref=<?php echo base_url();?>">Enterprise  Version</a> with OMML plugin to support math equations.</div> -->
+<div class="alert alert-warning"> 导入Word文件时，不支持数学公式。</div>
 
 
 

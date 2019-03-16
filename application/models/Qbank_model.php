@@ -49,43 +49,41 @@ Class Qbank_model extends CI_Model
 	 
  }
  
- function remove_question($qid){
+ function remove_question($qid){	//?question list?????
 	 
 	 $this->db->where('qid',$qid);
 	 if($this->db->delete('savsoft_qbank')){
 		$this->db->where('qid',$qid);		//WHERE qid=$qid
 		$this->db->delete('savsoft_options');	//DELETE FROM savsoft_options
-			
+		
+
+		//???????????? ??? ?????
+
 		//????????????????????????,?????????????,?????haystack????????????????				
 		$qr=$this->db->query("select * from savsoft_quiz where FIND_IN_SET($qid, qids) ");	//qids?????????????????
 	 
 		foreach($qr->result_array() as $k =>$val){
 		
-			$quid=$val['quid'];
+			$quid=$val['quid'];		//??id
 			$qids=explode(',',$val['qids']);	//explode?????????????js?split()
 			$nqids=array();
 			foreach($qids as $qk => $qv){
 				if($qv != $qid){
-					$nqids[]=$qv;
+					$nqids[]=$qv;	//$nqids???? ?????????????????id??
 				}
 			}
-			$noq=count($nqids);
-			$nqids=implode(',',$nqids);
-			$this->db->query(" update savsoft_quiz set qids='$nqids', noq='$noq' where quid='$quid' ");
-		}
-		
-		
+			$noq=count($nqids);		//?????
+			$nqids=implode(',',$nqids);		//???js?join(),????????????????????????
+			$this->db->query(" update savsoft_quiz set qids='$nqids', noq='$noq' where quid='$quid' ");		//????
+		}		
 		return true;
 	 }else{
-		 
-		 return false;
+		return false;
 	 }
-	 
-	 
+	
  }
  
  function insert_question_1(){
-	 
 	 
 	 $userdata=array(
 	 'question'=>$this->input->post('question'),
@@ -521,50 +519,53 @@ Class Qbank_model extends CI_Model
  
  
  
- 
- function import_question($question){
+ //????????? ??xls??????? ͨ��xls������������
+ function import_question($question){	//$question???????excel????????
 //echo "<pre>"; print_r($question);exit;
- $questioncid=$this->input->post('cid');
-$questiondid=$this->input->post('did');
+$questioncid=$this->input->post('cid');		//?? category_id
+$questiondid=$this->input->post('did');		//lid select_level
 foreach($question as $key => $singlequestion){
 	//$ques_type= 
 	
 //echo $ques_type; 
 
-if($key != 0){
-echo "<pre>";print_r($singlequestion);
-$question= str_replace('"','&#34;',$singlequestion['1']);
-$question= str_replace("`",'&#39;',$question);
-$question= str_replace("‘",'&#39;',$question);
-$question= str_replace("’",'&#39;',$question);
-$question= str_replace("â€œ",'&#34;',$question);
-$question= str_replace("â€˜",'&#39;',$question);
+if($key != 0){	//key=0???????
+	echo "<pre>";print_r($singlequestion);		//key???????singlequestion???? ???????question?description?corrent_option_number?option1?option2...?
+	//??$question?????????[1]?$description???????????[2]
+	$question= str_replace('"','&#34;',$singlequestion['1']);
 
+	$question= str_replace("`",'&#39;',$question);
+	$question= str_replace("閳ワ�?",'&#39;',$question);
+	$question= str_replace("閳ワ�?",'&#39;',$question);
+	$question= str_replace("鑺掗埀锟借�??",'&#34;',$question);
+	$question= str_replace("鑺掗埀锟借棿",'&#39;',$question);
+	$question= str_replace("鑺掗埀锟介埄锟�?",'&#39;',$question);
+	$question= str_replace("鑺掗埀锟借伜",'&#34;',$question);
+	$question= str_replace("'","&#39;",$question);
+	$question= str_replace("\n","<br>",$question);
 
+	$description= str_replace('"','&#34;',$singlequestion['2']);
 
-$question= str_replace("â€™",'&#39;',$question);
-$question= str_replace("â€",'&#34;',$question);
-$question= str_replace("'","&#39;",$question);
-$question= str_replace("\n","<br>",$question);
-$description= str_replace('"','&#34;',$singlequestion['2']);
-$description= str_replace("'","&#39;",$description);
-$description= str_replace("\n","<br>",$description);
-$ques_type= $singlequestion['0'];
-if($ques_type=="0" || $ques_type==""){
-$question_type=$this->lang->line('multiple_choice_single_answer');	
-}
-if($ques_type=="1"){
-$question_type=$this->lang->line('multiple_choice_multiple_answer');	
-}
-if($ques_type=="2"){
-$question_type=$this->lang->line('match_the_column');	
-}
-if($ques_type=="3"){
-$question_type=$this->lang->line('short_answer');	
-}
-if($ques_type=="4"){
-$question_type=$this->lang->line('long_answer');	
-}
+	$description= str_replace("'","&#39;",$description);
+	$description= str_replace("\n","<br>",$description);
+
+	$ques_type= $singlequestion['0'];	//????
+
+	if($ques_type=="0" || $ques_type==""){
+	$question_type=$this->lang->line('multiple_choice_single_answer');	
+	}
+	if($ques_type=="1"){
+	$question_type=$this->lang->line('multiple_choice_multiple_answer');	
+	}
+	if($ques_type=="2"){
+	$question_type=$this->lang->line('match_the_column');	
+	}
+	if($ques_type=="3"){
+	$question_type=$this->lang->line('short_answer');	
+	}
+	if($ques_type=="4"){
+	$question_type=$this->lang->line('long_answer');	
+	}
 
 
 	$insert_data = array(
@@ -576,126 +577,153 @@ $question_type=$this->lang->line('long_answer');
 	);
 	
 	if($this->db->insert('savsoft_qbank',$insert_data)){
-		$qid=$this->db->insert_id();
+		$qid=$this->db->insert_id();	//??? INSERT ???????????????ID?
 		$optionkeycounter = 4;
-		if($ques_type=="0" || $ques_type==""){
-		for($i=1;$i<=10;$i++){
-			if($singlequestion[$optionkeycounter] != ""){
-				if($singlequestion['3'] == $i){ $correctoption ='1'; }
-				else{ $correctoption = 0; }
-				$insert_options = array(
-				"qid" =>$qid,
-				"q_option" => $singlequestion[$optionkeycounter],
-				"score" => $correctoption
-				);
-				$this->db->insert("savsoft_options",$insert_options);
-				$optionkeycounter++;
+
+
+		//??
+		if($ques_type=="0" || $ques_type==""){	
+			for($i=1;$i<=10;$i++){	//??10???
+				if($singlequestion[$optionkeycounter] != ""){	//$singlequestion ??????$singlequestion[4]??????
+					if($singlequestion['3'] == $i){ $correctoption ='1'; }	//???????
+					else{ $correctoption = 0; }
+					$insert_options = array(
+					"qid" =>$qid,
+					"q_option" => $singlequestion[$optionkeycounter],	//??????
+					"score" => $correctoption
+					);
+					$this->db->insert("savsoft_options",$insert_options);
+					$optionkeycounter++;
 				}
-			
+				
 			}
-	}
-	//multiple type
-	if($ques_type=="1"){
-			$correct_options=explode(",",$singlequestion['3']);
-			$no_correct=count($correct_options);
+		}
+
+
+		//multiple type??
+		if($ques_type=="1"){
+			$correct_options=explode(",",$singlequestion['3']);		//split????????????
+			$no_correct=count($correct_options);	//???????
 			$correctoptionm=array();
-			for($i=1;$i<=10;$i++){
-			if($singlequestion[$optionkeycounter] != ""){
-			foreach($correct_options as $valueop){
-				if($valueop == $i){ $correctoptionm[$i-1] =(1/$no_correct);
-					break;
+			for($i=1;$i<=10;$i++){	//??10???
+				if($singlequestion[$optionkeycounter] != ""){	//??????
+					foreach($correct_options as $valueop){
+						if($valueop == $i){ $correctoptionm[$i-1] =(1/$no_correct);		//?i????????? 1?/??????
+							break;
+						}
+						else{ $correctoptionm[$i-1] = 0; }
 					}
-				else{ $correctoptionm[$i-1] = 0; }
-			}
-			}
-			}
-			
-			//print_r($correctoptionm);
-			
-		for($i=1;$i<=10;$i++){
-		
-			if($singlequestion[$optionkeycounter] != ""){
-			
-				$insert_options = array(
-				"qid" =>$qid,
-				"q_option" => $singlequestion[$optionkeycounter],
-				"score" => $correctoptionm[$i-1]
-				);
-				$this->db->insert("savsoft_options",$insert_options);
-				$optionkeycounter++;
-				
-				
 				}
-			
 			}
-	}
+				
+			//print_r($correctoptionm);
+				
+			for($i=1;$i<=10;$i++){
+			
+				if($singlequestion[$optionkeycounter] != ""){	//$optionkeycounter=4
+				
+					$insert_options = array(
+						"qid" =>$qid,
+						"q_option" => $singlequestion[$optionkeycounter],
+						"score" => $correctoptionm[$i-1]
+					);
+					$this->db->insert("savsoft_options",$insert_options);
+					$optionkeycounter++;
+					
+					
+					}
+				}
+		}
+		//multiple type end	
 	
-	//multiple type end	
-	
- //match Answer
+
+ 		//match Answer
 		if($ques_type=="2"){
-			$qotion_match=0;
+			$qotion_match=0;	//?????
 			for($j=1;$j<=10;$j++){
 			
-			if($singlequestion[$optionkeycounter] != ""){
+				if($singlequestion[$optionkeycounter] != ""){
 				
-				$qotion_match+=1;
-				$optionkeycounter++;
+					$qotion_match+=1;
+					$optionkeycounter++;
 				}
 				
-				}
+			}
 			///h
-			$optionkeycounter=4;
-		for($i=1;$i<=10;$i++){
+			$optionkeycounter=4;	
+			for($i=1;$i<=10;$i++){
 			
-			if($singlequestion[$optionkeycounter] != ""){
-				$explode_match=explode('=',$singlequestion[$optionkeycounter]);
-				 $correctoption =1/$qotion_match; 
-				$insert_options = array(
-				"qid" =>$qid,
-				"q_option" =>$explode_match[0] ,
-				"q_option_match" =>$explode_match[1] ,
-				 "score" => $correctoption
-				);
-				$this->db->insert("savsoft_options",$insert_options);
-				$optionkeycounter++;
+				if($singlequestion[$optionkeycounter] != ""){
+					$explode_match=explode('=',$singlequestion[$optionkeycounter]);		//A=B -> [A,B]
+					$correctoption =1/$qotion_match; 	//??????????
+					$insert_options = array(
+						"qid" =>$qid,
+						"q_option" =>$explode_match[0] ,
+						"q_option_match" =>$explode_match[1] ,
+						"score" => $correctoption
+					);
+					$this->db->insert("savsoft_options",$insert_options);
+					$optionkeycounter++;
 				}
 				
-				}
-			
 			}
-	
-	//end match answer
-	
-	//short Answer
-		if($ques_type=="3"){
-		for($i=1;$i<=1;$i++){
 			
-			if($singlequestion[$optionkeycounter] != ""){
-				if($singlequestion['3'] == $i){ $correctoption ='1'; }
-				$insert_options = array(
-				"qid" =>$qid,
-				"q_option" => $singlequestion[$optionkeycounter],
-				"score" => $correctoption
-				);
-				$this->db->insert("savsoft_options",$insert_options);
-				$optionkeycounter++;
-				}
-				
-				}
-			
-			}
-	
-	//end Short answer
-	
-	
-	
-		}//
 		}
-	}
+		//end match answer
+	
 
- 
-}
+		//short Answer
+		if($ques_type=="3"){
+			for($i=1;$i<=1;$i++){
+			
+				if($singlequestion[$optionkeycounter] != ""){
+					if($singlequestion['3'] == $i){ $correctoption ='1'; }
+					$insert_options = array(
+						"qid" =>$qid,
+						"q_option" => $singlequestion[$optionkeycounter],
+						"score" => $correctoption
+					);
+					$this->db->insert("savsoft_options",$insert_options);
+					$optionkeycounter++;
+				}
+				
+			}
+			
+		}
+		//end Short answer
+
+
+		//TODO：缺少long answer的存储答案逻辑，目前默认long answer没有标准答案，所以不会再Option中放入答案
+		if($ques_type=="4"){
+			for($i=1;$i<=1;$i++){
+
+				if($singlequestion[$optionkeycounter] != ""){
+					// if($singlequestion['3'] == $i){ $correctoption ='1'; }
+					// $insert_options = array(
+					// 	"qid" =>$qid,
+					// 	"q_option" => $singlequestion[$optionkeycounter],
+					// 	"score" => $correctoption
+					// );
+					// $this->db->insert("savsoft_options",$insert_options);
+					// $optionkeycounter++;
+				}
+			}
+
+		} 
+	
+	
+	
+	}//END OF: if($this->db->insert('savsoft_qbank',$insert_data))... ???qbank???????????????options???
+	
+
+}//END OF:if($key!=0){
+
+
+}//END OF:foreach($allxlsdata as $key => $singlequestion){
+
+
+
+}//END OF:the function import_question($allxlsdata)
 
 
 
