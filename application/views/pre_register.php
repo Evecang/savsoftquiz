@@ -25,12 +25,19 @@
      
     <?php 
     $cc=0;
+    //bottstrap自带颜色样式
 $colorcode=array(
 'success',
 'warning',
 'info',
 'danger'
 );
+    //TODO：
+    //$group_list 由 group_list 表获得
+    //用户注册分为三个组别，这里可以通过更改 group_list 表
+    //将此处设置为不同班级的选择
+    //其中 group_name 可更改为班级名
+    //注意下处注释
     foreach($group_list as $k => $val){
     
    ?>
@@ -48,11 +55,14 @@ $colorcode=array(
                           <hr>
                           Price: 
 <?php 
+//TODO:
+//此处通过配置 $this->config->item()来配置价格类型，比如美元$或者人名币￥，可删除大部分
 if($val['price']==0){
 echo "0";
 }else{
 echo $this->config->item('base_currency_prefix').' '.$val['price'].' '.$this->config->item('base_currency_sufix'); 
 }
+//此上可删除大部分
 ?>
                            
                         </div>

@@ -143,15 +143,14 @@ if($logged_in['su']=='1'){
           <div class="panel-footer">
           <a href="<?php echo site_url('quiz/quiz_detail/'.$val['quid']);?>" class="btn btn-success"  ><?php echo $this->lang->line('attempt');?> </a>
 
-<?php 
-if($logged_in['su']=='1'){  //如果是管理员，添加编辑还有删除功能
-	?>
-			
+    <?php 
+    if($logged_in['su']=='1'){  //如果是管理员，添加编辑还有删除功能
+    ?>
           <a href="<?php echo site_url('quiz/edit_quiz/'.$val['quid']);?>"><img src="<?php echo base_url('images/edit.png');?>"></a>
           <a href="javascript:remove_entry('quiz/remove_quiz/<?php echo $val['quid'];?>');"><img src="<?php echo base_url('images/cross.png');?>"></a>
-<?php 
-}
-?>
+    <?php 
+    }
+    ?>
 
 
           </div>

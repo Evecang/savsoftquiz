@@ -371,12 +371,13 @@ foreach($payments as $key => $val){
 echo "Page rendered in <strong>{elapsed_time}</strong> seconds. You may improve it by hosting on recommended hosting. <a href='http://savsoftquiz.com/affiliate.php' target='af'>Click here</a> ";
 ?>
 </div>
-<!-- Modal -->
-<div id="upgrade" class="modal fade" role="dialog">
-  <div class="modal-dialog">
+<!-- 这里一下全部注释了，阻止更新操作 -->
+<!-- Modal提示更新至企业版 -->
+<!-- <div id="upgrade" class="modal fade" role="dialog">
+  <div class="modal-dialog"> -->
 
     <!-- Modal content-->
-    <div class="modal-content">
+    <!-- <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
         <h4 class="modal-title">Upgrade to Enterprise</h4>
@@ -392,17 +393,18 @@ echo "Page rendered in <strong>{elapsed_time}</strong> seconds. You may improve 
     </div>
 
   </div>
-</div>
+</div> -->
 
-<a href="#" class="txtVertical btn btn-danger btn-lg" data-toggle="modal" data-target="#upgrade" style="border-radius:0px;">Upgrade to Enterprise</a>
-<script>
+<!-- <a href="#" class="txtVertical btn btn-danger btn-lg" data-toggle="modal" data-target="#upgrade" style="border-radius:0px;">Upgrade to Enterprise</a> -->
+
+<!-- <script>
 update_check('4.0');
 $( "#upgrade" ).on('shown.bs.modal', function(){
     	var formData = {group_name:'4.0'};
 	$.ajax({
 		 type: "POST",
 		 data : formData,
-			 url: "https://savsoftquiz.com/upgrade.php?ref=<?php echo base_url();?>",
+			 url: "https://savsoftquiz.com/upgrade.php?ref=<?php //echo base_url();?>",
 		success: function(data){
 		$("#upgrade_content").html(data);
 			
@@ -413,10 +415,10 @@ $( "#upgrade" ).on('shown.bs.modal', function(){
 		});
 });
  
-<?php if(date('d',time())==1 || date('d',time())==7 || date('d',time())==14 || date('d',time())==21 || date('d',time())==28){ ?>
+<?php //if(date('d',time())==1 || date('d',time())==7 || date('d',time())==14 || date('d',time())==21 || date('d',time())==28){ ?>
 setTimeout(function(){ 
 $( "#upgrade" ).modal('show');
 },3000);
-<?php } ?>
+<?php //} ?>
 
-</script>
+</script> -->

@@ -256,6 +256,7 @@ $config['url_suffix'] = '';
 |
 */
 $config['language']	= 'english';
+// $condig['language'] = 'zh';
 
 
 

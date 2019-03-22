@@ -122,5 +122,7 @@ application\config\routes.php : 这里定义了后台路由，$route['default_co
 application\controllers\Login.php ： 这里定义了登陆页面的页面路由index ，还有登陆界面的许多后台接口，包括 login/verifyLogin 这些接口
 application\views\header_login.php  首页（不包括登陆页）的头部组件 <header></header>部分
 application\views\login.php  登陆页
+
+register按钮 -> pre_register ->register
 js/basic.js  用 JS 写的功能函数，包括发送试卷请求等？
 js/calender.js 一个手写时间的函数集合，一个时间组件？

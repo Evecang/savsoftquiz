@@ -1,0 +1,6 @@
+savsoft_group表：
+group_name:组名
+gid：组的id
+description:描述
+price:价格            ======>待更改
+valid_for_days:到期时间

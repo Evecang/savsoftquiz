@@ -1,5 +1,5 @@
  
-function remove_entry(redir_cont){		//ɾ��ʱ������һ�������ٴ�confirm
+function remove_entry(redir_cont){		//删除时，添加一个弹窗再次confirm
 	
 	if(confirm("Do you really want to remove entry?")){
 		window.location=base_url+"index.php/"+redir_cont;
@@ -85,16 +85,16 @@ function updatecategory(vall,cid){
 }
 
 
-
+//在添加新用户时，选择组别时的onchange函数，gid为对应的输入框
 function getexpiry(){
-	 var gid=document.getElementById('gid').value;
+	var gid=document.getElementById('gid').value;	//选择组别的下拉框
 	var formData = {gid:gid};
 	$.ajax({
 		 type: "POST",
 		 data : formData,
-			url: base_url + "index.php/user/get_expiry/"+gid,
+		 url: base_url + "index.php/user/get_expiry/"+gid,
 		success: function(data){
-		$("#subscription_expired").val(data);
+		$("#subscription_expired").val(data);	//更改过期时间
 			
 			},
 		error: function(xhr,status,strErr){
@@ -125,7 +125,7 @@ function updatelevel(vall,lid){
 
 
 
-function hidenop(vall){
+function hidenop(vall){	//在添加问题时，如果是单选、多选、匹配题则可以让用户设置option个数
 	if(vall == '1' || vall=='2' || vall=='3'){
 		$("#nop").css('display','block');
 	}else{
@@ -577,7 +577,7 @@ function assign_score(rid,qno,score){
 }
 
 
-//չʾ����ļ�Ҫ����״̬�����������رգ�����ر����
+//展示问题的简要描述状态，如果被打开则关闭，如果关闭则打开
 function show_question_stat(id){
 	var did="#stat-"+id;
 	 
@@ -801,7 +801,7 @@ $("#comnt_optn").fadeOut();
 
 
 
- // version check
+ // version check 打开dashboard时会出现的提示
 function update_check(sq_version){
 	 
 	var formData = {sq_version:sq_version};

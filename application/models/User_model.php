@@ -3,17 +3,17 @@ Class User_model extends CI_Model
 {
  function login($username, $password)
  {
-	// 濡傛灉鐢ㄦ埛鍚嶄负绌哄鐞嗕负闅忔満璧嬪€兼暟瀛楋紝鍓嶇鎺у埗浜嗙敤鎴峰悕闈炵┖锛寃eb绔殑璇锋眰涓€鑸笉瀛樺湪杩欑鎯呭喌
+	// 如果用户名为空处理为随机赋值数字，前端控制了用户名非空，web端的请求一般不存在这种情况
    if($username==''){
    $username=time().rand(1111,9999);
    }
    //TODO
-   //涓嬮潰杩欎釜if鐨勫垽鏂潯浠舵槸涓€涓壒娈婇€昏緫锛屽彲浠ュ垹闄わ紵
+   //下面这个if的判断条件是一个特殊逻辑，可以删除？
    if($password!=$this->config->item('master_password')){
    $this->db->where('savsoft_users.password', MD5($password));
    }
 
-   //涓嬮潰鐨勬煡璇㈤€昏緫鐩稿綋浜?
+   //下面的查询逻辑相当于 SQL 语句：
    // select * from savsoft_users limit 1 join savsoft_group on savsoft_users.gid=savsoft_group.gid
    //where $password = savsoft_users.password and $username = savsoft_users.email
    if (strpos($username, '@') !== false) {
@@ -27,13 +27,12 @@ Class User_model extends CI_Model
     $this -> db -> join('savsoft_group', 'savsoft_users.gid=savsoft_group.gid');
   $this->db->limit(1);
     $query = $this -> db -> get('savsoft_users');
-
-   //濡傛灉璐﹀彿瀵嗙爜鍖归厤锛屽垯琛ㄧず鏁版嵁搴撳瓨鍦ㄨ处鍙峰瘑鐮侊紝楠岃瘉閫氳繃
-   // 杩欓噷鐢ㄦ埛娉ㄥ唽鐨勬椂鍊欏簲璇ラ渶瑕佸幓閭楠岃瘉璐﹀彿銆佽繕鏈夋縺娲荤殑姝ラ锛屽洜姝ゆ暟鎹簱 users 琛ㄤ腑杩樺瓨鍦?verify_code 鍜?user_status 瀛楁
-   // 杩斿洖鐨勬牸寮忎负 array('status'=>'涓€涓暟瀛?,'user'=>'鐢ㄦ埛淇℃伅') 鎴栬€?array('status'=>'涓€涓姸鎬佹暟瀛?,'message'=>'楠岃瘉鐨勭粨鏋滀俊鎭?)
+   //如果账号密码匹配，则表示数据库存在账号密码，验证通过
+   // 这里用户注册的时候应该需要去邮箱验证账号、还有激活的步骤，因此数据库 users 表中还存在 verify_code 和 user_status 字段
+   // 返回的格式为 array('status'=>'一个数字','user'=>'用户信息') 或者 array('status'=>'一个状态数字','message'=>'验证的结果信息')
    // status: 
-   //    0 璐﹀彿瀵嗙爜閿欒  杩斿洖'message'瀛楁锛歩nvalid login ;               1 璐﹀彿宸茬粡閫氳繃楠岃瘉鑰屼笖宸茬粡婵€娲伙紝鍚屾椂杩斿洖 鈥榰ser鈥?瀛楁鍖呭惈鐢ㄦ埛鐨勬墍鏈変俊鎭?
-   //    2 璐﹀彿锛堥偖绠憋級鏈獙璇?杩斿洖'message'瀛楁锛歟mail_not_verified ;      3 璐﹀彿鏈縺娲? 杩斿洖'message'瀛楁锛歛ccount_inactive
+   //    0 账号密码错误  返回'message'字段：invalid login ;               1 账号已经通过验证而且已经激活，同时返回 ‘user’ 字段包含用户的所有信息
+   //    2 账号（邮箱）未验证 返回'message'字段：email_not_verified ;      3 账号未激活  返回'message'字段：account_inactive
    if($query -> num_rows() == 1)
    {
    $user=$query->row_array();
@@ -323,11 +322,11 @@ return $revenue;
  }
  
  
- function insert_user(){
+ function insert_user(){	//添加新用户
 	 
 		$userdata=array(
 		'email'=>$this->input->post('email'),
-		'password'=>md5($this->input->post('password')),
+		'password'=>md5($this->input->post('password')),	//密码加密
 		'first_name'=>$this->input->post('first_name'),
 		'last_name'=>$this->input->post('last_name'),
 		'contact_no'=>$this->input->post('contact_no'),
@@ -345,8 +344,78 @@ return $revenue;
 		}
 	 
  }
+
+ //通过xls批量引入用户
+ function import_user($allxlsdata){	//$allxlsdata是数组，由excel表格中的每行数据组成
+	//echo "<pre>"; print_r($allxlsdata);exit;
+	// $accountGid=$this->input->post('i_gid');		//选择用户组的组别
+	// $accountType=$this->input->post('i_su');		//选择用户身份 0-学生 1-管理员
+
+	foreach($allxlsdata as $key => $singleAccount){
+
+		if($key != 0){	//key=0除去第一行的数据
+			echo "<pre>";print_r($singleAccount);		//singleAccount是每一行的数据[password,email,first_name,last_name,contact_no,connection_key,gid,su,subscription_expired]
+			//$email用户的邮箱地址[0]  $password用户密码 md5加密[2]
+			$email= str_replace('"','&#34;',$singleAccount['0']);
+			$email= str_replace("`",'&#39;',$email);
+			$email= str_replace("闁炽儻锟�?",'&#39;',$email);
+			$email= str_replace("闁炽儻锟�?",'&#39;',$email);
+			$email= str_replace("閼烘帡鍩€閿熷€燂拷??",'&#34;',$email);
+			$email= str_replace("閼烘帡鍩€閿熷€熸？",'&#39;',$email);
+			$email= str_replace("閼烘帡鍩€閿熶粙鍩勯敓锟�?",'&#39;',$email);
+			$email= str_replace("閼烘帡鍩€閿熷€熶紲",'&#34;',$email);
+			$email= str_replace("'","&#39;",$email);
+			$email= str_replace("\n","<br>",$email);
+		
+			$password= str_replace('"','&#34;',$singleAccount['1']);
+			$password= str_replace("'","&#39;",$password);
+			$password= str_replace("\n","<br>",$password);
+
+			$first_name = str_replace('"','&#34;',$singleAccount['2']);
+			$first_name= str_replace("'","&#39;",$first_name);
+			$first_name= str_replace("\n","<br>",$first_name);
+
+			$last_name = str_replace('"','&#34;',$singleAccount['3']);
+			$last_name= str_replace("'","&#39;",$last_name);
+			$last_name= str_replace("\n","<br>",$last_name);
+
+			$contact_no = str_replace('"','&#34;',$singleAccount['4']);
+			$contact_no= str_replace("'","&#39;",$contact_no);
+			$contact_no= str_replace("\n","<br>",$contact_no);
+
+
+			$insert_data = array(
+				'email'=>$email,
+				'password'=>md5($password),	
+				'first_name'=>$first_name,
+				'last_name'=>$last_name,
+				'contact_no'=>$contact_no,
+				'gid'=>$this->input->post('i_gid'),
+				'subscription_expired'=>strtotime($this->input->post('i_subscription_expired')),
+				'su'=>$this->input->post('i_su')		
+			);
+				
+			if($this->db->insert('savsoft_users',$insert_data)){
+				
+				//return true;
+			}else{
+				$this->session->set_flashdata('message', "<div class='alert alert-danger'>upload failed </div>");
+				return false;
+			}
+			
+		
+		}//END OF:if($key!=0){
+	
+	
+	}//END OF:foreach($allxlsdata as $key => $singleAccount){
+	
+	
+ }//END OF:the function import_question($allxlsdata)
+
+
+
  
-  function insert_user_2(){
+  function insert_user_2(){	//从登录界面过来的注册功能
 	 
 		$userdata=array(
 		'email'=>$this->input->post('email'),
@@ -357,21 +426,11 @@ return $revenue;
 		'gid'=>$this->input->post('gid'),
 		'su'=>'0'		
 		);
+		//如果需要验证邮箱，$this->config->item('verify_code') == true 的话，就要设置用户表中的 verify_code 为非0，验证完置0？
 		$veri_code=rand('1111','9999');
 		 if($this->config->item('verify_email')){
 			$userdata['verify_code']=$veri_code;
 		 }
-		 		if($this->session->userdata('logged_in_raw')){
-					$userraw=$this->session->userdata('logged_in_raw');
-					$userraw_uid=$userraw['uid'];
-					$this->db->where('uid',$userraw_uid);
-				$rresult=$this->db->update('savsoft_users',$userdata);
-				if($this->session->userdata('logged_in_raw')){
-				$this->session->unset_userdata('logged_in_raw');	
-				}		
-				}else{
-				$rresult=$this->db->insert('savsoft_users',$userdata);
-				}
 		if($rresult){
 			 if($this->config->item('verify_email')){
 				 // send verification link in email
@@ -607,13 +666,13 @@ $query=$this->db->get('savsoft_users');
 	 
 	$this->db->where('gid',$gid);
 	$query=$this->db->get('savsoft_group');
-	 $gr=$query->row_array();
-	 if($gr['valid_for_days']!='0'){
-	$nod=$gr['valid_for_days'];
-	 return date('Y-m-d',(time()+($nod*24*60*60)));
-	 }else{
-		 return date('Y-m-d',(time()+(10*365*24*60*60))); 
-	 }
+	$gr=$query->row_array();	//gid,group_name,price,valid_for_days,description
+	if($gr['valid_for_days']!='0'){
+		$nod=$gr['valid_for_days'];
+		return date('Y-m-d',(time()+($nod*24*60*60)));	//转换为毫秒
+	}else{
+		return date('Y-m-d',(time()+(10*365*24*60*60))); 	//10years
+	}
  }
  
  

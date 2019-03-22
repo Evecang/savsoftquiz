@@ -519,8 +519,8 @@ Class Qbank_model extends CI_Model
  
  
  
- //????????? ??xls??????? ͨ��xls������������
- function import_question($question){	//$question???????excel????????
+ //閫氳繃xls鎵归噺寮曞叆闂
+ function import_question($question){	//$question鏄暟缁勶紝鐢眅xcel琛ㄦ牸涓殑姣忚鏁版嵁缁勬垚
 //echo "<pre>"; print_r($question);exit;
 $questioncid=$this->input->post('cid');		//?? category_id
 $questiondid=$this->input->post('did');		//lid select_level
@@ -535,12 +535,12 @@ if($key != 0){	//key=0???????
 	$question= str_replace('"','&#34;',$singlequestion['1']);
 
 	$question= str_replace("`",'&#39;',$question);
-	$question= str_replace("閳ワ�?",'&#39;',$question);
-	$question= str_replace("閳ワ�?",'&#39;',$question);
-	$question= str_replace("鑺掗埀锟借�??",'&#34;',$question);
-	$question= str_replace("鑺掗埀锟借棿",'&#39;',$question);
-	$question= str_replace("鑺掗埀锟介埄锟�?",'&#39;',$question);
-	$question= str_replace("鑺掗埀锟借伜",'&#34;',$question);
+	$question= str_replace("闂佺偨鍎婚敓锟�?",'&#39;',$question);
+	$question= str_replace("闂佺偨鍎婚敓锟�?",'&#39;',$question);
+	$question= str_replace("闁肩儤甯￠崺鈧柨鐔封偓鐕傛嫹??",'&#34;',$question);
+	$question= str_replace("闁肩儤甯￠崺鈧柨鐔封偓鐔革紵",'&#39;',$question);
+	$question= str_replace("闁肩儤甯￠崺鈧柨鐔剁矙閸╁嫰鏁撻敓锟�?",'&#39;',$question);
+	$question= str_replace("闁肩儤甯￠崺鈧柨鐔封偓鐔剁床",'&#34;',$question);
 	$question= str_replace("'","&#39;",$question);
 	$question= str_replace("\n","<br>",$question);
 
@@ -602,8 +602,8 @@ if($key != 0){	//key=0???????
 
 		//multiple type??
 		if($ques_type=="1"){
-			$correct_options=explode(",",$singlequestion['3']);		//split????????????
-			$no_correct=count($correct_options);	//???????
+			$correct_options=explode(",",$singlequestion['3']);		//split
+			$no_correct=count($correct_options);	//正确答案的个数
 			$correctoptionm=array();
 			for($i=1;$i<=10;$i++){	//??10???
 				if($singlequestion[$optionkeycounter] != ""){	//??????
@@ -639,7 +639,7 @@ if($key != 0){	//key=0???????
 
  		//match Answer
 		if($ques_type=="2"){
-			$qotion_match=0;	//?????
+			$qotion_match=0;	//匹配题目的选项个数s
 			for($j=1;$j<=10;$j++){
 			
 				if($singlequestion[$optionkeycounter] != ""){
@@ -655,7 +655,7 @@ if($key != 0){	//key=0???????
 			
 				if($singlequestion[$optionkeycounter] != ""){
 					$explode_match=explode('=',$singlequestion[$optionkeycounter]);		//A=B -> [A,B]
-					$correctoption =1/$qotion_match; 	//??????????
+					$correctoption =1/$qotion_match; 	//每道匹配选项的分值
 					$insert_options = array(
 						"qid" =>$qid,
 						"q_option" =>$explode_match[0] ,
@@ -693,7 +693,7 @@ if($key != 0){	//key=0???????
 		//end Short answer
 
 
-		//TODO：缺少long answer的存储答案逻辑，目前默认long answer没有标准答案，所以不会再Option中放入答案
+		//TODO閿涙氨宸辩亸鎲€ong answer閻ㄥ嫬鐡ㄩ崒銊х摕濡楀牓鈧槒绶敍宀€娲伴崜宥夌帛鐠侇槖ong answer濞屸剝婀侀弽鍥у櫙缁涙梹顢嶉敍灞惧娴犮儰绗夋导姘晙Option娑擃厽鏂侀崗銉х摕濡楋拷
 		if($ques_type=="4"){
 			for($i=1;$i<=1;$i++){
 

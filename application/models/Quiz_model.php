@@ -2,29 +2,28 @@
 Class Quiz_model extends CI_Model
 {
  
-  function quiz_list($limit){
+  function quiz_list($limit){	//根据$limit关键词进行筛选，返回含有关键词的考试列表
 	  
-	  $logged_in=$this->session->userdata('logged_in');
-			if($logged_in['su']=='0'){
-			$gid=$logged_in['gid'];
-			$where="FIND_IN_SET('".$gid."', gids)";  
-			 $this->db->where($where);
-			}
+	$logged_in=$this->session->userdata('logged_in');
+	if($logged_in['su']=='0'){	//学生
+		$gid=$logged_in['gid'];
+		$where="FIND_IN_SET('".$gid."', gids)";  
+		$this->db->where($where);
+	}
 			
-			
-	 if($this->input->post('search') && $logged_in['su']=='1'){
-		 $search=$this->input->post('search');
-		 $this->db->or_where('quid',$search);
-		 $this->db->or_like('quiz_name',$search);
-		 $this->db->or_like('description',$search);
+	if($this->input->post('search') && $logged_in['su']=='1'){	//管理员，并且有搜索关键词
+		$search=$this->input->post('search');
+		$this->db->or_where('quid',$search);
+		$this->db->or_like('quiz_name',$search);
+		$this->db->or_like('description',$search);
 
-	 }
-		 $this->db->limit($this->config->item('number_of_rows'),$limit);
-		$this->db->order_by('quid','desc');
-		$query=$this->db->get('savsoft_quiz');
-		return $query->result_array();
+	}
+
+	$this->db->limit($this->config->item('number_of_rows'),$limit);	//限制你的查询返回结果的数量(数量，偏移量)
+	$this->db->order_by('quid','desc');
+	$query=$this->db->get('savsoft_quiz');
+	return $query->result_array();
 		
-	 
  }
  
  
@@ -35,7 +34,7 @@ Class Quiz_model extends CI_Model
 		$this->db->order_by('quid','desc');
 		$query=$this->db->get('savsoft_quiz');
 		return $query->result_array();
-}
+   }
  
    function open_quiz($limit){
 	  
@@ -44,7 +43,7 @@ Class Quiz_model extends CI_Model
 		$this->db->order_by('quid','desc');
 		$query=$this->db->get('savsoft_quiz');
 		return $query->result_array();
-}
+   }
  
  
  function num_quiz(){

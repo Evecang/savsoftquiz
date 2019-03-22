@@ -35,7 +35,7 @@
 		
 					<div class="form-group">	 
 					<form method="post" action="<?php echo site_url('quiz/pre_add_question/'.$quid.'/'.$limit.'/'.$cid.'/'.$lid);?>">
-					<select   name="cid">
+					<select   name="cid" class="form-control" style="width:200px;display:inline">
 					<option value="0"><?php echo $this->lang->line('all_category');?></option>
 					<?php 
 					foreach($category_list as $key => $val){
@@ -46,7 +46,7 @@
 					}
 					?>
 					</select>
-			 	<select  name="lid">
+			 	<select  name="lid" class="form-control" style="width:100px;display:inline">
 				<option value="0"><?php echo $this->lang->line('all_level');?></option>
 					<?php 
 					foreach($level_list as $key => $val){

@@ -8,6 +8,7 @@ class User extends CI_Controller {
 	   parent::__construct();
 	   $this->load->database();
 	   $this->load->helper('url');
+	   $this->load->helper('form');
 	   $this->load->model("user_model");
 	   $this->lang->load('basic', $this->config->item('language'));
 		// redirect if not loggedin
@@ -53,40 +54,126 @@ class User extends CI_Controller {
 			
 		$data['title']=$this->lang->line('add_new').' '.$this->lang->line('user');
 		// fetching group list
-		$data['group_list']=$this->user_model->group_list();
-		 $this->load->view('header',$data);
+		$data['group_list']=$this->user_model->group_list();	//返回所有的（gid升序）班级
+		$this->load->view('header',$data);
 		$this->load->view('new_user',$data);
 		$this->load->view('footer',$data);
 	}
 	
-	public function insert_user()
+	public function insert_user()	//添加新用户
 	{
 	 	
-		
-			$logged_in=$this->session->userdata('logged_in');
-			if($logged_in['su']!='1'){
-				exit($this->lang->line('permission_denied'));
-			}
+		$logged_in=$this->session->userdata('logged_in');
+		if($logged_in['su']!='1'){
+			exit($this->lang->line('permission_denied'));
+		}
+		//设置表单验证规则
 		$this->load->library('form_validation');
-		$this->form_validation->set_rules('email', 'Email', 'required|is_unique[savsoft_users.email]');
-        $this->form_validation->set_rules('password', 'Password', 'required');
-          if ($this->form_validation->run() == FALSE)
-                {
-                     $this->session->set_flashdata('message', "<div class='alert alert-danger'>".validation_errors()." </div>");
-					redirect('user/new_user/');
-                }
-                else
-                {
-					if($this->user_model->insert_user()){
-                        $this->session->set_flashdata('message', "<div class='alert alert-success'>".$this->lang->line('data_added_successfully')." </div>");
-					}else{
-						    $this->session->set_flashdata('message', "<div class='alert alert-danger'>".$this->lang->line('error_to_add_data')." </div>");
-						
-					}
-					redirect('user/new_user/');
-                }       
+		$this->form_validation->set_rules('email', 'Email', 'required|is_unique[savsoft_users.email]');	//表单域名，表单域的人性化名字将插入到错误信息中，验证规则
+		$this->form_validation->set_rules('password', 'Password', 'required');
+		
+		//run()它默认返回 FALSE， ``run()`` 方法只在全部成功匹配了你的规则后才会返回 TRUE 
+		if ($this->form_validation->run() == FALSE)	//验证规则会被自动加载，当用户触发 run() 方法时被调用
+		{
+			$this->session->set_flashdata('message', "<div class='alert alert-danger'>".validation_errors()." </div>");
+			redirect('user/new_user/');
+		}
+		else
+		{
+			if($this->user_model->insert_user()){
+				$this->session->set_flashdata('message', "<div class='alert alert-success'>".$this->lang->line('data_added_successfully')." </div>");
+			}else{
+				$this->session->set_flashdata('message', "<div class='alert alert-danger'>".$this->lang->line('error_to_add_data')." </div>");
+			}
+			redirect('user/new_user/');
+		}       
 
 	}
+
+
+	//批量添加用户，作用将excel文档里的每行内容传入model中
+	public function import()
+	{	
+		$logged_in=$this->session->userdata('logged_in');
+		if($logged_in['su']!='1'){
+			exit($this->lang->line('permission_denied'));
+		} 	
+
+		//引入库文件，可以到ReadMe中查看一些关于spreadsheetreader的用法。
+		$this->load->helper('xlsimport/php-excel-reader/excel_reader2');
+		$this->load->helper('xlsimport/spreadsheetreader.php');
+
+		if(isset($_FILES['xlsfile'])){	//如果上传文件成功
+
+			$config['upload_path']          = './xls/';	//根目录里的xls，存放上传文件的目录
+			$config['allowed_types']        = 'xls|xlsx';	//允许的文件类型
+			$config['max_size']             = 10000;	//允许上传文件大小KB
+			$this->load->library('upload', $config);	//初始化文件上传类 CI框架------->初始化之后，文件上传类的对象就可以这样访问:$this->upload
+			// $this->upload->initialize($config);
+
+			if ( ! $this->upload->do_upload('xlsfile'))	//xlsfile为前端上传文件input的name
+			{
+				$error = array('error' => $this->upload->display_errors());	//display_errors:如果 do_upload()方法返回 FALSE,可以使用该方法来获取错误信息。
+				$this->session->set_flashdata('message', "<div class='alert alert-danger'>".$error['error']." </div>");
+				redirect('user/new_user/');				
+				exit;
+			}else{
+
+				//TODO:文件重名怎么办
+				$data = array('upload_data' => $this->upload->data());	//data():该方法返回一个数组，包含你上传的文件的所有信息.
+				$targets = 'xls/';
+				$targets = $targets . basename($data['upload_data']['file_name']);	//basename()返回路径中的文件名部分
+				$Filepath = $targets;	//存放文件的路径：xls/文件名
+			 
+				$allxlsdata = array();
+				date_default_timezone_set('UTC');	//函数设置脚本中所有日期/时间函数使用的默认时区。
+
+				try
+				{
+					$Spreadsheet = new SpreadsheetReader($Filepath);
+
+					$Sheets = $Spreadsheet -> Sheets();
+
+					foreach ($Sheets as $Index => $Name)
+					{
+
+						$Spreadsheet -> ChangeSheet($Index);
+
+						foreach ($Spreadsheet as $Key => $Row)
+						{
+							//echo $Key.': ';
+							if ($Row)
+							{
+								//print_r($Row);
+								$allxlsdata[] = $Row;
+							}
+							else
+							{
+								var_dump($Row);		//返回变量的数据类型和值
+							}
+					
+						}
+					
+					}
+					
+				}
+				catch (Exception $E)
+				{
+					echo $E -> getMessage();
+				}
+
+				$this->user_model->import_user($allxlsdata);   
+		
+			}
+			
+		}else{
+			echo "Error: " . $_FILES["file"]["error"];
+		}	
+  		$this->session->set_flashdata('message', "<div class='alert alert-success'>".$this->lang->line('data_imported_successfully')." </div>");
+  		redirect('user/new_user/');
+	}
+
+
 
 		public function remove_user($uid){
 

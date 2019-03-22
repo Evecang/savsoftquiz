@@ -14,7 +14,7 @@
 （6）官方论坛：http://savsoftquiz.org/forum/
 （7）PHP框架——CodeIgniter中文说明文档：http://codeigniter.org.cn/user_guide/general/welcome.html
 （8）前端：
-	1、bootstrap v3.3.7 (http://getbootstrap.com已从网页source处下载)，文档：http://www.bootcss.com/
+	1、bootstrap v3.3.7 (http://getbootstrap.com)，文档：http://www.bootcss.com/
 	2、less不清楚，先暂时不看
 	3、jquery.js
 	4、basic.js：猜测是整个系统中统一公用到的函数。
@@ -53,10 +53,16 @@
 
 
 ——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
-web端:
-1、建立班级（统一录入）
-2、出题如果涉及图片，则会出错
-3、目前没有判断题
+web:
+最终支持的题型：
+（1）单选，多选----------fixed
+（2）填空-----------fixed
+（3）完形填空------------	cloze test
+（4）判断题->通过单选变向-------------fixed
+但是缺少解题分析
+1、批量引入用户----------fixed
+2、新添问题时，上传图片问题-------------fixed
+3、计算题（long answer）用户并没有上传图片功能，没有tinyeditor
 4、统计学生平时成绩
 
 *qbank_model->import_question() without dealing with long answer

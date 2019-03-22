@@ -26,7 +26,7 @@
 		// TODO
 		// 如果 session->flashdatamessage的 message 字段存在
 		// 则在 session->flashdata的 message 字段存储 的值中查找 ‘{resend_url}’并将其替换为 当前文件夹+login/resend
-		// 目的未知
+		// 如果不是账号激活而且账号密码都正确（如果存在flashdata，则说明不正确），则重定向到login/resend？
 		if($this->session->flashdata('message')){
 			
 			?>

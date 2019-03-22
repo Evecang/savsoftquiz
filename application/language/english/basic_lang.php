@@ -332,3 +332,5 @@ $lang['category_prof'] = "Categorywise Performance";
 $lang['questions_incorect']="Questions which was answered incorrect";
 
 
+//新添的内容
+$lang['import_user']='通过上传xls文件批量添加用户';

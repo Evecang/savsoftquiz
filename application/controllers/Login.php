@@ -75,10 +75,12 @@ class Login extends CI_Controller {
 	
 	
 	
-	
+	//真正注册前一个页面的路由，即选择用户组别的页面，不是后台注册逻辑路由
 		public function pre_registration()
 	{
 		$this->load->helper('url');
+		//TODO：
+		//这里配置要去选择组别/班级
 		$data['title']=$this->lang->line('select_package');
 		// fetching group list
 		$data['group_list']=$this->user_model->group_list();
@@ -87,7 +89,7 @@ class Login extends CI_Controller {
 		$this->load->view('footer',$data);
 	}
 
-	
+		//注册页面的路由，不是注册逻辑后台路由
 		public function registration($gid='0')
 	{
 	$this->load->helper('url');
@@ -100,7 +102,7 @@ class Login extends CI_Controller {
 		$this->load->view('footer',$data);
 	}
 
-	
+	//登陆验证路由接口
 	public function verifylogin($p1='',$p2=''){
 		
 		if($p1 == ''){
@@ -111,6 +113,7 @@ class Login extends CI_Controller {
 		$password=urldecode($p2);
 		}
 		 $status=$this->user_model->login($username,$password);
+		 //除了验证正确设置 userdata，其他所有情况都设置 flashSession 
 		if($status['status']=='1'){
 			$this->load->helper('url');
 			// row exist fetch userdata
@@ -231,13 +234,14 @@ class Login extends CI_Controller {
 	
 	}
 	
-	
+	//用户注册的真正逻辑后台接口
 		public function insert_user()
 	{
 		
 		
 		 $this->load->helper('url');
 		$this->load->library('form_validation');
+		//email 账号必须且唯一 ， password 必须，否则定向回注册界面
 		$this->form_validation->set_rules('email', 'Email', 'required|is_unique[savsoft_users.email]');
         $this->form_validation->set_rules('password', 'Password', 'required');
           if ($this->form_validation->run() == FALSE)

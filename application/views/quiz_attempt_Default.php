@@ -458,7 +458,7 @@ function increasectime(){
  
  
  
-<div  id="warning_div" style="padding:10px; position:fixed;z-index:100;display:none;width:100%;border-radius:5px;height:200px; border:1px solid #dddddd;left:4px;top:70px;background:#ffffff;">
+<div  id="warning_div" style="padding:10px; position:fixed;z-index:100;display:none;width:100%;border-radius:5px;height:200px; border:1px solid #dddddd;left:4px;top:70px;background:rgba(214, 199, 242, 0.71);">
 <center><b> <?php echo $this->lang->line('really_Want_to_submit');?></b> <br><br>
 <span id="processing"></span>
 

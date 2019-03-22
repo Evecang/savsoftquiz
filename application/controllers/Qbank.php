@@ -74,57 +74,55 @@ class Qbank extends CI_Controller {
 	}
 	
 	
-	public function pre_new_question()
+	public function pre_new_question()	//点击Add new首先进来的界面
 	{
-	 	
-	
-		
-			$logged_in=$this->session->userdata('logged_in');
-			if($logged_in['su']!='1'){
-			exit($this->lang->line('permission_denied'));
-			}
+		$logged_in=$this->session->userdata('logged_in');
+		if($logged_in['su']!='1'){
+		exit($this->lang->line('permission_denied'));
+		}
 			
 		if($this->input->post('question_type')){
-		if($this->input->post('question_type')=='1'){
+
+		if($this->input->post('question_type')=='1'){	//单选
 			$nop=$this->input->post('nop');
 			if(!is_numeric($this->input->post('nop'))){
 				$nop=4;
 			}
-		redirect('qbank/new_question_1/'.$nop);
+			redirect('qbank/new_question_1/'.$nop);
 		}
-		if($this->input->post('question_type')=='2'){
+		if($this->input->post('question_type')=='2'){	//多选
 			$nop=$this->input->post('nop');
 			if(!is_numeric($this->input->post('nop'))){
 				$nop=4;
 			}
-		redirect('qbank/new_question_2/'.$nop);
+			redirect('qbank/new_question_2/'.$nop);
 		}
-		if($this->input->post('question_type')=='3'){
+		if($this->input->post('question_type')=='3'){	//匹配
 			$nop=$this->input->post('nop');
 			if(!is_numeric($this->input->post('nop'))){
 				$nop=4;
 			}
-		redirect('qbank/new_question_3/'.$nop);
+			redirect('qbank/new_question_3/'.$nop);
 		}
-		if($this->input->post('question_type')=='4'){
+		if($this->input->post('question_type')=='4'){	//填空
 			$nop=$this->input->post('nop');
 			if(!is_numeric($this->input->post('nop'))){
 				$nop=4;
 			}
-		redirect('qbank/new_question_4/'.$nop);
+			redirect('qbank/new_question_4/'.$nop);
 		}
-				if($this->input->post('question_type')=='5'){
+		if($this->input->post('question_type')=='5'){	//long answer
 			$nop=$this->input->post('nop');
 			if(!is_numeric($this->input->post('nop'))){
 				$nop=4;
 			}
-		redirect('qbank/new_question_5/'.$nop);
+			redirect('qbank/new_question_5/'.$nop);
 		}
 
 		}
 		
-		 $data['title']=$this->lang->line('add_new').' '.$this->lang->line('question');
-		 $this->load->view('header',$data);
+		$data['title']=$this->lang->line('add_new').' '.$this->lang->line('question');
+		$this->load->view('header',$data);
 		$this->load->view('pre_new_question',$data);
 		$this->load->view('footer',$data);
 	}
@@ -185,22 +183,22 @@ class Qbank extends CI_Controller {
 	}
 	
 	
-	public function new_question_3($nop='4')
+	public function new_question_3($nop='4')	//匹配
 	{
-		
-			$logged_in=$this->session->userdata('logged_in');
-			if($logged_in['su']!='1'){
+		$logged_in=$this->session->userdata('logged_in');
+		if($logged_in['su']!='1'){
 			exit($this->lang->line('permission_denied'));
+		}
+
+		if($this->input->post('question')){
+			if($this->qbank_model->insert_question_3()){
+			$this->session->set_flashdata('message', "<div class='alert alert-success'>".$this->lang->line('data_added_successfully')." </div>");
+			}else{
+			$this->session->set_flashdata('message', "<div class='alert alert-danger'>".$this->lang->line('error_to_add_data')." </div>");
 			}
-			if($this->input->post('question')){
-				if($this->qbank_model->insert_question_3()){
-                $this->session->set_flashdata('message', "<div class='alert alert-success'>".$this->lang->line('data_added_successfully')." </div>");
-				}else{
-				 $this->session->set_flashdata('message', "<div class='alert alert-danger'>".$this->lang->line('error_to_add_data')." </div>");
-				}
-				redirect('qbank/pre_new_question/');
-			}			
-			
+			redirect('qbank/pre_new_question/');
+		}			
+		
 		 $data['nop']=$nop;
 		 $data['title']=$this->lang->line('add_new');
 		// fetching category list

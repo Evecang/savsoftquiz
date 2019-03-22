@@ -34,11 +34,11 @@ class Quiz extends CI_Controller {
 			 
 			
 			
-		$data['list_view']=$list_view;
-		$data['limit']=$limit;
+		$data['list_view']=$list_view;	//展示考试列表的形式
+		$data['limit']=$limit;	//搜索的关键词
 		$data['title']=$this->lang->line('quiz');
 		// fetching quiz list
-		$data['result']=$this->quiz_model->quiz_list($limit);
+		$data['result']=$this->quiz_model->quiz_list($limit);	//返回含有$limit关键词的考试列表
 		$this->load->view('header',$data);
 		$this->load->view('quiz_list',$data);
 		$this->load->view('footer',$data);
@@ -428,10 +428,9 @@ function open_quiz($limit='0'){
 
 
 
-	public function quiz_detail($quid){
+	public function quiz_detail($quid){	//用户在考试列表点击 Attempt 按钮应用的函数，参数为quid试卷的id
 				// redirect if not loggedin
- 
-		
+ 	
 		$logged_in=$this->session->userdata('logged_in');
 		$gid=$logged_in['gid'];
 		$data['title']=$this->lang->line('attempt').' '.$this->lang->line('quiz');
