@@ -305,7 +305,8 @@ $lang['edit_group'] = "Edit Group";
 $lang['change_group'] = "Change Group/Subscription";
 $lang['commercial_msg'] = "You are using free version of Savsoft Quiz. <a href='http://savsoftquiz.com' target='sq'>Upgrade</a> to commercial version to get more features. ";
 $lang['files_missing'] = "File doesn't exist";
-$lang['files_missing2'] = "File doesn't exist or only available in commercial version. <br> For more please visit <a href='http://savsoftquiz.com' target='sq'>www.SavsoftQuiz.com</a>";
+// $lang['files_missing2'] = "File doesn't exist or only available in commercial version. <br> For more please visit <a href='http://savsoftquiz.com' target='sq'>www.SavsoftQuiz.com</a>";
+$lang['files_missing2'] = "File doesn't exist or only available in commercial version. ";
 $lang['notification'] = "Notification";
 $lang['add_notification'] = "Add Notification";
 $lang['title'] = "Title";
@@ -334,3 +335,5 @@ $lang['questions_incorect']="Questions which was answered incorrect";
 
 //新添的内容
 $lang['import_user']='通过上传xls文件批量添加用户';
+$lang['cloze_test']='Cloze Test';
+$lang['subquestions']='Subquestions';

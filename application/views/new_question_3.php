@@ -69,6 +69,7 @@
 					<label for="inputEmail"  ><?php echo $this->lang->line('description');?></label> 
 					<textarea  name="description"  class="form-control"></textarea>
 			</div>
+			
 		<?php 
 		for($i=1; $i<=$nop; $i++){
 			?>

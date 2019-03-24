@@ -95,17 +95,17 @@ Class Qbank_model extends CI_Model
 	 $this->db->insert('savsoft_qbank',$userdata);
 	 $qid=$this->db->insert_id();
 	 foreach($this->input->post('option') as $key => $val){
-		 if($this->input->post('score')==$key){
-			 $score=1;
-		 }else{
-			 $score=0;
-		 }
-	$userdata=array(
-	 'q_option'=>$val,
-	 'qid'=>$qid,
-	 'score'=>$score,
-	 );
-	 $this->db->insert('savsoft_options',$userdata);	 
+		if($this->input->post('score')==$key){
+			$score=1;
+		}else{
+			$score=0;
+		}
+		$userdata=array(
+		'q_option'=>$val,
+		'qid'=>$qid,
+		'score'=>$score,
+		);
+		$this->db->insert('savsoft_options',$userdata);	 
 		 
 	 }
 	 
@@ -145,7 +145,7 @@ Class Qbank_model extends CI_Model
  }
  
  
- function insert_question_3(){
+ function insert_question_3(){	//添加匹配题目的数据
 	 
 	 
 	 $userdata=array(
@@ -156,12 +156,13 @@ Class Qbank_model extends CI_Model
 	 'lid'=>$this->input->post('lid')	 
 	 );
 	 $this->db->insert('savsoft_qbank',$userdata);
-	 $qid=$this->db->insert_id();
-	 foreach($this->input->post('option') as $key => $val){
+	 $qid=$this->db->insert_id();	//当执行 INSERT 语句时，这个方法返回新插入行的ID。
+
+	 foreach($this->input->post('option') as $key => $val){	//插入答案option为第一项的数组
 	  $score=(1/count($this->input->post('option')));
 	$userdata=array(
 	 'q_option'=>$val,
-	 'q_option_match'=>$_POST['option2'][$key],
+	 'q_option_match'=>$_POST['option2'][$key],	//option2为第二项的数组数组
 	 'qid'=>$qid,
 	 'score'=>$score,
 	 );
@@ -172,8 +173,6 @@ Class Qbank_model extends CI_Model
 	 return true;
 	 
  }
- 
- 
  
  
  function insert_question_4(){
@@ -221,6 +220,58 @@ Class Qbank_model extends CI_Model
 	 return true;
 	 
  }
+
+
+ function insert_question_6(){	//添加完形填空的数据
+	 
+	 
+	$userdata=array(
+	'question'=>$this->input->post('question'),
+	'description'=>$this->input->post('description'),
+	'question_type'=>$this->lang->line('cloze_test'),
+	'cid'=>$this->input->post('cid'),
+	'lid'=>$this->input->post('lid')	 
+	);
+	$this->db->insert('savsoft_qbank',$userdata);
+	$qid=$this->db->insert_id();	//当执行 INSERT 语句时，这个方法返回新插入行的ID。
+
+	//sub_option1[]、sub_option2[]、sub_option3[]、sub_option4[]分别存储子题目的ABCD的选项。
+	//score$i 分别存储着每道题的答案
+	$option = array();	//二维数组,存储所有答案
+	$op1 = $this->input->post('sub_option1');
+	$op2 = $this->input->post('sub_option2');
+	$op3 = $this->input->post('sub_option3');
+	$op4 = $this->input->post('sub_option4');
+	$nop = count($this->input->post('sub_option1'));
+	for($i=0;$i<$nop;$i++){
+		$option[$i][0] = $op1[$i];
+		$option[$i][1] = $op2[$i];
+		$option[$i][2] = $op3[$i];
+		$option[$i][3] = $op4[$i];
+	}
+	$score =  1/$nop;
+	
+	//需要插入到options表中，需要qid、q_option、q_option_match、score、q_option_match_option、
+	
+	foreach($option as $key => $val){
+
+		$sub_answer = $this->input->post('score'.($key+1));
+		$sub_option = implode($option[$key],',');	//A,B,C,D
+		$userdata=array(
+			'qid'=>$qid,
+			'q_option'=>$key+1,	//子题号 1-nop
+			'q_option_match'=>$sub_answer,	//子题目的答案 0-A 1-B 2-C 3-D
+			'score'=>$score,
+			'q_option_match_option'=>$sub_option
+		);
+		$this->db->insert('savsoft_options',$userdata);	 
+		
+	}
+
+	
+	return true;
+	
+}
  
  
  
@@ -383,9 +434,9 @@ Class Qbank_model extends CI_Model
  
  
  
- // category function start ???????
+ // category function start 返回所有的目录
  function category_list(){
-	 $this->db->order_by('cid','desc');	//??
+	 $this->db->order_by('cid','desc');	//降序
 	 $query=$this->db->get('savsoft_category');	//SELECT * FROM savsoft_category
 	 return $query->result_array();
 	 
@@ -452,7 +503,7 @@ Class Qbank_model extends CI_Model
 
  
  
-// level function start ?????????
+// level function start 返回所有的难易程度
  function level_list(){
 	  $query=$this->db->get('savsoft_level');
 	 return $query->result_array();

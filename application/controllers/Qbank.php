@@ -26,29 +26,29 @@ class Qbank extends CI_Controller {
 	{
 		$this->load->helper('form');
 		$logged_in=$this->session->userdata('logged_in');
-			if($logged_in['su']!='1'){	//Èç¹û²»ÊÇ¹ÜÀíÔ±£¬Ã»ÓĞÈ¨ÏŞ
+			if($logged_in['su']!='1'){	//å¦‚æœä¸æ˜¯ç®¡ç†å‘˜ï¼Œæ²¡æœ‰æƒé™
 			exit($this->lang->line('permission_denied'));
 			}
 			
-		$data['category_list']=$this->qbank_model->category_list();	//·µ»ØËùÓĞµÄ¿ÆÄ¿
-		$data['level_list']=$this->qbank_model->level_list();	//·µ»ØËùÓĞµÄÄÑÒ×³Ì¶È
+		$data['category_list']=$this->qbank_model->category_list();	//è¿”å›æ‰€æœ‰çš„ç§‘ç›®
+		$data['level_list']=$this->qbank_model->level_list();	//è¿”å›æ‰€æœ‰çš„éš¾æ˜“ç¨‹åº¦
 		
 		$data['limit']=$limit;
-		$data['cid']=$cid;	//¿ÆÄ¿µÄid
-		$data['lid']=$lid;	//ÄÑÒ×³Ì¶ÈµÄid
+		$data['cid']=$cid;	//ç§‘ç›®çš„id
+		$data['lid']=$lid;	//éš¾æ˜“ç¨‹åº¦çš„id
 		 
 		
 		$data['title']=$this->lang->line('qbank');	//Question Bank
 		// fetching user list
-		$data['result']=$this->qbank_model->question_list($limit,$cid,$lid);	//·µ»Ø·ûºÏÉ¸Ñ¡ºóµÄÎÊÌâÁĞ±í
+		$data['result']=$this->qbank_model->question_list($limit,$cid,$lid);	//è¿”å›ç¬¦åˆç­›é€‰åçš„é—®é¢˜åˆ—è¡¨
 		$this->load->view('header',$data);
 		$this->load->view('question_list',$data);
 		$this->load->view('footer',$data);
 	}
 	
-	public function remove_question($qid){	//É¾³ıÌâÄ¿
+	public function remove_question($qid){	//åˆ é™¤é¢˜ç›®
 
-			//¹ÜÀíÔ±²ÅÓĞÈ¨ÏŞ
+			//ç®¡ç†å‘˜æ‰æœ‰æƒé™
 			$logged_in=$this->session->userdata('logged_in');
 			if($logged_in['su']!='1'){
 				exit($this->lang->line('permission_denied'));
@@ -67,14 +67,14 @@ class Qbank extends CI_Controller {
 	
 	
 	
-	function pre_question_list($limit='0',$cid='0',$lid='0'){	//ÕâÊÇÓÃ»§Ñ¡ÔñÁËcategory/level É¸Ñ¡Ìõ¼şÖ®ºóÖ´ĞĞµÄº¯Êı£¬Êµ¼ÊÉÏÓÖÊÇµ÷ÓÃÁËindex()
+	function pre_question_list($limit='0',$cid='0',$lid='0'){	//è¿™æ˜¯ç”¨æˆ·é€‰æ‹©äº†category/level ç­›é€‰æ¡ä»¶ä¹‹åæ‰§è¡Œçš„å‡½æ•°ï¼Œå®é™…ä¸Šåˆæ˜¯è°ƒç”¨äº†index()
 		$cid=$this->input->post('cid');
 		$lid=$this->input->post('lid');
 		redirect('qbank/index/'.$limit.'/'.$cid.'/'.$lid);
 	}
 	
 	
-	public function pre_new_question()	//µã»÷Add newÊ×ÏÈ½øÀ´µÄ½çÃæ
+	public function pre_new_question()	//ç‚¹å‡»Add newé¦–å…ˆè¿›æ¥çš„ç•Œé¢
 	{
 		$logged_in=$this->session->userdata('logged_in');
 		if($logged_in['su']!='1'){
@@ -82,43 +82,48 @@ class Qbank extends CI_Controller {
 		}
 			
 		if($this->input->post('question_type')){
-
-		if($this->input->post('question_type')=='1'){	//µ¥Ñ¡
-			$nop=$this->input->post('nop');
-			if(!is_numeric($this->input->post('nop'))){
-				$nop=4;
+			if($this->input->post('question_type')=='1'){	//å•é€‰
+				$nop=$this->input->post('nop');
+				if(!is_numeric($this->input->post('nop'))){
+					$nop=4;
+				}
+				redirect('qbank/new_question_1/'.$nop);
 			}
-			redirect('qbank/new_question_1/'.$nop);
-		}
-		if($this->input->post('question_type')=='2'){	//¶àÑ¡
-			$nop=$this->input->post('nop');
-			if(!is_numeric($this->input->post('nop'))){
-				$nop=4;
+			if($this->input->post('question_type')=='2'){	//å¤šé€‰
+				$nop=$this->input->post('nop');
+				if(!is_numeric($this->input->post('nop'))){
+					$nop=4;
+				}
+				redirect('qbank/new_question_2/'.$nop);
 			}
-			redirect('qbank/new_question_2/'.$nop);
-		}
-		if($this->input->post('question_type')=='3'){	//Æ¥Åä
-			$nop=$this->input->post('nop');
-			if(!is_numeric($this->input->post('nop'))){
-				$nop=4;
+			if($this->input->post('question_type')=='3'){	//åŒ¹é…
+				$nop=$this->input->post('nop');
+				if(!is_numeric($this->input->post('nop'))){
+					$nop=4;
+				}
+				redirect('qbank/new_question_3/'.$nop);
 			}
-			redirect('qbank/new_question_3/'.$nop);
-		}
-		if($this->input->post('question_type')=='4'){	//Ìî¿Õ
-			$nop=$this->input->post('nop');
-			if(!is_numeric($this->input->post('nop'))){
-				$nop=4;
+			if($this->input->post('question_type')=='4'){	//å¡«ç©º
+				$nop=$this->input->post('nop');
+				if(!is_numeric($this->input->post('nop'))){
+					$nop=4;
+				}
+				redirect('qbank/new_question_4/'.$nop);
 			}
-			redirect('qbank/new_question_4/'.$nop);
-		}
-		if($this->input->post('question_type')=='5'){	//long answer
-			$nop=$this->input->post('nop');
-			if(!is_numeric($this->input->post('nop'))){
-				$nop=4;
+			if($this->input->post('question_type')=='5'){	//long answer
+				$nop=$this->input->post('nop');
+				if(!is_numeric($this->input->post('nop'))){
+					$nop=4;
+				}
+				redirect('qbank/new_question_5/'.$nop);
 			}
-			redirect('qbank/new_question_5/'.$nop);
-		}
-
+			if($this->input->post('question_type')=='6'){	//å®Œå½¢å¡«ç©º Cloze Test
+				$nop=$this->input->post('nop');
+				if(!is_numeric($this->input->post('nop'))){
+					$nop=10;
+				}
+				redirect('qbank/new_question_6/'.$nop);
+			}
 		}
 		
 		$data['title']=$this->lang->line('add_new').' '.$this->lang->line('question');
@@ -134,6 +139,7 @@ class Qbank extends CI_Controller {
 			if($logged_in['su']!='1'){
 			exit($this->lang->line('permission_denied'));
 			}
+			
 			if($this->input->post('question')){
 				if($this->qbank_model->insert_question_1()){
                 $this->session->set_flashdata('message', "<div class='alert alert-success'>".$this->lang->line('data_added_successfully')." </div>");
@@ -183,35 +189,38 @@ class Qbank extends CI_Controller {
 	}
 	
 	
-	public function new_question_3($nop='4')	//Æ¥Åä
+	public function new_question_3($nop='4')	//åŒ¹é…
 	{
 		$logged_in=$this->session->userdata('logged_in');
 		if($logged_in['su']!='1'){
 			exit($this->lang->line('permission_denied'));
 		}
 
-		if($this->input->post('question')){
+
+		if($this->input->post('question')){	//è¿™é‡Œæ˜¯å†æ¬¡è¿›å…¥æ·»åŠ é—®é¢˜çš„ç¬¬äºŒä¸ªé¡µé¢å‘é€çš„æ•°æ®ï¼ˆäºŒï¼‰
 			if($this->qbank_model->insert_question_3()){
-			$this->session->set_flashdata('message', "<div class='alert alert-success'>".$this->lang->line('data_added_successfully')." </div>");
+				$this->session->set_flashdata('message', "<div class='alert alert-success'>".$this->lang->line('data_added_successfully')." </div>");
 			}else{
-			$this->session->set_flashdata('message', "<div class='alert alert-danger'>".$this->lang->line('error_to_add_data')." </div>");
+				$this->session->set_flashdata('message', "<div class='alert alert-danger'>".$this->lang->line('error_to_add_data')." </div>");
 			}
 			redirect('qbank/pre_new_question/');
 		}			
 		
+		//é¦–æ¬¡è¿›å…¥æ·»åŠ é—®é¢˜çš„é¡µé¢ å‘é€è¿‡æ¥çš„æ•°æ®ï¼ˆä¸€ï¼‰
 		 $data['nop']=$nop;
 		 $data['title']=$this->lang->line('add_new');
 		// fetching category list
-		$data['category_list']=$this->qbank_model->category_list();
+		$data['category_list']=$this->qbank_model->category_list();	//è¿”å›æ‰€æœ‰çš„ç§‘ç›®ä¿¡æ¯
 		// fetching level list
-		$data['level_list']=$this->qbank_model->level_list();
-		 $this->load->view('header',$data);
+		$data['level_list']=$this->qbank_model->level_list();	//è¿”å›æ‰€æœ‰çš„levelçº§åˆ«
+
+		$this->load->view('header',$data);
 		$this->load->view('new_question_3',$data);
 		$this->load->view('footer',$data);
 	}
 	
 	
-		public function new_question_4($nop='4')
+	public function new_question_4($nop='4')
 	{
 		
 			$logged_in=$this->session->userdata('logged_in');
@@ -239,7 +248,7 @@ class Qbank extends CI_Controller {
 	}
 	
 	
-			public function new_question_5($nop='4')
+	public function new_question_5($nop='4')
 	{
 		
 			$logged_in=$this->session->userdata('logged_in');
@@ -265,12 +274,44 @@ class Qbank extends CI_Controller {
 		$this->load->view('new_question_5',$data);
 		$this->load->view('footer',$data);
 	}
+
+
+	public function new_question_6($nop='10')	//å®Œå½¢å¡«ç©º
+	{
+		
+		$logged_in=$this->session->userdata('logged_in');
+		if($logged_in['su']!='1'){
+			exit($this->lang->line('permission_denied'));
+		}
+
+
+		if($this->input->post('question')){	//è¿™é‡Œæ˜¯å†æ¬¡è¿›å…¥æ·»åŠ é—®é¢˜çš„ç¬¬äºŒä¸ªé¡µé¢å‘é€çš„æ•°æ®ï¼ˆäºŒï¼‰
+			if($this->qbank_model->insert_question_6()){
+				$this->session->set_flashdata('message', "<div class='alert alert-success'>".$this->lang->line('data_added_successfully')." </div>");
+			}else{
+				$this->session->set_flashdata('message', "<div class='alert alert-danger'>".$this->lang->line('error_to_add_data')." </div>");
+			}
+			redirect('qbank/pre_new_question/');
+		}			
+		
+		//é¦–æ¬¡è¿›å…¥æ·»åŠ é—®é¢˜çš„é¡µé¢ å‘é€è¿‡æ¥çš„æ•°æ®ï¼ˆä¸€ï¼‰
+		 $data['nop']=$nop;
+		 $data['title']=$this->lang->line('add_new');
+		// fetching category list
+		$data['category_list']=$this->qbank_model->category_list();	//è¿”å›æ‰€æœ‰çš„ç§‘ç›®ä¿¡æ¯
+		// fetching level list
+		$data['level_list']=$this->qbank_model->level_list();	//è¿”å›æ‰€æœ‰çš„levelçº§åˆ«
+
+		$this->load->view('header',$data);
+		$this->load->view('new_question_6',$data);
+		$this->load->view('footer',$data);
+	}
 	
 
 	
 	
 	
-	//ĞŞ¸ÄÌâĞÍ£º1->µ¥Ñ¡Ìâ  2->¶àÑ¡Ìâ  3->Æ¥Åä  4->¼ò´ğÌâ  5->³¤´ğÌâ
+	//ä¿®æ”¹é¢˜å‹ï¼š1->å•é€‰é¢˜  2->å¤šé€‰é¢˜  3->åŒ¹é…  4->ç®€ç­”é¢˜  5->é•¿ç­”é¢˜
 	
 	public function edit_question_1($qid)
 	{
@@ -638,48 +679,43 @@ $this->db->query(" update savsoft_qbank set lid='$mlid' where lid='$lid' ");
 	
 	
 	
-	
-	
-	
-	
-	
-	function import()	//xlsÅúÁ¿ÒıÈëÎÊÌâ
+	function import()	//xlsæ‰¹é‡å¼•å…¥é—®é¢˜
 	{	
 		$logged_in=$this->session->userdata('logged_in');
 		if($logged_in['su']!='1'){
 			exit($this->lang->line('permission_denied'));
 		} 	
 
-		//ÒıÈë¿âÎÄ¼ş£¬¿ÉÒÔµ½ReadMeÖĞ²é¿´Ò»Ğ©¹ØÓÚspreadsheetreaderµÄÓÃ·¨¡£
+		//å¼•å…¥åº“æ–‡ä»¶ï¼Œå¯ä»¥åˆ°ReadMeä¸­æŸ¥çœ‹ä¸€äº›å…³äºspreadsheetreaderçš„ç”¨æ³•ã€‚
 		$this->load->helper('xlsimport/php-excel-reader/excel_reader2');
 		$this->load->helper('xlsimport/spreadsheetreader.php');
 
-		if(isset($_FILES['xlsfile'])){	//Èç¹ûÉÏ´«ÎÄ¼ş³É¹¦
+		if(isset($_FILES['xlsfile'])){	//å¦‚æœä¸Šä¼ æ–‡ä»¶æˆåŠŸ
 
-			$config['upload_path']          = './xls/';	//¸ùÄ¿Â¼ÀïµÄxls
-			$config['allowed_types']        = 'xls';	//ÔÊĞíµÄÎÄ¼şÀàĞÍ
-			$config['max_size']             = 10000;	//ÔÊĞíÉÏ´«ÎÄ¼ş´óĞ¡KB
-			$this->load->library('upload', $config);	//³õÊ¼»¯ÎÄ¼şÉÏ´«Àà CI¿ò¼Ü------->³õÊ¼»¯Ö®ºó£¬ÎÄ¼şÉÏ´«ÀàµÄ¶ÔÏó¾Í¿ÉÒÔÕâÑù·ÃÎÊ:$this->upload
+			$config['upload_path']          = './xls/';	//æ ¹ç›®å½•é‡Œçš„xls
+			$config['allowed_types']        = 'xls';	//å…è®¸çš„æ–‡ä»¶ç±»å‹
+			$config['max_size']             = 10000;	//å…è®¸ä¸Šä¼ æ–‡ä»¶å¤§å°KB
+			$this->load->library('upload', $config);	//åˆå§‹åŒ–æ–‡ä»¶ä¸Šä¼ ç±» CIæ¡†æ¶------->åˆå§‹åŒ–ä¹‹åï¼Œæ–‡ä»¶ä¸Šä¼ ç±»çš„å¯¹è±¡å°±å¯ä»¥è¿™æ ·è®¿é—®:$this->upload
 			// $this->upload->initialize($config);
 
-			if ( ! $this->upload->do_upload('xlsfile'))	//xlsfileÎªÇ°¶ËÉÏ´«ÎÄ¼şinputµÄname
+			if ( ! $this->upload->do_upload('xlsfile'))	//xlsfileä¸ºå‰ç«¯ä¸Šä¼ æ–‡ä»¶inputçš„name
 			{
-				$error = array('error' => $this->upload->display_errors());	//display_errors:Èç¹û do_upload()·½·¨·µ»Ø FALSE,¿ÉÒÔÊ¹ÓÃ¸Ã·½·¨À´»ñÈ¡´íÎóĞÅÏ¢¡£
+				$error = array('error' => $this->upload->display_errors());	//display_errors:å¦‚æœ do_upload()æ–¹æ³•è¿”å› FALSE,å¯ä»¥ä½¿ç”¨è¯¥æ–¹æ³•æ¥è·å–é”™è¯¯ä¿¡æ¯ã€‚
 				$this->session->set_flashdata('message', "<div class='alert alert-danger'>".$error['error']." </div>");
 				redirect('qbank');				
 				exit;
 			}else{
 
-				//TODO:ÎÄ¼şÖØÃûÔõÃ´°ì
-				$data = array('upload_data' => $this->upload->data());	//data():¸Ã·½·¨·µ»ØÒ»¸öÊı×é£¬°üº¬ÄãÉÏ´«µÄÎÄ¼şµÄËùÓĞĞÅÏ¢.[file_name¡¢file_type¡¢file_path¡¢full_path¡¢raw_name¡¢orig_name¡¢client_name¡¢file_ext¡¢file_size¡¢is_image...]
+				//TODO:æ–‡ä»¶é‡åæ€ä¹ˆåŠ
+				$data = array('upload_data' => $this->upload->data());	//data():è¯¥æ–¹æ³•è¿”å›ä¸€ä¸ªæ•°ç»„ï¼ŒåŒ…å«ä½ ä¸Šä¼ çš„æ–‡ä»¶çš„æ‰€æœ‰ä¿¡æ¯.[file_nameã€file_typeã€file_pathã€full_pathã€raw_nameã€orig_nameã€client_nameã€file_extã€file_sizeã€is_image...]
 				$targets = 'xls/';
-				$targets = $targets . basename($data['upload_data']['file_name']);	//basename()·µ»ØÂ·¾¶ÖĞµÄÎÄ¼şÃû²¿·Ö
-				$Filepath = $targets;	//´æ·ÅÎÄ¼şµÄÂ·¾¶£ºxls/ÎÄ¼şÃû
+				$targets = $targets . basename($data['upload_data']['file_name']);	//basename()è¿”å›è·¯å¾„ä¸­çš„æ–‡ä»¶åéƒ¨åˆ†
+				$Filepath = $targets;	//å­˜æ”¾æ–‡ä»¶çš„è·¯å¾„ï¼šxls/æ–‡ä»¶å
 			 
 				$allxlsdata = array();
-				date_default_timezone_set('UTC');	//º¯ÊıÉèÖÃ½Å±¾ÖĞËùÓĞÈÕÆÚ/Ê±¼äº¯ÊıÊ¹ÓÃµÄÄ¬ÈÏÊ±Çø¡£
+				date_default_timezone_set('UTC');	//å‡½æ•°è®¾ç½®è„šæœ¬ä¸­æ‰€æœ‰æ—¥æœŸ/æ—¶é—´å‡½æ•°ä½¿ç”¨çš„é»˜è®¤æ—¶åŒºã€‚
 
-				$StartMem = memory_get_usage();		//·µ»Øµ±Ç°·ÖÅä¸øÄãµÄ PHP ½Å±¾µÄÄÚ´æÁ¿£¬µ¥Î»ÊÇ×Ö½Ú£¨byte£©
+				$StartMem = memory_get_usage();		//è¿”å›å½“å‰åˆ†é…ç»™ä½ çš„ PHP è„šæœ¬çš„å†…å­˜é‡ï¼Œå•ä½æ˜¯å­—èŠ‚ï¼ˆbyteï¼‰
 				//echo '---------------------------------'.PHP_EOL;
 				//echo 'Starting memory: '.$StartMem.PHP_EOL;
 				//echo '---------------------------------'.PHP_EOL;
@@ -703,7 +739,7 @@ $this->db->query(" update savsoft_qbank set lid='$mlid' where lid='$lid' ");
 						//echo '*** Sheet '.$Name.' ***'.PHP_EOL;
 						//echo '---------------------------------'.PHP_EOL;
 
-						$Time = microtime(true);	//·µ»Øµ±Ç° Unix Ê±¼ä´ÁºÍÎ¢ÃëÊı
+						$Time = microtime(true);	//è¿”å›å½“å‰ Unix æ—¶é—´æˆ³å’Œå¾®ç§’æ•°
 
 						$Spreadsheet -> ChangeSheet($Index);
 
@@ -717,9 +753,9 @@ $this->db->query(" update savsoft_qbank set lid='$mlid' where lid='$lid' ");
 							}
 							else
 							{
-								var_dump($Row);		//·µ»Ø±äÁ¿µÄÊı¾İÀàĞÍºÍÖµ
+								var_dump($Row);		//è¿”å›å˜é‡çš„æ•°æ®ç±»å‹å’Œå€¼
 							}
-							$CurrentMem = memory_get_usage();	//·µ»Øµ±Ç°·ÖÅä¸øÄãµÄ PHP ½Å±¾µÄÄÚ´æÁ¿£¬µ¥Î»ÊÇ×Ö½Ú£¨byte£©
+							$CurrentMem = memory_get_usage();	//è¿”å›å½“å‰åˆ†é…ç»™ä½ çš„ PHP è„šæœ¬çš„å†…å­˜é‡ï¼Œå•ä½æ˜¯å­—èŠ‚ï¼ˆbyteï¼‰
 					
 							//echo 'Memory: '.($CurrentMem - $BaseMem).' current, '.$CurrentMem.' base'.PHP_EOL;
 							//echo '---------------------------------'.PHP_EOL;

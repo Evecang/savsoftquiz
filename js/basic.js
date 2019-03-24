@@ -125,9 +125,13 @@ function updatelevel(vall,lid){
 
 
 
-function hidenop(vall){	//在添加问题时，如果是单选、多选、匹配题则可以让用户设置option个数
-	if(vall == '1' || vall=='2' || vall=='3'){
+function hidenop(vall){	//在添加问题时，如果是单选、多选、匹配题则可以让用户设置option个数 现在多添加一下6==完形填空
+	if(vall == '1' || vall=='2' || vall=='3' || vall=='6'){
 		$("#nop").css('display','block');
+		//如果是完形填空 选项默认为10
+		if(document.getElementsByName("question_type")[0].selectedIndex == 5){
+			document.getElementsByName("nop")[0].value = "10";	
+		}
 	}else{
 	$("#nop").css('display','none');
 	}
