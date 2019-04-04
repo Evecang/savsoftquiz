@@ -15,7 +15,7 @@ class Quiz extends CI_Controller {
 	 }
 
 	public function index($limit='0',$list_view='grid')
-	{//�ڶ��������ĺ����ǣ�չʾ������Ϣ����ʽ��grid->���ӣ�table->����
+	{//第二个参数的含义是，展示考试信息的形式：grid->格子，table->表格
 		
 		// redirect if not loggedin
 		if(!$this->session->userdata('logged_in')){
@@ -34,11 +34,11 @@ class Quiz extends CI_Controller {
 			 
 			
 			
-		$data['list_view']=$list_view;	//չʾ�����б�����ʽ
-		$data['limit']=$limit;	//�����Ĺؼ���
+		$data['list_view']=$list_view;	//展示考试列表的形式
+		$data['limit']=$limit;	//搜索的关键词
 		$data['title']=$this->lang->line('quiz');
 		// fetching quiz list
-		$data['result']=$this->quiz_model->quiz_list($limit);	//���غ���$limit�ؼ��ʵĿ����б�
+		$data['result']=$this->quiz_model->quiz_list($limit);	//返回含有$limit关键词的考试列表
 		$this->load->view('header',$data);
 		$this->load->view('quiz_list',$data);
 		$this->load->view('footer',$data);
@@ -84,7 +84,7 @@ function open_quiz($limit='0'){
 	 
 		$data['title']=$this->lang->line('add_new').' '.$this->lang->line('quiz');
 		// fetching group list
-		$data['group_list']=$this->user_model->group_list();	//�������еģ�gid���򣩰༶/���
+		$data['group_list']=$this->user_model->group_list();	//返回所有的（gid升序）班级/组别
 		$this->load->view('header',$data);
 		$this->load->view('new_quiz',$data);
 		$this->load->view('footer',$data);
@@ -428,26 +428,26 @@ function open_quiz($limit='0'){
 
 
 
-	public function quiz_detail($quid){	//�û��ڿ����б���� Attempt ��ťӦ�õĺ���������Ϊquid�Ծ���id
+	public function quiz_detail($quid){	//用户在考试列表点击 Attempt 按钮应用的函数，参数为quid试卷的id
 				// redirect if not loggedin
  	
 		$logged_in=$this->session->userdata('logged_in');
 		$gid=$logged_in['gid'];
 		$data['title']=$this->lang->line('attempt').' '.$this->lang->line('quiz');
 		
-		$data['quiz']=$this->quiz_model->get_quiz($quid);	//�õ�ָ���Ծ���������Ϣ����savsoft_quiz���в�ѯ
+		$data['quiz']=$this->quiz_model->get_quiz($quid);	//得到指定试卷的所有信息，从savsoft_quiz表中查询
 		$this->load->view('header',$data);
 		$this->load->view('quiz_detail',$data);
 		$this->load->view('footer',$data);
 		
 	}
 	
-	public function validate_quiz($quid){
+	public function validate_quiz($quid){	//正式进入测试
 		$data['quiz']=$this->quiz_model->get_quiz($quid);
-		// if it is without login quiz.
-		if($data['quiz']['with_login']==0 && !$this->session->userdata('logged_in')){
+		// if it is without login quiz. 游客测试
+		if($data['quiz']['with_login']==0 && !$this->session->userdata('logged_in')){	//用户可以不用登录进行测试
 		if($this->session->userdata('logged_in_raw')){
-		$logged_in=$this->session->userdata('logged_in_raw');
+			$logged_in=$this->session->userdata('logged_in_raw');
 		}else{
 			
 		$userdata=array(
@@ -459,7 +459,7 @@ function open_quiz($limit='0'){
 		'gid'=>$this->config->item('default_gid'),
 		'su'=>'0'		
 		);
-		$this->db->insert('savsoft_users',$userdata);
+		$this->db->insert('savsoft_users',$userdata);	//插入游客账号
 		$uid=$this->db->insert_id();
 		$query=$this->db->query("select * from savsoft_users where uid='$uid' ");
 		$user=$query->row_array();
@@ -518,7 +518,7 @@ function open_quiz($limit='0'){
 		// without login ends
 
 		
-		}else{
+		}else{	//正式用户测试
 		// with login starts
 				// redirect if not loggedin
 		if(!$this->session->userdata('logged_in')){
@@ -542,10 +542,10 @@ function open_quiz($limit='0'){
 		$uid=$logged_in['uid'];
 		 
 		 // if this quiz already opened by user then resume it
-		 $open_result=$this->quiz_model->open_result($quid,$uid);
-		 if($open_result != '0'){
+		 $open_result=$this->quiz_model->open_result($quid,$uid);	//在result表中，根据uid查询正在测试的用户，返回rid(result的id)
+		 if($open_result != '0'){	//有数据
 		// $this->session->set_userdata('rid', $open_result);
-		redirect('quiz/resume_pending/'.$open_result);
+		redirect('quiz/resume_pending/'.$open_result);	//继续作答
 		 	
 		}
 		$data['quiz']=$this->quiz_model->get_quiz($quid);
@@ -590,7 +590,7 @@ function open_quiz($limit='0'){
 		
 	}
 	
-	function resume_pending($open_result){
+	function resume_pending($open_result){	//继续作答，$open_result为正在作答的用户的result表中的rid
 	$data['title']=$this->lang->line('pending_quiz');
 	$this->session->set_userdata('rid', $open_result);
 		$data['openquizurl']='quiz/attempt/'.$open_result;
@@ -601,7 +601,7 @@ function open_quiz($limit='0'){
 	
 	}
 	
-	function attempt($rid){
+	function attempt($rid){	//测试界面
 		// redirect if not loggedin
 		if(!$this->session->userdata('logged_in')){
 			if(!$this->session->userdata('logged_in_raw')){
@@ -622,12 +622,12 @@ function open_quiz($limit='0'){
 
 		$srid=$this->session->userdata('rid');
 						// if linked and session rid is not matched then something wrong.
-			if($rid != $srid){
+		if($rid != $srid){
 		 
-		$this->session->set_flashdata('message', "<div class='alert alert-danger'>".$this->lang->line('quiz_ended')." </div>");
-		redirect('quiz/');
+			$this->session->set_flashdata('message', "<div class='alert alert-danger'>".$this->lang->line('quiz_ended')." </div>");
+			redirect('quiz/');
 
-			}
+		}
 		/*
 		if(!$this->session->userdata('logged_in')){
 			exit($this->lang->line('permission_denied'));
@@ -635,15 +635,15 @@ function open_quiz($limit='0'){
 		*/
 		
 		// get result and quiz info and validate time period
-		$data['quiz']=$this->quiz_model->quiz_result($rid);
-		$data['saved_answers']=$this->quiz_model->saved_answers($rid);
+		$data['quiz']=$this->quiz_model->quiz_result($rid);	//根据rid得到考试结果信息result表+quiz表
+		$data['saved_answers']=$this->quiz_model->saved_answers($rid);	//在answer表中查询作答信息
 		
 
 			
 			
 		// end date/time
-		if($data['quiz']['end_date'] < time()){
-		$this->quiz_model->submit_result($rid);
+		if($data['quiz']['end_date'] < time()){	//end_date考试结束的时间
+		$this->quiz_model->submit_result($rid);	//更新结果。。
 		$this->session->unset_userdata('rid');
 		$this->session->set_flashdata('message', "<div class='alert alert-danger'>".$this->lang->line('quiz_ended')." </div>");
 		redirect('quiz/quiz_detail/'.$data['quiz']['quid']);
@@ -660,9 +660,9 @@ function open_quiz($limit='0'){
 		// remaining time in seconds 
 		$data['seconds']=($data['quiz']['duration']*60) - (time()- $data['quiz']['start_time']);
 		// get questions
-		$data['questions']=$this->quiz_model->get_questions($data['quiz']['r_qids']);
+		$data['questions']=$this->quiz_model->get_questions($data['quiz']['r_qids']);	//根据qid在qbank、category、level表中查
 		// get options
-		$data['options']=$this->quiz_model->get_options($data['quiz']['r_qids']);
+		$data['options']=$this->quiz_model->get_options($data['quiz']['r_qids']);	//option
 		$data['title']=$data['quiz']['quiz_name'];
 		$this->load->view('header',$data);
 		
@@ -674,7 +674,7 @@ function open_quiz($limit='0'){
 		
 	
 	
-	function save_answer(){
+	function save_answer(){	//自动保存答案
 				// redirect if not loggedin
 		if(!$this->session->userdata('logged_in')){
 			if(!$this->session->userdata('logged_in_raw')){
@@ -696,7 +696,7 @@ function open_quiz($limit='0'){
 		echo "<pre>";
 		print_r($_POST);
 		  // insert user response and calculate scroe
-		echo $this->quiz_model->insert_answer();
+		echo $this->quiz_model->insert_answer();	//保存答案并 自动计算用户得分
 		
 		
 	}
@@ -736,7 +736,7 @@ if(isset($_FILES['webcam'])){
 
 
 
- function submit_quiz(){
+ function submit_quiz(){	//用户提交测试后
 	 				// redirect if not loggedin
 		if(!$this->session->userdata('logged_in')){
 			if(!$this->session->userdata('logged_in_raw')){
@@ -755,18 +755,19 @@ if(isset($_FILES['webcam'])){
 
 	 $rid=$this->session->userdata('rid');
 		
-				if($this->quiz_model->submit_result()){
-					 
-					 $this->session->set_flashdata('message', "<div class='alert alert-success'>".str_replace("{result_url}",site_url('result/view_result/'.$rid),$this->lang->line('quiz_submit_successfully'))." </div>");
-					 
-					
-					}else{
-						    $this->session->set_flashdata('message', "<div class='alert alert-danger'>".$this->lang->line('error_to_submit')." </div>");
-						
-					}
-			$this->session->unset_userdata('rid');		
+		if($this->quiz_model->submit_result()){	//submit_result()函数才是关键
+				
+				$this->session->set_flashdata('message', "<div class='alert alert-success'>".str_replace("{result_url}",site_url('result/view_result/'.$rid),$this->lang->line('quiz_submit_successfully'))." </div>");
+				
+		}else{
+				$this->session->set_flashdata('message', "<div class='alert alert-danger'>".$this->lang->line('error_to_submit')." </div>");
+			
+		}
+
+		$this->session->unset_userdata('rid');
+
 	if($this->session->userdata('logged_in')){				
- redirect('quiz');
+ 	 redirect('quiz');
 	}else{
 	 redirect('quiz/open_quiz/0');	
 	}

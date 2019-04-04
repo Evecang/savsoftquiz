@@ -337,3 +337,4 @@ $lang['questions_incorect']="Questions which was answered incorrect";
 $lang['import_user']='通过上传xls文件批量添加用户';
 $lang['cloze_test']='Cloze Test';
 $lang['subquestions']='Subquestions';
+$lang['notattempted']='Not Attempted';

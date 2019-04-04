@@ -111,7 +111,7 @@ foreach($result as $key => $val){
 
 	<td>
 	<?php 
-	$qn=1;	//修改题型：1->单选题  2->多选题  3->匹配  4->简答题  5->长答题
+	$qn=1;	//修改题型：1->单选题  2->多选题  3->匹配  4->简答题  5->长答题 6->完形填空
 	if($val['question_type']==$this->lang->line('multiple_choice_single_answer')){
 		$qn=1;
 	}
@@ -126,6 +126,9 @@ foreach($result as $key => $val){
 	}
 	if($val['question_type']==$this->lang->line('long_answer')){
 		$qn=5;
+	}
+	if($val['question_type']==$this->lang->line('cloze_test')){
+		$qn=6;
 	}
 	?>
 		<a href="<?php echo site_url('qbank/edit_question_'.$qn.'/'.$val['qid']);?>"><img src="<?php echo base_url('images/edit.png');?>"></a>

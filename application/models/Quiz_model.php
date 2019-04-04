@@ -170,7 +170,7 @@ $incorrect_i[]=$_POST['i_incorrect'][$ck];
 	 
  }
  
- function get_questions($qids){
+ function get_questions($qids){	//根据qids在qbank、category、level表中查
 	 if($qids == ''){
 		$qids=0; 
 	 }else{
@@ -193,7 +193,7 @@ $incorrect_i[]=$_POST['i_incorrect'][$ck];
 	 
  }
  
- function get_options($qids){
+ function get_options($qids){	//获取答案
 	 
 	 
 	 $query=$this->db->query("select * from savsoft_options where qid in ($qids) order by FIELD(savsoft_options.qid,$qids)");
@@ -475,20 +475,20 @@ $noq=$quiz['noq'];
  
  
  
- function open_result($quid,$uid){
-	 $result_open=$this->lang->line('open');
+ function open_result($quid,$uid){	//根据uid在result中 得到怎么测试的用户（考试了考试 但未提交）
+	 $result_open=$this->lang->line('open');	//'Open'
 		$query=$this->db->query("select * from savsoft_result  where savsoft_result.result_status='$result_open'  and savsoft_result.uid='$uid'  "); 
-	if($query->num_rows() >= '1'){
-		$result=$query->row_array();
-return $result['rid'];		
-	}else{
+	if($query->num_rows() >= '1'){	//正常情况下，只有一个符合条件
+		$result=$query->row_array();	//返回一行数据，是数组形式
+return $result['rid'];		//result的id
+	}else{	//没有结果
 		return '0';
 	}
 	
 	 
  }
  
- function quiz_result($rid){
+ function quiz_result($rid){	//根据rid在result表中查询，同时保证试卷在quid表中存在（也把quid的表字段导出），返回得到的第一行数据
 	 
 	 
 	$query=$this->db->query("select * from savsoft_result join savsoft_quiz on savsoft_result.quid=savsoft_quiz.quid where savsoft_result.rid='$rid' "); 
@@ -496,7 +496,7 @@ return $result['rid'];
 	 
  }
  
-function saved_answers($rid){
+function saved_answers($rid){	//作答的结果
 	 
 	 
 	$query=$this->db->query("select * from savsoft_answers  where savsoft_answers.rid='$rid' "); 
@@ -566,43 +566,55 @@ function saved_answers($rid){
  
  
  
- function submit_result(){
+ function submit_result(){	//提交结果，有一个参数$rid
 	 if(!$this->session->userdata('logged_in')){
 		$logged_in=$this->session->userdata('logged_in_raw');
 	 }else{
 	 $logged_in=$this->session->userdata('logged_in');
 	 }
-	 $email=$logged_in['email'];
-	 $rid=$this->session->userdata('rid');
+//TODO：marks的计算逻辑有误
+	 $email=$logged_in['email'];	//账号
+	 $rid=$this->session->userdata('rid');	//结果id
 	$query=$this->db->query("select * from savsoft_result join savsoft_quiz on savsoft_result.quid=savsoft_quiz.quid where savsoft_result.rid='$rid' "); 
-	$quiz=$query->row_array(); 
-	$score_ind=explode(',',$quiz['score_individual']);
-	$r_qids=explode(',',$quiz['r_qids']);
-	$qids_perf=array();
-	$marks=0;
-	$correct_score=$quiz['correct_score'];
-	$incorrect_score=$quiz['incorrect_score'];
-	$total_time=array_sum(explode(',',$quiz['individual_time']));
-	$manual_valuation=0;
-	foreach($score_ind as $mk => $score){
+	$quiz=$query->row_array(); 	//第一行数据，根据rid结合了quiz和result表
+	$score_ind=explode(',',$quiz['score_individual']);	//在result表中 ->可能是一种解答结果的标志，1正确 2错误 3未完成 4-$marks为完形填空的得分
+	$r_qids=explode(',',$quiz['r_qids']);	//result表中 记录试卷中包含的题目id序列
+	$qids_perf=array();		//索引为题目qid,值为用户作答的正确错误标记
+	$marks=0;	//得分的标记
+	// $correct_score=$quiz['correct_score'];	//每题正确时的得分（序列）from quiz table   1,1,1,1
+	$correct_score = explode(',',$quiz['correct_score']);
+	// $incorrect_score=$quiz['incorrect_score'];	//每道题错误时的得分（序列） from quiz table    0,0,0,0
+	$incorrect_score = explode(',',$quiz['incorrect_score']);
+	$total_time=array_sum(explode(',',$quiz['individual_time']));	//result表 每题用时  array_sum()返回数组中所有值的和-->一共用时
+	$manual_valuation=0;	//
+	foreach($score_ind as $mk => $score){	//mk题索引 score每题正确，错误，未完成的标记
 		$qids_perf[$r_qids[$mk]]=$score;
 		
 		if($score == 1){
 			
-			$marks+=$correct_score;
+			// $marks+=$correct_score;
+			$marks+=$correct_score[$mk];
 			
 		}
 		if($score == 2){
 			
-			$marks+=$incorrect_score;
+			// $marks+=$incorrect_score;
+			$marks+=$incorrect_score[$mk];
+
 		}
 		if($score == 3){
 			
 			$manual_valuation=1;
 		}
+		else{	//4 -> cloze test
+			// $cloze_options = $this->db->query("select * from savsoft_options where qid='$qids_perf[1]' ");
+			$s = explode('-',$score);	//4-$marks
+			$marks += floatval($s[1])*$correct_score[$mk];
+		}
 		
 	}
-	$percentage_obtained=($marks/($quiz['noq']*$correct_score))*100;
+	// $percentage_obtained=($marks/($quiz['noq']*$correct_score))*100;	//总分为100？
+	$percentage_obtained = ( $marks / array_sum($correct_score) ) * 100;
 	if($percentage_obtained >= $quiz['pass_percentage']){
 		$qr=$this->lang->line('pass');
 	}else{
@@ -699,7 +711,7 @@ if($this->config->item('allow_result_email')){
  
  
  
- function insert_answer(){
+ function insert_answer(){	//保存答案 并且 自动计算得分
 	 $rid=$_POST['rid'];
 	$srid=$this->session->userdata('rid');
 	if(!$this->session->userdata('logged_in')){
@@ -712,6 +724,7 @@ if($this->config->item('allow_result_email')){
 
 	return "Something wrong";
 	}
+
 	$query=$this->db->query("select * from savsoft_result join savsoft_quiz on savsoft_result.quid=savsoft_quiz.quid where savsoft_result.rid='$rid' "); 
 	$quiz=$query->row_array(); 
 	$correct_score=$quiz['correct_score'];
@@ -723,47 +736,48 @@ if($this->config->item('allow_result_email')){
 	
 	// remove existing answers
 	$this->db->where('rid',$rid);
-	$this->db->delete('savsoft_answers');
+	$this->db->delete('savsoft_answers');	//不断在answer表中更新数据
 	
-	 foreach($_POST['answer'] as $ak => $answer){
-		 
+	 foreach($_POST['answer'] as $ak => $answer){	//$answer = 前端的answer[qk],qk在试卷中对应的题目顺序，从0开始
+		//$_POST['question_type'][$ak]->value: 1-单选 2-多选 3-short 4-long 5-match 6-cloze  
+
 		 // multiple choice single answer
 		 if($_POST['question_type'][$ak] == '1' || $_POST['question_type'][$ak] == '2'){
 			 
-			 $qid=$qids[$ak];
+			 $qid=$qids[$ak];	//$ak在试卷中对应的题目顺序，从0开始，得到对应的qid
 			 $query=$this->db->query(" select * from savsoft_options where qid='$qid' ");
-			 $options_data=$query->result_array();
+			 $options_data=$query->result_array();	//多个结果
 			 $options=array();
 			 foreach($options_data as $ok => $option){
-				 $options[$option['oid']]=$option['score'];
+				 $options[$option['oid']]=$option['score'];	//oid  options表中的oid
 			 }
 			 $attempted=0;
 			 $marks=0;
-				foreach($answer as $sk => $ansval){
-					if($options[$ansval] <= 0 ){
-					$marks+=-1;	
-					}else{
-					$marks+=$options[$ansval];
-					}
-					$userdata=array(
-					'rid'=>$rid,
-					'qid'=>$qid,
-					'uid'=>$uid,
-					'q_option'=>$ansval,
-					'score_u'=>$options[$ansval]
-					);
-					$this->db->insert('savsoft_answers',$userdata);
-				$attempted=1;	
-				}
-				if($attempted==1){
-					if($marks >= '0.99' ){
-					$correct_incorrect[$ak]=1;	
-					}else{
-					$correct_incorrect[$ak]=2;							
-					}
+			foreach($answer as $sk => $ansval){//多选时要foreach TODO:多选时，若正确个数比错误的多1个则有分？？
+				if($options[$ansval] <= 0 ){	//$ansval=前端的radio/checkbox的value为oid
+				$marks+=-1;	
 				}else{
-					$correct_incorrect[$ak]=0;
+				$marks+=$options[$ansval];
 				}
+				$userdata=array(
+				'rid'=>$rid,
+				'qid'=>$qid,
+				'uid'=>$uid,
+				'q_option'=>$ansval,
+				'score_u'=>$options[$ansval]
+				);
+				$this->db->insert('savsoft_answers',$userdata);
+				$attempted=1;	
+			}
+			if($attempted==1){
+				if($marks >= '0.99' ){
+				$correct_incorrect[$ak]=1;	//正确
+				}else{
+				$correct_incorrect[$ak]=2;	//错误					
+				}
+			}else{
+				$correct_incorrect[$ak]=0;
+			}
 		 }
 		 // short answer
 		 if($_POST['question_type'][$ak] == '3'){
@@ -774,17 +788,17 @@ if($this->config->item('allow_result_email')){
 			 $options_data=explode(',',$options_data['q_option']);
 			 $noptions=array();
 			 foreach($options_data as $op){
-				 $noptions[]=strtoupper(trim($op));
+				 $noptions[]=strtoupper(trim($op));	//大写
 			 }
 			 
 			 $attempted=0;
 			 $marks=0;
 				foreach($answer as $sk => $ansval){
 					if($ansval != ''){
-					if(in_array(strtoupper(trim($ansval)),$noptions)){
-					$marks=1;	
+						if(in_array(strtoupper(trim($ansval)),$noptions)){
+						$marks=1;	
 					}else{
-					$marks=0;
+						$marks=0;
 					}
 					
 				$attempted=1;
@@ -817,17 +831,17 @@ if($this->config->item('allow_result_email')){
 			 $marks=0;
 			  $qid=$qids[$ak];
 					foreach($answer as $sk => $ansval){
-					if($ansval != ''){
-					$userdata=array(
-					'rid'=>$rid,
-					'qid'=>$qid,
-					'uid'=>$uid,
-					'q_option'=>$ansval,
-					'score_u'=>0
-					);
-					$this->db->insert('savsoft_answers',$userdata);
-					$attempted=1;
-					}
+						if($ansval != ''){
+							$userdata=array(
+							'rid'=>$rid,
+							'qid'=>$qid,
+							'uid'=>$uid,
+							'q_option'=>$ansval,
+							'score_u'=>0
+							);
+							$this->db->insert('savsoft_answers',$userdata);
+							$attempted=1;
+						}
 					}
 				if($attempted==1){
 					
@@ -839,26 +853,26 @@ if($this->config->item('allow_result_email')){
 		 }
 		 
 		 // match
-			 if($_POST['question_type'][$ak] == '5'){
-				 			 $qid=$qids[$ak];
-			 $query=$this->db->query(" select * from savsoft_options where qid='$qid' ");
-			 $options_data=$query->result_array();
+		if($_POST['question_type'][$ak] == '5'){
+			$qid=$qids[$ak];
+			$query=$this->db->query(" select * from savsoft_options where qid='$qid' ");
+			$options_data=$query->result_array();
 			$noptions=array();
 			foreach($options_data as $op => $option){
 				$noptions[]=$option['q_option'].'___'.$option['q_option_match'];				
 			}
-			 $marks=0;
-			 $attempted=0;
-					foreach($answer as $sk => $ansval){
-						if($ansval != '0'){
+			$marks=0;
+			$attempted=0;
+			foreach($answer as $sk => $ansval){
+				if($ansval != '0'){
+					$mc=0;
+					if(in_array($ansval,$noptions)){
+						$marks+=1/count($options_data);
+						$mc=1/count($options_data);
+					}else{
+						$marks+=0;
 						$mc=0;
-						if(in_array($ansval,$noptions)){
-							$marks+=1/count($options_data);
-							$mc=1/count($options_data);
-						}else{
-							$marks+=0;
-							$mc=0;
-						}
+					}
 					$userdata=array(
 					'rid'=>$rid,
 					'qid'=>$qid,
@@ -868,19 +882,74 @@ if($this->config->item('allow_result_email')){
 					);
 					$this->db->insert('savsoft_answers',$userdata);
 					$attempted=1;
-					}
-					}
-					if($attempted==1){
-					if($marks==1){
-					$correct_incorrect[$ak]=1;	
-					}else{
-					$correct_incorrect[$ak]=2;							
-					}
-				}else{
-					$correct_incorrect[$ak]=0;
 				}
-		 }
+			}
+			if($attempted==1){
+				if($marks==1){
+					$correct_incorrect[$ak]=1;	
+				}else{
+					$correct_incorrect[$ak]=2;							
+				}
+			}else{
+				$correct_incorrect[$ak]=0;
+			}
+		}
 		 
+
+		// cloze
+		if($_POST['question_type'][$ak] == '6'){
+			$qid=$qids[$ak];
+			$query=$this->db->query(" select * from savsoft_options where qid='$qid' ");
+			$options_data=$query->result_array();
+			$noptions=array();	//每道题的正确答案
+			foreach($options_data as $op => $option){
+				$all_options = explode(',',$option['q_option_match_option']);
+				$noptions[]=$option['q_option'].'___'.$all_options[$option['q_option_match']];		//1___deer,2___dog,3___goes,4___dark...	
+			}
+			// echo $noptions;
+			
+			$marks=0;
+			$attempted=0;
+			for($n=1;$n<=count($options_data);$n++){
+				//$answer[$n]自选项的值
+				if($answer[$n] != '0'){
+					if(in_array($answer[$n],$noptions)){	//正确
+						$marks += 1/count($options_data);
+						$userdata=array(
+							'rid'=>$rid,
+							'qid'=>$qid,
+							'uid'=>$uid,
+							'q_option'=>$answer[$n],
+							'score_u'=>1/count($options_data)
+						);
+					}else{	//错误
+						$marks += 0;
+						$userdata=array(
+							'rid'=>$rid,
+							'qid'=>$qid,
+							'uid'=>$uid,
+							'q_option'=>$answer[$n],
+							'score_u'=>0
+						);
+					}
+					$this->db->insert('savsoft_answers',$userdata);
+					$attempted=1;
+				}
+			}
+
+			if($attempted==1){
+				if($marks == 1){
+					$correct_incorrect[$ak]=1;
+				}else if($marks==0){
+					$correct_incorrect[$ak]=2;
+				}else{
+					// $correct_incorrect[$ak]=4;		//注意！！4的话代表是完形填空的不完全对的情况
+					$correct_incorrect[$ak] = '4-'.$marks;
+				}
+			}else{
+				$correct_incorrect[$ak]=0;
+			}
+		}
 		 
 		 
 		 

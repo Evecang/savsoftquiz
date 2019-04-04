@@ -50,7 +50,8 @@ foreach($group_list as $gk => $group){
 ?>
 
 
-<h3><?php echo $title;?></h3>
+
+<h3><?php echo $title;?></h3>	<!--从这里开始看，管理员与学生共有的部分，也是真正有用的部分-->
  
   <div class="row">
  
@@ -89,18 +90,18 @@ foreach($group_list as $gk => $group){
 <table class="table table-bordered">
 <tr>
  <th><?php echo $this->lang->line('result_id');?></th>
-<th><?php echo $this->lang->line('first_name');?> <?php echo $this->lang->line('last_name');?></th>
+ <th><?php echo $this->lang->line('first_name');?> <?php echo $this->lang->line('last_name');?></th>
  <th><?php echo $this->lang->line('quiz_name');?></th>
  <th><?php echo $this->lang->line('status');?>
- <select onChange="sort_result('<?php echo $limit;?>',this.value);">
- <option value="0"><?php echo $this->lang->line('all');?></option>
- <option value="<?php echo $this->lang->line('pass');?>" <?php if($status==$this->lang->line('pass')){ echo 'selected'; } ?> ><?php echo $this->lang->line('pass');?></option>
- <option value="<?php echo $this->lang->line('fail');?>" <?php if($status==$this->lang->line('fail')){ echo 'selected'; } ?> ><?php echo $this->lang->line('fail');?></option>
- <option value="<?php echo $this->lang->line('pending');?>" <?php if($status==$this->lang->line('pending')){ echo 'selected'; } ?> ><?php echo $this->lang->line('pending');?></option>
- </select>
+	<select onChange="sort_result('<?php echo $limit;?>',this.value);">
+		<option value="0"><?php echo $this->lang->line('all');?></option>
+		<option value="<?php echo $this->lang->line('pass');?>" <?php if($status==$this->lang->line('pass')){ echo 'selected'; } ?> ><?php echo $this->lang->line('pass');?></option>
+		<option value="<?php echo $this->lang->line('fail');?>" <?php if($status==$this->lang->line('fail')){ echo 'selected'; } ?> ><?php echo $this->lang->line('fail');?></option>
+		<option value="<?php echo $this->lang->line('pending');?>" <?php if($status==$this->lang->line('pending')){ echo 'selected'; } ?> ><?php echo $this->lang->line('pending');?></option>
+	</select>
  </th>
  <th><?php echo $this->lang->line('percentage_obtained');?></th>
-<th><?php echo $this->lang->line('action');?> </th>
+ <th><?php echo $this->lang->line('action');?> </th>
 </tr>
 <?php 
 if(count($result)==0){
@@ -117,20 +118,20 @@ foreach($result as $key => $val){
 ?>
 <tr>
  <td><?php echo $val['rid'];?></td>
-<td><?php echo $val['first_name'];?> <?php echo $val['last_name'];?></td>
+ <td><?php echo $val['first_name'];?> <?php echo $val['last_name'];?></td>
  <td><?php echo $val['quiz_name'];?></td>
  <td><?php echo $val['result_status'];?></td>
  <td><?php echo $val['percentage_obtained'];?>%</td>
-<td>
-<a href="<?php echo site_url('result/view_result/'.$val['rid']);?>" class="btn btn-success" ><?php echo $this->lang->line('view');?> </a>
-<?php 
-if($logged_in['su']=='1'){
+ <td>
+	<a href="<?php echo site_url('result/view_result/'.$val['rid']);?>" class="btn btn-success" ><?php echo $this->lang->line('view');?> </a>
+	<?php 
+	if($logged_in['su']=='1'){
+		?>
+		<a href="javascript:remove_entry('result/remove_result/<?php echo $val['rid'];?>');"><img src="<?php echo base_url('images/cross.png');?>"></a>
+	<?php 
+	}
 	?>
-	<a href="javascript:remove_entry('result/remove_result/<?php echo $val['rid'];?>');"><img src="<?php echo base_url('images/cross.png');?>"></a>
-<?php 
-}
-?>
-</td>
+ </td>
 </tr>
 
 <?php 

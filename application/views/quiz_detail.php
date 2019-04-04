@@ -78,7 +78,7 @@
 	<?php 
 	}else{
 	?>	
-
+	<!-- ¿ªÊ¼²âÊÔ°´Å¥ -->
 	<button class="btn btn-success" type="submit"><?php echo $this->lang->line('start_quiz');?></button>
  
 	<?php 

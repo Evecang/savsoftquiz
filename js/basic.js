@@ -167,23 +167,23 @@ var global_quid="0";
 var global_qid="0";
 var global_opos="0";
 
-function cancelmove(position_t,quid,qid,opos){
-save_answer(qn);
+function cancelmove(position_t,quid,qid,opos){	//submit_quiz
+save_answer(qn);	//保存答案并且 自动计算得分
 position_type=position_t;
 global_quid=quid;
 global_qid=qid;
 global_opos=opos;
 
-if((document.getElementById('warning_div').style.display)=="block"){
-document.getElementById('warning_div').style.display="none";
+if((document.getElementById('warning_div').style.display)=="block"){	//再次config的时候 取消显示
+	document.getElementById('warning_div').style.display="none";
 }else{
-document.getElementById('warning_div').style.display="block";
-if(position_type=="Up"){
-var upos=parseInt(global_opos)-parseInt(1);
-}else{
-var upos=parseInt(global_opos)+parseInt(1);
-}
-document.getElementById('qposition').value=upos;
+	document.getElementById('warning_div').style.display="block";	//显示提交提示框
+	if(position_type=="Up"){
+		var upos=parseInt(global_opos)-parseInt(1);	//-1
+	}else{
+		var upos=parseInt(global_opos)+parseInt(1);	//+1
+	}
+	document.getElementById('qposition').value=upos;
 
 }
 
@@ -226,17 +226,17 @@ function no_q_available(lid){
 
 
 
-// quiz attempt functions 
+// quiz attempt functions 测试中的参数
 
-var noq=0;
+var noq=0;	//quiz中的noq
 var qn=0;
-var lqn=0;
+var lqn=0;	//last qn
 
 function fide_all_question(){
 	
 	for(var i=0; i < noq; i++){
 		
-		var did="#q"+i;
+		var did="#q"+i;	//包括每个问题的最外边的框
 	$(did).css('display','none');
 	}
 }
@@ -247,19 +247,19 @@ function show_question(vqn){
 	fide_all_question();
 	var did="#q"+vqn;
 	$(did).css('display','block');
-	// hide show next back btn
-	if(vqn >= 1){
+	// hide show next back btn     vqn从0开始
+	if(vqn >= 1){	//第一题之后 显示‘返回’
 	$('#backbtn').css('visibility','visible');
 	}
 	
-	if(vqn < noq){
+	if(vqn < noq){	//不是最后一题的话 显示‘下一题’
 	$('#nextbtn').css('visibility','visible');
 	}
-	if((parseInt(vqn)+1) == noq){
+	if((parseInt(vqn)+1) == noq){	//最后一题 隐藏‘下一题’
 	  
 	$('#nextbtn').css('visibility','hidden');
 	}
-	if(vqn == 0){
+	if(vqn == 0){	//第一题 隐藏‘返回’
 	$('#backbtn').css('visibility','hidden');
 	}
 	
@@ -273,11 +273,11 @@ save_answer(lqn);
 
 function show_next_question(){
 
-	if((parseInt(qn)+1) < noq){
-	fide_all_question();
-	qn=(parseInt(qn)+1);
-	var did="#q"+qn;
-	$(did).css('display','block');
+	if((parseInt(qn)+1) < noq){	//不为最后一题
+		fide_all_question();
+		qn=(parseInt(qn)+1);
+		var did="#q"+qn;
+		$(did).css('display','block');	//显示下一题
 	}
 	// hide show next back btn
 	if(qn >= 1){
@@ -286,6 +286,7 @@ function show_next_question(){
 	if((parseInt(qn)+1) == noq){
 	$('#nextbtn').css('visibility','hidden');
 	}
+	// console.log("lqn is:"+lqn); 	//比如我在第一题中点击了下一题（激发这个函数），lqn是0,但是此时qn变为1了
 	change_color(lqn);
 	setIndividual_time(lqn);
 	save_answer(lqn);
@@ -296,11 +297,11 @@ function show_next_question(){
 }
 function show_back_question(){
 	
-	if((parseInt(qn)-1) >= 0 ){
-	fide_all_question();
-	qn=(parseInt(qn)-1);
-	var did="#q"+qn;
-	$(did).css('display','block');
+	if((parseInt(qn)-1) >= 0 ){	//不为第一题
+		fide_all_question();	//所有的题目都display:none
+		qn=(parseInt(qn)-1);	//返回上一题
+		var did="#q"+qn;
+		$(did).css('display','block');	//显示上一题
 	}
 	// hide show next back btn
 	if(qn < noq){
@@ -311,7 +312,7 @@ function show_back_question(){
 	}
 	change_color(lqn);
 	setIndividual_time(lqn);
-	save_answer(lqn);
+	save_answer(lqn);	//保存答案，并自动计算某一些值
 	
 	// last qn
 	lqn=qn;	
@@ -320,42 +321,43 @@ function show_back_question(){
 
 
 function change_color(qn){
-	var did='#qbtn'+qn;
-	var q_type='#q_type'+lqn;
+	var did='#qbtn'+qn;	//右上角的题目号
+	var q_type='#q_type'+lqn;	//代表是哪种题，隐藏
 	
 	// if not answered then make red
 	// alert($(did).css('backgroundColor'));
-	if($(did).css('backgroundColor') != 'rgb(68, 157, 68)' && $(did).css('backgroundColor') != 'rgb(236, 151, 31)'){
-	$(did).css('backgroundColor','#c9302c');
+	if($(did).css('backgroundColor') != 'rgb(68, 157, 68)' && $(did).css('backgroundColor') != 'rgb(236, 151, 31)'){	//绿色answered&橘黄色review later
+	$(did).css('backgroundColor','#c9302c');	//红色 -> unanswered
 	$(did).css('color','#ffffff');
 	}
 	
 	// answered make green
-	if(lqn >= '0' && $(did).css('backgroundColor') != 'rgb(236, 151, 31)'){
+	if(lqn >= '0' && $(did).css('backgroundColor') != 'rgb(236, 151, 31)'){	//！=橘黄
 	var ldid='#qbtn'+lqn;
 		
 		if($(q_type).val()=='1' || $(q_type).val()=='2'){
-		var green=0;
-		for(var k=0; k<=10; k++){
-			var answer_value="answer_value"+lqn+'-'+k;
-			if(document.getElementById(answer_value)){
-				if(document.getElementById(answer_value).checked == true){	
-				green=1;
+			var green=0;
+			for(var k=0; k<=10; k++){
+				var answer_value="answer_value"+lqn+'-'+k;
+				if(document.getElementById(answer_value)){
+					if(document.getElementById(answer_value).checked == true){	
+					green=1;
+					}
 				}
 			}
-		}
-		if(green==1){			
-		$(ldid).css('backgroundColor','#449d44');
-		$(ldid).css('color','#ffffff');	
-		}		
+
+			if(green==1){			
+				$(ldid).css('backgroundColor','#449d44');	//绿色
+				$(ldid).css('color','#ffffff');	
+			}		
 		}		
  		
 		if($(q_type).val()=='3' || $(q_type).val()=='4'){
-		var answer_value="#answer_value"+lqn;
-		if($(answer_value).val()!=''){			
-		$(ldid).css('backgroundColor','#449d44');
-		$(ldid).css('color','#ffffff');	
-		}
+			var answer_value="#answer_value"+lqn;
+			if($(answer_value).val()!=''){			
+				$(ldid).css('backgroundColor','#449d44');
+				$(ldid).css('color','#ffffff');	
+			}
 		}		
  		
 		if($(q_type).val()=='5'){
@@ -373,6 +375,36 @@ function change_color(qn){
 			$(ldid).css('color','#ffffff');	
 			}		
 		}		
+
+		if($(q_type).val()=='6'){	//cloze
+			var green=0,n = 1;
+			var answer_value = "answer_value"+lqn+'-'+n+'-';
+
+			while(document.getElementById(answer_value+'0')){
+
+				for(var j=0;j<4;j++){
+					if(document.getElementById(answer_value+j).checked == true){	
+						green++;
+						break;
+					}
+				}
+				if(green < n){
+					break;
+				}
+				n++;
+				answer_value = "answer_value"+lqn+'-'+n+'-';
+
+			}
+			if(!document.getElementById(answer_value+'0')){
+				n--;
+			}
+			if(green==n){			
+			$(ldid).css('backgroundColor','#449d44');
+			$(ldid).css('color','#ffffff');	
+			}		
+		}		
+
+		
 		
 	}
 	
@@ -380,10 +412,10 @@ function change_color(qn){
 
 
 // clear radio btn response
-function clear_response(){
-var q_type='#q_type'+qn;
+function clear_response(){	//测试中 底部按钮：Clear  ->  主要清空答案
+var q_type='#q_type'+qn;	//判断当前处于那种类型的题目
 		
-		if($(q_type).val()=='1' || $(q_type).val()=='2'){
+		if($(q_type).val()=='1' || $(q_type).val()=='2'){	//1-单选 2-多选
 		 
 		for(var k=0; k<=10; k++){
 			var answer_value="answer_value"+lqn+'-'+k;
@@ -399,14 +431,14 @@ var q_type='#q_type'+qn;
 	 		
 		}	
 		
-		if($(q_type).val()=='3' || $(q_type).val()=='4'){
+		if($(q_type).val()=='3' || $(q_type).val()=='4'){	//3-填空 4-计算
 		var answer_value="answer_value"+qn;
-		document.getElementById(answer_value).value='';
+		document.getElementById(answer_value).value='';	//清空
 		}	
 		
 		
 		
-		if($(q_type).val()=='5'){
+		if($(q_type).val()=='5'){	//5-匹配
 			 
 			for(var k=0; k<=10; k++){
 				var answer_value="answer_value"+qn+'-'+k;
@@ -417,27 +449,45 @@ var q_type='#q_type'+qn;
 				}
 			}
 		 		
-		}			
-	var did='#qbtn'+qn;
+		}		
+		
+		if($(q_type).val()=='6'){	//6-完形
+			 
+			for(var n=1; n<=20; n++){
+
+				for(var j=0;j<4;j++){
+					var answer_value="answer_value"+qn+'-'+n+'-'+j;
+					// console.log(answer_value);
+					if(document.getElementById(answer_value)){
+						if(document.getElementById(answer_value).checked == true){	
+							document.getElementById(answer_value).checked = false;
+						}
+					}
+				}
+
+			}
+		}		
+
+	var did='#qbtn'+qn;	//右边的题号
 	$(did).css('backgroundColor','#c9302c');
 	$(did).css('color','#ffffff');
 }
 
-var review_later;
-function review_later(){
+var review_later;	//数组
+function review_later(){	//在考试中 底部按钮：Review Later -> 主要是更改右边题号的颜色
 	
  
-	if(review_later[qn] && review_later[qn]){
+	if(review_later[qn] && review_later[qn]){	//qn在232行，是测试中一个参数，题号，[0,noq)
 	
 		review_later[qn]=0;
-		var did='#qbtn'+qn;
-	$(did).css('backgroundColor','#c9302c');
+		var did='#qbtn'+qn;	//did为右边col-ms-4的 题号
+	$(did).css('backgroundColor','#c9302c');//红色 ->unanswered
 			$(did).css('color','#ffffff');	
 	}else{
 		
 		review_later[qn]=1;
 	var did='#qbtn'+qn;
-	$(did).css('backgroundColor','#ec971f');
+	$(did).css('backgroundColor','#ec971f');//橘黄色 -> review later
 	$(did).css('color','#ffffff');
 	}
 	
@@ -449,12 +499,12 @@ function review_later(){
 function save_answer(qn){
 	
 								// signal 1
-							$('#save_answer_signal1').css('backgroundColor','#00ff00');
+							$('#save_answer_signal1').css('backgroundColor','#00ff00');	//绿色
 								setTimeout(function(){
-							$('#save_answer_signal1').css('backgroundColor','#666666');		
+							$('#save_answer_signal1').css('backgroundColor','#666666');		//黑色
 								},5000);
 								
-								    var str = $( "form" ).serialize();
+								    var str = $( "form" ).serialize();	//jq中的方法，serialize() 方法通过序列化表单值，创建 URL 编码文本字符串。
  
  
 						// var formData = {user_answer:str};
@@ -555,7 +605,7 @@ function count_char(answer,span_id){
 
 
 
-function sort_result(limit,val){
+function sort_result(limit,val){	//在结果查询中 根据status筛选结果
 	window.location=base_url+"index.php/result/index/"+limit+"/"+val;
 	
 }

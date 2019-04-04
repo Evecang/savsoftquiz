@@ -4,3 +4,24 @@ gid：组的id
 description:描述
 price:价格            ======>待更改
 valid_for_days:到期时间
+
+result:
+category_range猜测是每个科目对应的题目数量
+
+qbank：
+quid：试卷编号
+noq：试卷中的题目数量
+quiz_name：试卷名
+camera_req：是否开启拍照功能
+
+quiz表：
+quid——试卷编号（int自动递增）
+quiz_name——试卷名
+description——试卷的描述
+start_date——开始时间（int）
+end_date——结束时间（）
+gids——组别id
+qids——包含的题目id
+noq——题目数量
+correct_score——正确答案的得分
+incorrect_score——错误答案的得分

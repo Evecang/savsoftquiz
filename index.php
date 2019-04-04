@@ -5,6 +5,7 @@ ob_start();
 * find supported parameter or time zones at http://php.net/manual/en/timezones.php
 */
 date_default_timezone_set('Asia/Kolkata');
+// phpinfo();
 /**
  * CodeIgniter
  *

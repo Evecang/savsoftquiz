@@ -278,7 +278,7 @@ class Qbank extends CI_Controller {
 
 	public function new_question_6($nop='10')	//完形填空
 	{
-		
+
 		$logged_in=$this->session->userdata('logged_in');
 		if($logged_in['su']!='1'){
 			exit($this->lang->line('permission_denied'));
@@ -311,7 +311,7 @@ class Qbank extends CI_Controller {
 	
 	
 	
-	//修改题型：1->单选题  2->多选题  3->匹配  4->简答题  5->长答题
+	//修改题型：1->单选题  2->多选题  3->匹配  4->简答题  5->长答题 6->完形填空
 	
 	public function edit_question_1($qid)
 	{
@@ -464,6 +464,41 @@ class Qbank extends CI_Controller {
 		$data['level_list']=$this->qbank_model->level_list();
 		 $this->load->view('header',$data);
 		$this->load->view('edit_question_5',$data);
+		$this->load->view('footer',$data);
+	}
+
+
+	public function edit_question_6($qid)	//修改完形填空
+	{
+		
+		$logged_in=$this->session->userdata('logged_in');
+		if($logged_in['su']!='1'){
+		exit($this->lang->line('permission_denied'));
+		}
+		if($this->input->post('question')){		//在修改页面 提交数据Edit
+			if($this->qbank_model->update_question_6($qid)){
+			$this->session->set_flashdata('message', "<div class='alert alert-success'>".$this->lang->line('data_updated_successfully')." </div>");
+			}else{
+				$this->session->set_flashdata('message', "<div class='alert alert-danger'>".$this->lang->line('error_to_update_data')." </div>");
+			}
+			redirect('qbank/edit_question_6/'.$qid);
+		}
+			
+		  
+		//从question list 点击qid进来
+		 $data['title']=$this->lang->line('edit');
+		// fetching question
+		$data['question']=$this->qbank_model->get_question($qid);
+		$data['options']=$this->qbank_model->get_option($qid);
+		foreach($data['options'] as $key => $val){
+			$data['options'][$key]['q_option_match_option'] = explode(",",$val['q_option_match_option']);	//转换为数组
+		}
+		// fetching category list
+		$data['category_list']=$this->qbank_model->category_list();
+		// fetching level list
+		$data['level_list']=$this->qbank_model->level_list();
+		 $this->load->view('header',$data);
+		$this->load->view('edit_question_6',$data);
 		$this->load->view('footer',$data);
 	}
 	
