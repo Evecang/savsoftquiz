@@ -574,16 +574,15 @@ if($result['gen_certificate']=='1'){
  
 	 <div id="page_break"></div>
  <div class="col-md-12">
+
 <?php
  
- 
-  
 if($this->config->item('google_chart') == true ){ 
 ?> 
 
 
-<!-- google chart starts--> 
-<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<!-- google chart starts--> <!--注释掉了2个script 1个div-->
+<!-- <script type="text/javascript" src="https://www.google.com/jsapi"></script>
     
  
 <script type="text/javascript">
@@ -600,13 +599,13 @@ if($this->config->item('google_chart') == true ){
         var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
         chart.draw(data, options);
       }
-    </script>
-		 <div id="chart_div" style="width: 800px; height: 500px;"></div>
+</script>
+		 <div id="chart_div" style="width: 800px; height: 500px;"></div> -->
   
 
-<!-- google chart starts -->
+<!-- google chart starts --> <!--注释掉了1个script 1个div-->
 
-    <script type="text/javascript">
+    <!-- <script type="text/javascript">
       google.load("visualization", "1", {packages:["corechart"]});
       google.setOnLoadCallback(drawChart);
       function drawChart() {
@@ -620,7 +619,7 @@ if($this->config->item('google_chart') == true ){
         chart.draw(data, options);
       }
     </script>
-		 <div id="chart_div2" style="width:800px; height: 500px;"></div>
+		 <div id="chart_div2" style="width:800px; height: 500px;"></div> -->
 <!-- google chart ends -->
 
 
@@ -799,7 +798,7 @@ if(in_array($option['oid'],$save_ans)){   echo  trim($option['q_option']).', '; 
 		<div class="op"> 
 		<?php echo $this->lang->line('answer');?> <br>
 		<?php echo $this->lang->line('word_counts');?>  <?php echo str_word_count($save_ans);?>
-		<textarea name="answer[<?php echo $qk;?>][]" id="answer_value<?php echo $qk;?>" style="width:100%;height:100%;" onKeyup="count_char(this.value,'char_count<?php echo $qk;?>');"><?php echo $save_ans;?></textarea>
+		<textarea name="answer[<?php echo $qk;?>][]" id="answer_value<?php echo $qk;?>" style="width:100%;height:100%;color:#000;" onKeyup="count_char(this.value,'char_count<?php echo $qk;?>');"><?php echo $save_ans;?></textarea>
 		</div>
 		<?php 
 		if($logged_in['su']=='1'){
@@ -807,7 +806,7 @@ if(in_array($option['oid'],$save_ans)){   echo  trim($option['q_option']).', '; 
 			
 		?>
 		<div id="assign_score<?php echo $qk;?>">
-		<?php echo $this->lang->line('evaluate');?>	
+		<?php echo $this->lang->line('evaluate');//提交计算题的分数?>	
 		<a href="javascript:assign_score('<?php echo $result['rid'];?>','<?php echo $qk;?>','1');"  class="btn btn-success" ><?php echo $this->lang->line('correct');?></a>	
 		<a href="javascript:assign_score('<?php echo $result['rid'];?>','<?php echo $qk;?>','2');"  class="btn btn-danger" ><?php echo $this->lang->line('incorrect');?></a>	
 		</div>
@@ -817,6 +816,12 @@ if(in_array($option['oid'],$save_ans)){   echo  trim($option['q_option']).', '; 
 		?>		
 			 
 			 <?php 
+			//  here to show the suggested answer of long answer
+				foreach($options as $ok => $option){
+					if($option['qid']==$question['qid']){
+						echo "<b>".$this->lang->line('suggested_answer').'</b>: '.$option['q_option'];
+					}
+			 	}
 			 
 			 
 		 }

@@ -69,6 +69,10 @@
 					<label for="inputEmail"  ><?php echo $this->lang->line('description');?></label> 
 					<textarea  name="description"  class="form-control"><?php echo $question['description'];?></textarea>
 			</div>
+			<div class="form-group">	 
+					<label for="inputEmail"  ><?php echo $this->lang->line('suggested_answer');?></label>
+					<textarea  name="option"  class="form-control"><?php echo $options['q_option'];?></textarea>
+			</div>
 
  
 	<button class="btn btn-default" type="submit"><?php echo $this->lang->line('submit');?></button>

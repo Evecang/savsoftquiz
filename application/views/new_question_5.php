@@ -69,6 +69,11 @@
 					<label for="inputEmail"  ><?php echo $this->lang->line('description');?></label> 
 					<textarea  name="description"  class="form-control"></textarea>
 			</div>
+			<div class="form-group">	 
+					<label for="inputEmail"  ><?php echo $this->lang->line('suggested_answer');?> </label> <br>
+					<!-- <input type="text" name="option[]"  class="form-control"  value=""  >  -->
+					<textarea  name="option"  class="form-control"></textarea>
+			</div>
 	 
 
  

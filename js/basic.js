@@ -611,7 +611,7 @@ function sort_result(limit,val){	//在结果查询中 根据status筛选结果
 }
 
 
-function assign_score(rid,qno,score){
+function assign_score(rid,qno,score){	//提交 long answer的分数 score-1正确 -2错误
 	 var evaluate_warning=	document.getElementById('evaluate_warning').value;
 	 if(confirm(evaluate_warning)){
 	var formData = {rid:rid};

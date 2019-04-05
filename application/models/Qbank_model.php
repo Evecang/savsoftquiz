@@ -2,7 +2,7 @@
 Class Qbank_model extends CI_Model
 {
  
-  function question_list($limit,$cid='0',$lid='0'){	//????????????
+  function question_list($limit,$cid='0',$lid='0'){	//
 	if($this->input->post('search')){
 		$search=$this->input->post('search');
 		$this->db->or_where('savsoft_qbank.qid',$search);
@@ -34,7 +34,7 @@ Class Qbank_model extends CI_Model
  
  
  
- function get_question($qid){	//鏉╂柨娲杚id閵嗕构uestion_type閵嗕构uestion閵嗕龚escription閵嗕恭id閵嗕勾id...
+ function get_question($qid){	//根据qid得到相应的问题
 	 $this->db->where('qid',$qid);
 	 $query=$this->db->get('savsoft_qbank');
 	 return $query->row_array();
@@ -49,7 +49,7 @@ Class Qbank_model extends CI_Model
 	 
  }
  
- function remove_question($qid){	//缁熶竴 鍒犻櫎闂
+ function remove_question($qid){	//for all, to remove the question
 	 
 	 $this->db->where('qid',$qid);
 	 if($this->db->delete('savsoft_qbank')){
@@ -62,15 +62,15 @@ Class Qbank_model extends CI_Model
 	 
 		foreach($qr->result_array() as $k =>$val){
 		
-			$quid=$val['quid'];		//璇曞嵎id
+			$quid=$val['quid'];		//
 			$qids=explode(',',$val['qids']);	//explode=> split()
 			$nqids=array();
 			foreach($qids as $qk => $qv){
 				if($qv != $qid){
-					$nqids[]=$qv;	//$nqids瀛樺偍鍓╀綑棰樼洰鐨処d
+					$nqids[]=$qv;	//$nqids剩余题目的id
 				}
 			}
-			$noq=count($nqids);		//棰樼洰鏁�
+			$noq=count($nqids);		
 			$nqids=implode(',',$nqids);		//join()
 			$this->db->query(" update savsoft_quiz set qids='$nqids', noq='$noq' where quid='$quid' ");	
 		}		
@@ -213,6 +213,11 @@ Class Qbank_model extends CI_Model
 	 );
 	 $this->db->insert('savsoft_qbank',$userdata);
 	 $qid=$this->db->insert_id();
+	 $userdata=array(
+		'q_option'=>$this->input->post('option'),
+		'qid'=>$qid,
+		);
+		$this->db->insert('savsoft_options',$userdata);	 
 	 
 	 
 	 return true;
@@ -418,6 +423,11 @@ Class Qbank_model extends CI_Model
 	 $this->db->update('savsoft_qbank',$userdata);
 	 $this->db->where('qid',$qid);
 	$this->db->delete('savsoft_options');
+		$userdata=array(
+		'q_option'=>$this->input->post('option'),
+		'qid'=>$qid,
+		);
+		$this->db->insert('savsoft_options',$userdata);	 
 
 	 
 	 return true;

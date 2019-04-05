@@ -255,7 +255,7 @@ class Qbank extends CI_Controller {
 			if($logged_in['su']!='1'){
 			exit($this->lang->line('permission_denied'));
 			}
-			if($this->input->post('question')){
+			if($this->input->post('question')){	//这里是再次进入添加问题的第二个页面发送的数据（二）
 				if($this->qbank_model->insert_question_5()){
                 $this->session->set_flashdata('message', "<div class='alert alert-success'>".$this->lang->line('data_added_successfully')." </div>");
 				}else{
@@ -263,7 +263,8 @@ class Qbank extends CI_Controller {
 				}
 				redirect('qbank/pre_new_question/');
 			}			
-			
+		
+			//首次进入添加问题的页面 发送过来的数据（一）
 		 $data['nop']=$nop;
 		 $data['title']=$this->lang->line('add_new');
 		// fetching category list
@@ -457,7 +458,12 @@ class Qbank extends CI_Controller {
 		 $data['title']=$this->lang->line('edit');
 		// fetching question
 		$data['question']=$this->qbank_model->get_question($qid);
-		$data['options']=$this->qbank_model->get_option($qid);
+		$data['options']=$this->qbank_model->get_option($qid)[0];
+		// $myfile = fopen("D:\XAMPP\htdocs\bug.txt", "w") or die("Unable to open file!".$data['options']['q_option']);
+		// foreach($data['options'] as $k =>$v){
+		// 	fwrite($myfile, $k.' '.$v);
+		// }
+		// fclose($myfile);
 		// fetching category list
 		$data['category_list']=$this->qbank_model->category_list();
 		// fetching level list

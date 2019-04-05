@@ -775,7 +775,7 @@ if(isset($_FILES['webcam'])){
  
  
  
- function assign_score($rid,$qno,$score){
+ function assign_score($rid,$qno,$score){	//提交 long answer的分数 score-1正确 -2错误
 	 
 	 				// redirect if not loggedin
 		if(!$this->session->userdata('logged_in')){

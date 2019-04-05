@@ -505,33 +505,39 @@ function saved_answers($rid){	//作答的结果
  }
  
  
- function assign_score($rid,$qno,$score){
+ function assign_score($rid,$qno,$score){	//提交 long answer的分数 score-1正确 -2错误，qno为题目在试卷中的顺序
 	 $qp_score=$score;
 	 $query=$this->db->query("select * from savsoft_result join savsoft_quiz on savsoft_result.quid=savsoft_quiz.quid where savsoft_result.rid='$rid' "); 
-	$quiz=$query->row_array(); 
+	$quiz=$query->row_array(); 	//result+quiz表
 	$score_ind=explode(',',$quiz['score_individual']);
-	$score_ind[$qno]=$score;
+	$score_ind[$qno]=$score;	//得分标志
 	$r_qids=explode(',',$quiz['r_qids']);
-	$correct_score=$quiz['correct_score'];
-	$incorrect_score=$quiz['incorrect_score'];
+	$marks = 0;
+	$correct_score=explode(',',$quiz['correct_score']);
+	$incorrect_score=explode(',',$quiz['incorrect_score']);
 		$manual_valuation=0;
 	foreach($score_ind as $mk => $score){
 		
 		if($score == 1){
 			
-			$marks+=$correct_score;
+			$marks+=$correct_score[$mk];
 		}
 		if($score == 2){
 			
-			$marks+=$incorrect_score;
+			$marks+=$incorrect_score[$mk];
 		}
 		if($score == 3){
 			
 			$manual_valuation=1;
 		}
+		else{	//4 -> cloze test
+			// $cloze_options = $this->db->query("select * from savsoft_options where qid='$qids_perf[1]' ");
+			$s = explode('-',$score);	//4-$marks
+			$marks += floatval($s[1])*$correct_score[$mk];
+		}
 		
 	}
-	$percentage_obtained=($marks/$quiz['noq'])*100;
+	$percentage_obtained = ( $marks / array_sum($correct_score) ) * 100;
 	if($percentage_obtained >= $quiz['pass_percentage']){
 		$qr=$this->lang->line('pass');
 	}else{
@@ -555,12 +561,12 @@ function saved_answers($rid){	//作答的结果
 	 // question performance
 	 $qp=$r_qids[$qno];
 	 		 $crin="";
-		if($$qp_score=='1'){
-			$crin=", no_time_corrected=(no_time_corrected +1)"; 	 
-		 }else if($$qp_score=='2'){
-			$crin=", no_time_incorrected=(no_time_incorrected +1)"; 	 
+		if($qp_score=='1'){
+			$crin="no_time_corrected=(no_time_corrected +1)"; 	 
+		 }else if($qp_score=='2'){
+			$crin="no_time_incorrected=(no_time_incorrected +1)"; 	 
 		 }
-		  $query_qp="update savsoft_qbank set  $crin  where qid='$qp'  ";
+		 $query_qp="update savsoft_qbank set  $crin  where qid='$qp'  ";
 	 $this->db->query($query_qp);
  }
  
