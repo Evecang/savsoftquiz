@@ -80,6 +80,10 @@
 		<?php 
 		}
 		?>
+		<div class="form-group">	 
+				<label for="inputEmail"  ><?php echo $this->lang->line('analyses');?></label> 
+				<textarea  name="analyses"  class="form-control"></textarea>
+		</div>
 
  
 	<button class="btn btn-default" type="submit"><?php echo $this->lang->line('submit');?></button>

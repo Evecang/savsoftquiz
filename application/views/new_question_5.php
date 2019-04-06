@@ -74,6 +74,10 @@
 					<!-- <input type="text" name="option[]"  class="form-control"  value=""  >  -->
 					<textarea  name="option"  class="form-control"></textarea>
 			</div>
+			<div class="form-group">	 
+					<label for="inputEmail"  ><?php echo $this->lang->line('analyses');?></label> 
+					<textarea  name="analyses"  class="form-control"></textarea>
+			</div>
 	 
 
  

@@ -705,7 +705,8 @@ style="margin:10px;padding:10px;<?php if($ind_score[$qk]=='1'){ //right:green?>b
 					
 				}
 			}echo "<br>";
-			echo "<b>".$this->lang->line('correct_options').'</b>: '.implode(', ',array_map('trim',($correct_options)));
+			echo "<b>".$this->lang->line('correct_options').'</b>: '.implode(', ',array_map('trim',($correct_options))).'<br>';
+			
 		 }
 			
 // multiple_choice_multiple_answer	
@@ -796,7 +797,7 @@ if(in_array($option['oid'],$save_ans)){   echo  trim($option['q_option']).', '; 
 			 ?>
 			 
 		<div class="op"> 
-		<?php echo $this->lang->line('answer');?> <br>
+		<?php echo $this->lang->line('your_answer');?> <br>
 		<?php echo $this->lang->line('word_counts');?>  <?php echo str_word_count($save_ans);?>
 		<textarea name="answer[<?php echo $qk;?>][]" id="answer_value<?php echo $qk;?>" style="width:100%;height:100%;color:#000;" onKeyup="count_char(this.value,'char_count<?php echo $qk;?>');"><?php echo $save_ans;?></textarea>
 		</div>
@@ -1004,7 +1005,17 @@ if(in_array($option['oid'],$save_ans)){   echo  trim($option['q_option']).', '; 
 				echo $question['description'];
 			 }
 			
-?></p>
+?>
+	</p>
+	
+	<p><?php 
+ if($question['analyses']!='') {
+				echo '<b>'.$this->lang->line('analyses').'</b>:<br>';
+				echo $question['analyses'];
+			 }
+			
+?>
+	</p>
 	
 </div>
 <div class="col-md-2 col-sm-2" id="q<?php echo $qk;?>"  style="font-size:30px;">

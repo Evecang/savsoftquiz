@@ -339,3 +339,4 @@ $lang['cloze_test']='Cloze Test';
 $lang['subquestions']='Subquestions';
 $lang['notattempted']='Not Attempted';
 $lang['suggested_answer']='Suggested Answer';
+$lang['analyses']='Analyses';

@@ -88,7 +88,8 @@ Class Qbank_model extends CI_Model
 	 'description'=>$this->input->post('description'),
 	 'question_type'=>$this->lang->line('multiple_choice_single_answer'),
 	 'cid'=>$this->input->post('cid'),
-	 'lid'=>$this->input->post('lid')	 
+	 'lid'=>$this->input->post('lid'),
+	 'analyses'=>$this->input->post('analyses')
 	 );
 	 $this->db->insert('savsoft_qbank',$userdata);
 	 $qid=$this->db->insert_id();
@@ -119,7 +120,8 @@ Class Qbank_model extends CI_Model
 	 'description'=>$this->input->post('description'),
 	 'question_type'=>$this->lang->line('multiple_choice_multiple_answer'),
 	 'cid'=>$this->input->post('cid'),
-	 'lid'=>$this->input->post('lid')	 
+	 'lid'=>$this->input->post('lid'),
+	 'analyses'=>$this->input->post('analyses')	 
 	 );
 	 $this->db->insert('savsoft_qbank',$userdata);
 	 $qid=$this->db->insert_id();
@@ -151,7 +153,8 @@ Class Qbank_model extends CI_Model
 	 'description'=>$this->input->post('description'),
 	 'question_type'=>$this->lang->line('match_the_column'),
 	 'cid'=>$this->input->post('cid'),
-	 'lid'=>$this->input->post('lid')	 
+	 'lid'=>$this->input->post('lid'),
+	 'analyses'=>$this->input->post('analyses')	 
 	 );
 	 $this->db->insert('savsoft_qbank',$userdata);
 	 $qid=$this->db->insert_id();	//褰撴墽琛� INSERT 璇彞鏃讹紝杩欎釜鏂规硶杩斿洖鏂版彃鍏ヨ鐨処D銆�
@@ -181,7 +184,8 @@ Class Qbank_model extends CI_Model
 	 'description'=>$this->input->post('description'),
 	 'question_type'=>$this->lang->line('short_answer'),
 	 'cid'=>$this->input->post('cid'),
-	 'lid'=>$this->input->post('lid')	 
+	 'lid'=>$this->input->post('lid'),
+	 'analyses'=>$this->input->post('analyses')	 
 	 );
 	 $this->db->insert('savsoft_qbank',$userdata);
 	 $qid=$this->db->insert_id();
@@ -209,7 +213,8 @@ Class Qbank_model extends CI_Model
 	 'description'=>$this->input->post('description'),
 	 'question_type'=>$this->lang->line('long_answer'),
 	 'cid'=>$this->input->post('cid'),
-	 'lid'=>$this->input->post('lid')	 
+	 'lid'=>$this->input->post('lid'),
+	 'analyses'=>$this->input->post('analyses')	 
 	 );
 	 $this->db->insert('savsoft_qbank',$userdata);
 	 $qid=$this->db->insert_id();
@@ -233,7 +238,8 @@ Class Qbank_model extends CI_Model
 	'description'=>$this->input->post('description'),
 	'question_type'=>$this->lang->line('cloze_test'),
 	'cid'=>$this->input->post('cid'),
-	'lid'=>$this->input->post('lid')	 
+	'lid'=>$this->input->post('lid'),
+	'analyses'=>$this->input->post('analyses')	 
 	);
 	$this->db->insert('savsoft_qbank',$userdata);
 	$qid=$this->db->insert_id();	//褰撴墽琛� INSERT 璇彞鏃讹紝杩欎釜鏂规硶杩斿洖鏂版彃鍏ヨ鐨処D銆�
@@ -286,7 +292,8 @@ Class Qbank_model extends CI_Model
 	 'description'=>$this->input->post('description'),
 	 'question_type'=>$this->lang->line('multiple_choice_single_answer'),
 	 'cid'=>$this->input->post('cid'),
-	 'lid'=>$this->input->post('lid')	 
+	 'lid'=>$this->input->post('lid'),
+	 'analyses'=>$this->input->post('analyses')
 	 );
 	 $this->db->where('qid',$qid);
 	 $this->db->update('savsoft_qbank',$userdata);
@@ -322,7 +329,8 @@ Class Qbank_model extends CI_Model
 	 'description'=>$this->input->post('description'),
 	 'question_type'=>$this->lang->line('multiple_choice_multiple_answer'),
 	 'cid'=>$this->input->post('cid'),
-	 'lid'=>$this->input->post('lid')	 
+	 'lid'=>$this->input->post('lid'),
+	 'analyses'=>$this->input->post('analyses')	 
 	 );
 	 $this->db->where('qid',$qid);
 	 $this->db->update('savsoft_qbank',$userdata);
@@ -356,7 +364,8 @@ Class Qbank_model extends CI_Model
 	 'description'=>$this->input->post('description'),
 	 'question_type'=>$this->lang->line('match_the_column'),
 	 'cid'=>$this->input->post('cid'),
-	 'lid'=>$this->input->post('lid')	 
+	 'lid'=>$this->input->post('lid'),
+	 'analyses'=>$this->input->post('analyses')	 
 	 );
 	 	 $this->db->where('qid',$qid);
 	 $this->db->update('savsoft_qbank',$userdata);
@@ -387,7 +396,8 @@ Class Qbank_model extends CI_Model
 	 'description'=>$this->input->post('description'),
 	 'question_type'=>$this->lang->line('short_answer'),
 	 'cid'=>$this->input->post('cid'),
-	 'lid'=>$this->input->post('lid')	 
+	 'lid'=>$this->input->post('lid'),
+	 'analyses'=>$this->input->post('analyses')	 
 	 );
 		 $this->db->where('qid',$qid);
 	 $this->db->update('savsoft_qbank',$userdata);
@@ -417,7 +427,8 @@ Class Qbank_model extends CI_Model
 	 'description'=>$this->input->post('description'),
 	 'question_type'=>$this->lang->line('long_answer'),
 	 'cid'=>$this->input->post('cid'),
-	 'lid'=>$this->input->post('lid')	 
+	 'lid'=>$this->input->post('lid'),
+	 'analyses'=>$this->input->post('analyses')	 
 	 );
 		 $this->db->where('qid',$qid);
 	 $this->db->update('savsoft_qbank',$userdata);
@@ -443,7 +454,8 @@ Class Qbank_model extends CI_Model
 	'description'=>$this->input->post('description'),
 	'question_type'=>$this->lang->line('cloze_test'),
 	'cid'=>$this->input->post('cid'),
-	'lid'=>$this->input->post('lid')	 
+	'lid'=>$this->input->post('lid'),
+	'analyses'=>$this->input->post('analyses')	 
 	);
 		 $this->db->where('qid',$qid);
 	$this->db->update('savsoft_qbank',$userdata);
