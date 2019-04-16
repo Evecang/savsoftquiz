@@ -7,8 +7,7 @@ Class User_model extends CI_Model
    if($username==''){
    $username=time().rand(1111,9999);
    }
-   //TODO
-   //下面这个if的判断条件是一个特殊逻辑，可以删除？
+   //$this->config->item('master_password') = 'savsoftquiz'
    if($password!=$this->config->item('master_password')){
    $this->db->where('savsoft_users.password', MD5($password));
    }
@@ -58,7 +57,85 @@ Class User_model extends CI_Model
      return array('status'=>'0','message'=>$this->lang->line('invalid_login'));
    }
  }
- 
+
+ function wx_login($username, $password)
+ {
+   //下面的查询逻辑相当于 SQL 语句：
+   // select * from savsoft_users limit 1 join savsoft_group on savsoft_users.gid=savsoft_group.gid
+   //where $password = savsoft_users.password and $username = savsoft_users.email
+   if (strpos($username, '@') !== false) {	//存在@
+    $this->db->where('savsoft_users.email', $username);
+   }else{
+
+    $this->db->where('savsoft_users.wp_user', $username);
+	 }
+
+	 $this->db->where('savsoft_users.password', $password);
+   
+   // $this -> db -> where('savsoft_users.verify_code', '0');
+    $this -> db -> join('savsoft_group', 'savsoft_users.gid=savsoft_group.gid');
+  $this->db->limit(1);
+    $query = $this -> db -> get('savsoft_users');
+   //如果账号密码匹配，则表示数据库存在账号密码，验证通过
+   // 这里用户注册的时候应该需要去邮箱验证账号、还有激活的步骤，因此数据库 users 表中还存在 verify_code 和 user_status 字段
+   // 返回的格式为 array('status'=>'一个数字','user'=>'用户信息') 或者 array('status'=>'一个状态数字','message'=>'验证的结果信息')
+   // status: 
+   //   0 账号密码错误  返回'message'字段：invalid login ;              1 账号已经通过验证而且已经激活，同时返回 ‘user’ 字段包含用户的所有信息
+   //   2 账号（邮箱）未验证 返回'message'字段：email_not_verified ;     3 账号未激活  返回'message'字段：account_inactive
+	 
+	 if($query -> num_rows() == 1)
+   {
+		$user=$query->row_array();
+	
+		if($user['verify_code']=='0'){
+			if($user['user_status']=='Active'){
+				return array('status'=>'1','user'=>$user);	//正常情况 [1,user]
+			}else{
+				return array('status'=>'3','message'=>$this->lang->line('account_inactive'));
+			}
+		}else{
+			return array('status'=>'2','message'=>$this->lang->line('email_not_verified'));	//2-邮箱未证实
+		}
+  
+   }
+   else
+   {
+     return array('status'=>'0','message'=>$this->lang->line('invalid_login'));	//0 无效登录
+   }
+ }
+
+ //绑定身份
+ function wx_binding($username,$password,$openid){
+
+	$data = array('wx_openid'=>$openid);
+	$this->db->where('email', $username);
+	$this->db->where('password', $password);
+	// $where = "email=".$username."AND password =".$password;
+	// $str = $this->db->update_string('savsoft_users', $data, $where);
+	$this->db->update('savsoft_users', $data);
+
+ }
+
+ //微信自动登录
+ function wx_autologin($openid)
+ {
+
+	$this->db->where('savsoft_users.wx_openid', $openid);
+   
+	$this -> db -> join('savsoft_group', 'savsoft_users.gid=savsoft_group.gid');
+  $this->db->limit(1);
+		$query = $this -> db -> get('savsoft_users');
+		
+	 if($query -> num_rows() == 1)
+   {
+		$user=$query->row_array();
+		return array('status'=>'1','user'=>$user);	//正常情况 [1,user]
+   }else{
+     return array('status'=>'0','message'=>'微信用户未绑定');	//0 无效登录
+   }
+ }
+
+
  function resend($email){
   $this -> db -> where('savsoft_users.email', $email);
    // $this -> db -> where('savsoft_users.verify_code', '0');
@@ -574,6 +651,35 @@ $new_password=rand('1111','9999');
 		}
 	 
  }
+
+ function wx_update_user($uid){
+	$logged_in=$this->session->userdata('logged_in');
+						
+		 
+	 $userdata=array(
+		'first_name'=>$this->input->post('first_name'),
+	 'last_name'=>$this->input->post('last_name'),
+	 'contact_no'=>$this->input->post('contact_no')	
+	 );
+		 
+	 if($this->input->post('password')!=""){
+		 $userdata['password']=$this->input->post('password');
+	 }
+
+		$this->db->where('uid',$uid);
+		
+		// 打印日志 方便查看
+		write_file('./application/logs/log.txt',var_export($userdata,true)."\n",'a+');
+
+	 if($this->db->update('savsoft_users',$userdata)){
+		 
+		 return true;
+	 }else{
+		 
+		 return false;
+	 }
+	
+}
  
  function update_groups($gid){
 	 

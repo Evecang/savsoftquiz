@@ -21,15 +21,15 @@
 		}
 		?>	
 		
-				<div class="form-group">	 
-				<?php echo $this->lang->line('group_name');?>: <?php echo $result['group_name'];?> (<?php echo $this->lang->line('price_');?>: <?php echo $result['price'];?>)
-				</div>
-				
-				
-		
-				<div class="form-group">	 
-					<label for="inputEmail" class="sr-only"><?php echo $this->lang->line('email_address');?></label> 
-					<input type="email" id="inputEmail" name="email" value="<?php echo $result['email'];?>" class="form-control" placeholder="<?php echo $this->lang->line('email_address');?>" required autofocus>
+			<div class="form-group">	 
+			<?php echo $this->lang->line('group_name');?>: <?php echo $result['group_name'];?> (<?php echo $this->lang->line('price_');?>: <?php echo $result['price'];?>)
+			</div>
+			
+			
+	
+			<div class="form-group">	 
+				<label for="inputEmail" class="sr-only"><?php echo $this->lang->line('email_address');?></label> 
+				<input type="email" id="inputEmail" name="email" value="<?php echo $result['email'];?>" class="form-control" placeholder="<?php echo $this->lang->line('email_address');?>" required autofocus>
 			</div>
 			<div class="form-group">	  
 					<label for="inputPassword" class="sr-only"><?php echo $this->lang->line('password');?></label>
@@ -47,18 +47,19 @@
 					<label for="inputEmail" class="sr-only"><?php echo $this->lang->line('contact_no');?></label> 
 					<input type="text" name="contact_no"  class="form-control"  value="<?php echo $result['contact_no'];?>"  placeholder="<?php echo $this->lang->line('contact_no');?>"   autofocus>
 			</div>
-				<div class="form-group">	 
-					<label   ><?php echo $this->lang->line('select_group');?></label> 
-					<select class="form-control" name="gid"  onChange="getexpiry();" id="gid">
-					<?php 
-					foreach($group_list as $key => $val){
-						?>
-						
-						<option value="<?php echo $val['gid'];?>" <?php if($result['gid']==$val['gid']){ echo 'selected';}?> ><?php echo $val['group_name'];?> (<?php echo $this->lang->line('price_');?>: <?php echo $val['price'];?>)</option>
-						<?php 
-					}
+			
+			<div class="form-group">	 
+				<label   ><?php echo $this->lang->line('select_group');?></label> 
+				<select class="form-control" name="gid"  onChange="getexpiry();" id="gid">
+				<?php 
+				foreach($group_list as $key => $val){
 					?>
-					</select>
+					
+					<option value="<?php echo $val['gid'];?>" <?php if($result['gid']==$val['gid']){ echo 'selected';}?> ><?php echo $val['group_name'];?> (<?php echo $this->lang->line('price_');?>: <?php echo $val['price'];?>)</option>
+					<?php 
+				}
+				?>
+				</select>
 			</div>
 			<div class="form-group">	 
 					<label for="inputEmail"  ><?php echo $this->lang->line('subscription_expired');?></label> 
@@ -66,20 +67,20 @@
 			</div>
 
 
-				<div class="form-group">	 
-					<label   ><?php echo $this->lang->line('account_type');?></label> 
-					<select class="form-control" name="su">
-						<option value="0" <?php if($result['su']==0){ echo 'selected';}?>  ><?php echo $this->lang->line('user');?></option>
-						<option value="1" <?php if($result['su']==1){ echo 'selected';}?>  ><?php echo $this->lang->line('administrator');?></option>
-					</select>
+			<div class="form-group">	 
+				<label   ><?php echo $this->lang->line('account_type');?></label> 
+				<select class="form-control" name="su">
+					<option value="0" <?php if($result['su']==0){ echo 'selected';}?>  ><?php echo $this->lang->line('user');?></option>
+					<option value="1" <?php if($result['su']==1){ echo 'selected';}?>  ><?php echo $this->lang->line('administrator');?></option>
+				</select>
 			</div>
 
- 				<div class="form-group">	 
-					<label   ><?php echo $this->lang->line('account_status');?></label> 
-					<select class="form-control" name="user_status">
-						<option value="Active" <?php if($result['user_status']=='Active'){ echo 'selected';}?>  ><?php echo $this->lang->line('active');?></option>
-						<option value="Inactive" <?php if($result['user_status']=='Inactive'){ echo 'selected';}?>  ><?php echo $this->lang->line('inactive');?></option>
-					</select>
+			<div class="form-group">	 
+				<label   ><?php echo $this->lang->line('account_status');?></label> 
+				<select class="form-control" name="user_status">
+					<option value="Active" <?php if($result['user_status']=='Active'){ echo 'selected';}?>  ><?php echo $this->lang->line('active');?></option>
+					<option value="Inactive" <?php if($result['user_status']=='Inactive'){ echo 'selected';}?>  ><?php echo $this->lang->line('inactive');?></option>
+				</select>
 			</div>
 
  

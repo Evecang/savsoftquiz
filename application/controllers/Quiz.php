@@ -43,7 +43,39 @@ class Quiz extends CI_Controller {
 		$this->load->view('quiz_list',$data);
 		$this->load->view('footer',$data);
 	}
-	
+
+
+	public function wx_index($limit='0')
+	{
+		
+		// redirect if not loggedin
+		if(!$this->session->userdata('logged_in')){
+			echo json_encode(array(
+				'status'=>'0',
+				'message'=>'without login'
+			));
+			return ;
+		}
+		$logged_in=$this->session->userdata('logged_in');
+			if($logged_in['base_url'] != base_url()){
+			$this->session->unset_userdata('logged_in');		
+			echo json_encode(array(
+				'status'=>'0',
+				'message'=>'Base url error, please redirect to login page!'
+			));
+			return ;
+		}
+		
+		$logged_in=$this->session->userdata('logged_in');
+		
+		$data['limit']=$limit;	//搜索的关键词
+		// fetching quiz list
+		$data['result']=$this->quiz_model->quiz_list($limit);	//返回含有$limit关键词的考试列表
+		echo json_encode(array(
+			'status'=>'0',
+			'message'=>'Fetching quiz list success!'
+		));
+	}
 	
 	
 function open_quiz($limit='0'){

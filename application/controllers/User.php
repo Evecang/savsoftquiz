@@ -11,15 +11,25 @@ class User extends CI_Controller {
 	   $this->load->helper('form');
 	   $this->load->model("user_model");
 	   $this->lang->load('basic', $this->config->item('language'));
+		
+			// 打印日志 方便查看
+			$this->load->helper('file');
+			write_file('./application/logs/log.txt','User 登陆态'.var_export($this->session->userdata('logged_in'),true)."\n",'a+');
+			write_file('./application/logs/log.txt',var_export(base_url(),true)."\n",'a+');
+
 		// redirect if not loggedin
 		if(!$this->session->userdata('logged_in')){
+			// echo json_encode("redirect to login");
+			// write_file('./application/logs/log.txt',"redirect if not loggedin\n",'a+');
+			// return ;
 			redirect('login');
 			
 		}
 		$logged_in=$this->session->userdata('logged_in');
+
 		if($logged_in['base_url'] != base_url()){
-		$this->session->unset_userdata('logged_in');		
-		redirect('login');
+			$this->session->unset_userdata('logged_in');		
+			redirect('login');
 		}
 		
 	 }
@@ -248,6 +258,30 @@ class User extends CI_Controller {
 					}
 					redirect('user/edit_user/'.$uid);
                 }       
+
+	}
+
+	public function wx_update_user($uid)
+	{
+
+		// 打印日志 方便查看
+		$this->load->helper('file');
+		write_file('./application/logs/log.txt',"uid---------------------\n".var_export($uid,true)."\n",'a+');
+		
+		
+		$logged_in=$this->session->userdata('logged_in');
+						
+		if($logged_in['su']!='1'){
+			$uid=$logged_in['uid'];
+		}
+
+		if($this->user_model->wx_update_user($uid)){
+
+			echo json_encode( array(true,$this->lang->line('data_updated_successfully')) );
+		}else{
+			echo json_encode( array(false,$this->lang->line('error_to_update_data')) );
+			
+		}
 
 	}
 	

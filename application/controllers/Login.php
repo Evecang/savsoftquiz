@@ -49,6 +49,8 @@ class Login extends CI_Controller {
 		$this->load->view('footer',$data);
 	}
 
+
+
 	//设置重新发送邮箱的页面？
 	public function resend()
 	{
@@ -187,6 +189,87 @@ class Login extends CI_Controller {
 		
 	}
 	
+
+		//wx登录接口1
+		public function wx_verifylogin(){
+		
+			$username=$this->input->post('email');	
+			$password=$this->input->post('password');
+			$code=$this->input->post('code');
+
+			$status=$this->user_model->wx_login($username,$password);//成功情况：[status:1,user:user]
+			
+			 
+			 //除了验证正确设置 userdata，其他所有情况都设置 flashSession 
+			if($status['status']=='1'){
+				$this->load->helper('url');
+				$user=$status['user'];
+				// TODO:微信端-如果是付费组的用户，检测是否过期，如果过期则重定向到充值页面，不过期则不做处理
+
+				$user['base_url']=base_url();
+				// creating login cookie
+				$this->session->set_userdata('logged_in', $user);
+
+				//将appid,appsecret,code发送至微信服务器,得到openid,session_key
+				$appid='wxb650f284e0718ec2';
+				$appsecret='317599492cbea8916b79918550211d3a';
+				$openid='';
+				$session_key='';
+				$wx_url='https://api.weixin.qq.com/sns/jscode2session?appid='.$appid.'&secret='.$appsecret.'&js_code='.$code.'&grant_type=authorization_code';
+				$info = file_get_contents($wx_url);//发送HTTPs请求并获取返回的数据，推荐使用curl
+				$json = json_decode($info);//对json数据解码
+				$arr = get_object_vars($json);
+				$openid = $arr['openid'];
+				$session_key = $arr['session_key'];
+
+				$this->user_model->wx_binding($username,$password,$openid);
+
+				echo json_encode($user);
+			}else{
+				// ['status','message'] => ['0','invalid login'],['2','email_not_verified'],['3','account_inactive']
+				echo json_encode($status);
+			}
+			
+		}
+
+		//wx登录接口2(不用输入账号密码)
+		public function wx_autologin(){
+
+			$code=$this->input->post('code');
+
+			//将appid,appsecret,code发送至微信服务器,得到openid,session_key
+			$appid='wxb650f284e0718ec2';
+			$appsecret='317599492cbea8916b79918550211d3a';
+			$openid='';
+			$session_key='';
+			$wx_url='https://api.weixin.qq.com/sns/jscode2session?appid='.$appid.'&secret='.$appsecret.'&js_code='.$code.'&grant_type=authorization_code';
+			$info = file_get_contents($wx_url);//发送HTTPs请求并获取返回的数据，推荐使用curl
+			$json = json_decode($info);//对json数据解码
+
+			$arr = get_object_vars($json);
+			$openid = $arr['openid'];
+			$session_key = $arr['session_key'];
+			// 打印日志 方便查看
+			// $this->load->helper('file');
+			// write_file('./application/logs/log.txt',"微信服务器返回的openid与session_key\n".var_export($arr,true)."\n",'a+');
+
+			$status=$this->user_model->wx_autologin($openid);//成功情况：[status:1,user:user] 失败：[status:0,message]
+			
+			if($status['status']=='1'){
+				$this->load->helper('url');
+				$user=$status['user'];
+				$user['base_url']=base_url();
+				// creating login cookie
+				$this->session->set_userdata('logged_in', $user);
+
+				$status['user'] = $user;
+
+				echo json_encode($status);
+			}else{
+				echo json_encode($status);
+			}
+			
+		}
 	
 	
 	

@@ -7,12 +7,12 @@ $logged_in=$this->session->userdata('logged_in');
    
  <h3><?php echo $title;?></h3>
     <?php 
-	if($logged_in['su']=='1'){  //Èç¹ûÊÇ¹ÜÀíÔ±£¨¶àÏÔÊ¾ÒÔÏÂ²¿·Ö£©£º
+	if($logged_in['su']=='1'){  //å¦‚æœæ˜¯ç®¡ç†å‘˜ï¼ˆå¤šæ˜¾ç¤ºä»¥ä¸‹éƒ¨åˆ†ï¼‰ï¼š
 		?>
 		<div class="row">
  
   <div class="col-lg-6">
-    <!-- $list_view='grid',¼´·ÃÎÊquiz¿ØÖÆÆ÷µÄindex(0,'grid') -->
+    <!-- $list_view='grid',å³è®¿é—®quizæ§åˆ¶å™¨çš„index(0,'grid') -->
     <form method="post" action="<?php echo site_url('quiz/index/0/'.$list_view);?>">
       <div class="input-group">
         <input type="text" class="form-control" name="search" placeholder="<?php echo $this->lang->line('search');?>...">
@@ -22,12 +22,12 @@ $logged_in=$this->session->userdata('logged_in');
       </div><!-- /input-group -->
 
    </form>
-  </div><!-- /.col-lg-6ËÑË÷¿ò -->
+  </div><!-- /.col-lg-6æœç´¢æ¡† -->
 
   <div class="col-lg-6">
     <p style="float:right;">
   <?php 
-  //ÕâÀïÑ¡ÔñÕ¹Ê¾¿¼ÊÔÁĞ±íµÄĞÎÊ½£º¸ñ×Ó/±í¸ñ
+  //è¿™é‡Œé€‰æ‹©å±•ç¤ºè€ƒè¯•åˆ—è¡¨çš„å½¢å¼ï¼šæ ¼å­/è¡¨æ ¼
   if($list_view=='grid'){
 	  ?>
 	  <a href="<?php echo site_url('quiz/index/'.$limit.'/table');?>"><?php echo $this->lang->line('table_view');?></a>
@@ -69,7 +69,7 @@ $logged_in=$this->session->userdata('logged_in');
         <th><?php echo $this->lang->line('action');?> </th>
       </tr>
 <?php 
-if(count($result)==0){  //Ã»ÓĞÊı¾İÊ±
+if(count($result)==0){  //æ²¡æœ‰æ•°æ®æ—¶
 	?>
       <tr>
         <td colspan="3"><?php echo $this->lang->line('no_record_found');?></td>
@@ -89,7 +89,7 @@ foreach($result as $key => $val){
 
 <?php 
 if($logged_in['su']=='1'){
-  //½ö¹ÜÀíÔ±²ÅÓĞ±à¼­ºÍÉ¾³ı¹¦ÄÜ
+  //ä»…ç®¡ç†å‘˜æ‰æœ‰ç¼–è¾‘å’Œåˆ é™¤åŠŸèƒ½
 	?>
 			
 <a href="<?php echo site_url('quiz/edit_quiz/'.$val['quid']);?>"><img src="<?php echo base_url('images/edit.png');?>"></a>
@@ -107,15 +107,15 @@ if($logged_in['su']=='1'){
 
   <?php 
   }else{
-    //µ±Ñ¡ÔñÕ¹Ê¾¿¼ÊÔÁĞ±íÎª¸ñ×ÓĞÎÊ½Ê±£º
+    //å½“é€‰æ‹©å±•ç¤ºè€ƒè¯•åˆ—è¡¨ä¸ºæ ¼å­å½¢å¼æ—¶ï¼š
 	  ?>
 	  <?php 
-      if(count($result)==0){  //Ã»ÓĞÊı¾İ
+      if(count($result)==0){  //æ²¡æœ‰æ•°æ®
         ?>
           <?php echo $this->lang->line('no_record_found');?>
     <?php
       }
-      //ccºÍcolorcodeÖ÷ÒªÉèÖÃ±íÍ·µÄÑÕÉ«£¬ÎŞÊµ¼Ê×÷ÓÃ
+      //ccå’Œcolorcodeä¸»è¦è®¾ç½®è¡¨å¤´çš„é¢œè‰²ï¼Œæ— å®é™…ä½œç”¨
       $cc=0;
       $colorcode=array(
       'success',
@@ -144,7 +144,7 @@ if($logged_in['su']=='1'){
           <a href="<?php echo site_url('quiz/quiz_detail/'.$val['quid']);?>" class="btn btn-success"  ><?php echo $this->lang->line('attempt');?> </a>
 
     <?php 
-    if($logged_in['su']=='1'){  //Èç¹ûÊÇ¹ÜÀíÔ±£¬Ìí¼Ó±à¼­»¹ÓĞÉ¾³ı¹¦ÄÜ
+    if($logged_in['su']=='1'){  //å¦‚æœæ˜¯ç®¡ç†å‘˜ï¼Œæ·»åŠ ç¼–è¾‘è¿˜æœ‰åˆ é™¤åŠŸèƒ½
     ?>
           <a href="<?php echo site_url('quiz/edit_quiz/'.$val['quid']);?>"><img src="<?php echo base_url('images/edit.png');?>"></a>
           <a href="javascript:remove_entry('quiz/remove_quiz/<?php echo $val['quid'];?>');"><img src="<?php echo base_url('images/cross.png');?>"></a>

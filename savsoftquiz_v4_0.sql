@@ -380,7 +380,8 @@ CREATE TABLE `savsoft_users` (
   `photo` varchar(1000) DEFAULT NULL,
   `user_status` varchar(100) NOT NULL DEFAULT 'Active',
   `web_token` varchar(1000) DEFAULT NULL,
-  `android_token` varchar(1000) DEFAULT NULL
+  `android_token` varchar(1000) DEFAULT NULL,
+  `wx_openid` varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --

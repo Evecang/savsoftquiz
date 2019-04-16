@@ -943,14 +943,18 @@ if($this->config->item('allow_result_email')){
 				}
 			}
 
+			$marks = $marks.'';
 			if($attempted==1){
-				if($marks == 1){
+				if($marks=='1'){
 					$correct_incorrect[$ak]=1;
-				}else if($marks==0){
+				}elseif($marks=='0'){
 					$correct_incorrect[$ak]=2;
 				}else{
 					// $correct_incorrect[$ak]=4;		//注意！！4的话代表是完形填空的不完全对的情况
 					$correct_incorrect[$ak] = '4-'.$marks;
+					// if(explode('-',$correct_incorrect[$ak])[1]=='1'){
+					// 	$correct_incorrect[$ak]=1;
+					// }
 				}
 			}else{
 				$correct_incorrect[$ak]=0;

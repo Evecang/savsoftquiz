@@ -718,13 +718,13 @@ if($key != 0){	//key=0???????
 		}
 
 
-		//multiple type??
+		//multiple type
 		if($ques_type=="1"){
 			$correct_options=explode(",",$singlequestion['3']);		//split
-			$no_correct=count($correct_options);	//姝ｇ‘绛旀鐨勪釜鏁�
+			$no_correct=count($correct_options);	//正确答案的个数
 			$correctoptionm=array();
-			for($i=1;$i<=10;$i++){	//??10???
-				if($singlequestion[$optionkeycounter] != ""){	//??????
+			for($i=1;$i<=10;$i++){	//最多10项
+				if($singlequestion[$optionkeycounter] != ""){	//答案不为空
 					foreach($correct_options as $valueop){
 						if($valueop == $i){ $correctoptionm[$i-1] =(1/$no_correct);		//?i????????? 1?/??????
 							break;
@@ -757,7 +757,7 @@ if($key != 0){	//key=0???????
 
  		//match Answer
 		if($ques_type=="2"){
-			$qotion_match=0;	//鍖归厤棰樼洰鐨勯€夐」涓暟s
+			$qotion_match=0;	//match连接的个数
 			for($j=1;$j<=10;$j++){
 			
 				if($singlequestion[$optionkeycounter] != ""){
@@ -773,7 +773,7 @@ if($key != 0){	//key=0???????
 			
 				if($singlequestion[$optionkeycounter] != ""){
 					$explode_match=explode('=',$singlequestion[$optionkeycounter]);		//A=B -> [A,B]
-					$correctoption =1/$qotion_match; 	//姣忛亾鍖归厤閫夐」鐨勫垎鍊�
+					$correctoption =1/$qotion_match;
 					$insert_options = array(
 						"qid" =>$qid,
 						"q_option" =>$explode_match[0] ,
@@ -813,19 +813,14 @@ if($key != 0){	//key=0???????
 
 		//TODO 计算题没有答案
 		if($ques_type=="4"){
-			for($i=1;$i<=1;$i++){
-
+			//optionkeycounter=4，即第一个option
 				if($singlequestion[$optionkeycounter] != ""){
-					// if($singlequestion['3'] == $i){ $correctoption ='1'; }
-					// $insert_options = array(
-					// 	"qid" =>$qid,
-					// 	"q_option" => $singlequestion[$optionkeycounter],
-					// 	"score" => $correctoption
-					// );
-					// $this->db->insert("savsoft_options",$insert_options);
-					// $optionkeycounter++;
+					$insert_options = array(
+						"qid" =>$qid,
+						"q_option" => $singlequestion[$optionkeycounter]
+					);
+					$this->db->insert("savsoft_options",$insert_options);
 				}
-			}
 
 		} 
 

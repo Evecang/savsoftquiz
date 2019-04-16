@@ -1,0 +1,297 @@
+User 登陆态array (
+  'uid' => '1',
+  'password' => '21232f297a57a5a743894a0e4a801fc3',
+  'email' => 'admin@example.com',
+  'first_name' => 'Admin',
+  'last_name' => 'Admin',
+  'contact_no' => '1234567890',
+  'connection_key' => NULL,
+  'gid' => '1',
+  'su' => '1',
+  'subscription_expired' => '1776290400',
+  'verify_code' => '0',
+  'wp_user' => '',
+  'registered_date' => '2017-04-20 19:22:38',
+  'photo' => NULL,
+  'user_status' => 'Active',
+  'web_token' => 'dnwIpQWkxyA:APA91bFZLhdxZnPcNareTyHnJRikJGqaT7qh9DF4jSmyKSOq1rv6k7uwgmaQ4_K7jT3WNNUeKRdRQYsNf_OZaQZ7i5nKI_CjA6QGPwPsL5_D7ShPTtsuIwTkr0CuGx0RS7oAVNg_bImc',
+  'android_token' => NULL,
+  'wx_openid' => 'oXEya5QQKvvPsnmD_MR2bYo7rg1U',
+  'group_name' => 'Free',
+  'price' => '0',
+  'valid_for_days' => '0',
+  'description' => '10 Free quiz',
+  'base_url' => 'http://localhost:8081/savsoftquiz/',
+)
+'http://localhost:8081/savsoftquiz/'
+uid---------------------
+'1'
+array (
+  'first_name' => 'Admin',
+  'last_name' => 'Admin',
+  'contact_no' => '1234567890',
+)
+User 登陆态array (
+  'uid' => '1',
+  'password' => '21232f297a57a5a743894a0e4a801fc3',
+  'email' => 'admin@example.com',
+  'first_name' => 'Admin',
+  'last_name' => 'Admin',
+  'contact_no' => '1234567890',
+  'connection_key' => NULL,
+  'gid' => '1',
+  'su' => '1',
+  'subscription_expired' => '1776290400',
+  'verify_code' => '0',
+  'wp_user' => '',
+  'registered_date' => '2017-04-20 19:22:38',
+  'photo' => NULL,
+  'user_status' => 'Active',
+  'web_token' => 'dnwIpQWkxyA:APA91bFZLhdxZnPcNareTyHnJRikJGqaT7qh9DF4jSmyKSOq1rv6k7uwgmaQ4_K7jT3WNNUeKRdRQYsNf_OZaQZ7i5nKI_CjA6QGPwPsL5_D7ShPTtsuIwTkr0CuGx0RS7oAVNg_bImc',
+  'android_token' => NULL,
+  'wx_openid' => 'oXEya5QQKvvPsnmD_MR2bYo7rg1U',
+  'group_name' => 'Free',
+  'price' => '0',
+  'valid_for_days' => '0',
+  'description' => '10 Free quiz',
+  'base_url' => 'http://localhost:8081/savsoftquiz/',
+)
+'http://localhost:8081/savsoftquiz/'
+uid---------------------
+'1'
+array (
+  'first_name' => 'Admin',
+  'last_name' => 'Admin',
+  'contact_no' => '1234567890',
+)
+User 登陆态array (
+  'uid' => '1',
+  'password' => '21232f297a57a5a743894a0e4a801fc3',
+  'email' => 'admin@example.com',
+  'first_name' => 'Admin',
+  'last_name' => 'Admin',
+  'contact_no' => '1234567890',
+  'connection_key' => NULL,
+  'gid' => '1',
+  'su' => '1',
+  'subscription_expired' => '1776290400',
+  'verify_code' => '0',
+  'wp_user' => '',
+  'registered_date' => '2017-04-20 19:22:38',
+  'photo' => NULL,
+  'user_status' => 'Active',
+  'web_token' => 'dnwIpQWkxyA:APA91bFZLhdxZnPcNareTyHnJRikJGqaT7qh9DF4jSmyKSOq1rv6k7uwgmaQ4_K7jT3WNNUeKRdRQYsNf_OZaQZ7i5nKI_CjA6QGPwPsL5_D7ShPTtsuIwTkr0CuGx0RS7oAVNg_bImc',
+  'android_token' => NULL,
+  'wx_openid' => 'oXEya5QQKvvPsnmD_MR2bYo7rg1U',
+  'group_name' => 'Free',
+  'price' => '0',
+  'valid_for_days' => '0',
+  'description' => '10 Free quiz',
+  'base_url' => 'http://localhost:8081/savsoftquiz/',
+)
+'http://localhost:8081/savsoftquiz/'
+uid---------------------
+'1'
+array (
+  'first_name' => 'Admin',
+  'last_name' => 'Admin',
+  'contact_no' => '1234567890',
+)
+User 登陆态array (
+  'uid' => '1',
+  'password' => '21232f297a57a5a743894a0e4a801fc3',
+  'email' => 'admin@example.com',
+  'first_name' => 'Admin',
+  'last_name' => 'Admin',
+  'contact_no' => '1234567890',
+  'connection_key' => NULL,
+  'gid' => '1',
+  'su' => '1',
+  'subscription_expired' => '1776290400',
+  'verify_code' => '0',
+  'wp_user' => '',
+  'registered_date' => '2017-04-20 19:22:38',
+  'photo' => NULL,
+  'user_status' => 'Active',
+  'web_token' => 'dnwIpQWkxyA:APA91bFZLhdxZnPcNareTyHnJRikJGqaT7qh9DF4jSmyKSOq1rv6k7uwgmaQ4_K7jT3WNNUeKRdRQYsNf_OZaQZ7i5nKI_CjA6QGPwPsL5_D7ShPTtsuIwTkr0CuGx0RS7oAVNg_bImc',
+  'android_token' => NULL,
+  'wx_openid' => 'oXEya5QQKvvPsnmD_MR2bYo7rg1U',
+  'group_name' => 'Free',
+  'price' => '0',
+  'valid_for_days' => '0',
+  'description' => '10 Free quiz',
+  'base_url' => 'http://localhost:8081/savsoftquiz/',
+)
+'http://localhost:8081/savsoftquiz/'
+uid---------------------
+'1'
+array (
+  'first_name' => 'Admin',
+  'last_name' => 'Admin',
+  'contact_no' => '1234567890',
+)
+User 登陆态array (
+  'uid' => '1',
+  'password' => '21232f297a57a5a743894a0e4a801fc3',
+  'email' => 'admin@example.com',
+  'first_name' => 'Admin',
+  'last_name' => 'Admin',
+  'contact_no' => '1234567890',
+  'connection_key' => NULL,
+  'gid' => '1',
+  'su' => '1',
+  'subscription_expired' => '1776290400',
+  'verify_code' => '0',
+  'wp_user' => '',
+  'registered_date' => '2017-04-20 19:22:38',
+  'photo' => NULL,
+  'user_status' => 'Active',
+  'web_token' => 'dnwIpQWkxyA:APA91bFZLhdxZnPcNareTyHnJRikJGqaT7qh9DF4jSmyKSOq1rv6k7uwgmaQ4_K7jT3WNNUeKRdRQYsNf_OZaQZ7i5nKI_CjA6QGPwPsL5_D7ShPTtsuIwTkr0CuGx0RS7oAVNg_bImc',
+  'android_token' => NULL,
+  'wx_openid' => 'oXEya5QQKvvPsnmD_MR2bYo7rg1U',
+  'group_name' => 'Free',
+  'price' => '0',
+  'valid_for_days' => '0',
+  'description' => '10 Free quiz',
+  'base_url' => 'http://localhost:8081/savsoftquiz/',
+)
+'http://localhost:8081/savsoftquiz/'
+uid---------------------
+'1'
+array (
+  'first_name' => 'Admin',
+  'last_name' => 'Admin',
+  'contact_no' => '1234567890',
+)
+User 登陆态array (
+  'uid' => '1',
+  'password' => '21232f297a57a5a743894a0e4a801fc3',
+  'email' => 'admin@example.com',
+  'first_name' => 'Admin',
+  'last_name' => 'Admin',
+  'contact_no' => '1234567890',
+  'connection_key' => NULL,
+  'gid' => '1',
+  'su' => '1',
+  'subscription_expired' => '1776290400',
+  'verify_code' => '0',
+  'wp_user' => '',
+  'registered_date' => '2017-04-20 19:22:38',
+  'photo' => NULL,
+  'user_status' => 'Active',
+  'web_token' => 'dnwIpQWkxyA:APA91bFZLhdxZnPcNareTyHnJRikJGqaT7qh9DF4jSmyKSOq1rv6k7uwgmaQ4_K7jT3WNNUeKRdRQYsNf_OZaQZ7i5nKI_CjA6QGPwPsL5_D7ShPTtsuIwTkr0CuGx0RS7oAVNg_bImc',
+  'android_token' => NULL,
+  'wx_openid' => 'oXEya5QQKvvPsnmD_MR2bYo7rg1U',
+  'group_name' => 'Free',
+  'price' => '0',
+  'valid_for_days' => '0',
+  'description' => '10 Free quiz',
+  'base_url' => 'http://localhost:8081/savsoftquiz/',
+)
+'http://localhost:8081/savsoftquiz/'
+uid---------------------
+'1'
+array (
+  'first_name' => 'Admin',
+  'last_name' => 'Admin',
+  'contact_no' => '1234567890',
+)
+User 登陆态array (
+  'uid' => '1',
+  'password' => '21232f297a57a5a743894a0e4a801fc3',
+  'email' => 'admin@example.com',
+  'first_name' => 'Admin',
+  'last_name' => 'Admin',
+  'contact_no' => '1234567890',
+  'connection_key' => NULL,
+  'gid' => '1',
+  'su' => '1',
+  'subscription_expired' => '1776290400',
+  'verify_code' => '0',
+  'wp_user' => '',
+  'registered_date' => '2017-04-20 19:22:38',
+  'photo' => NULL,
+  'user_status' => 'Active',
+  'web_token' => 'dnwIpQWkxyA:APA91bFZLhdxZnPcNareTyHnJRikJGqaT7qh9DF4jSmyKSOq1rv6k7uwgmaQ4_K7jT3WNNUeKRdRQYsNf_OZaQZ7i5nKI_CjA6QGPwPsL5_D7ShPTtsuIwTkr0CuGx0RS7oAVNg_bImc',
+  'android_token' => NULL,
+  'wx_openid' => 'oXEya5QQKvvPsnmD_MR2bYo7rg1U',
+  'group_name' => 'Free',
+  'price' => '0',
+  'valid_for_days' => '0',
+  'description' => '10 Free quiz',
+  'base_url' => 'http://localhost:8081/savsoftquiz/',
+)
+'http://localhost:8081/savsoftquiz/'
+uid---------------------
+'1'
+array (
+  'first_name' => 'Admin',
+  'last_name' => 'Admin',
+  'contact_no' => '1234567890',
+)
+User 登陆态array (
+  'uid' => '1',
+  'password' => '21232f297a57a5a743894a0e4a801fc3',
+  'email' => 'admin@example.com',
+  'first_name' => 'Admin',
+  'last_name' => 'Admin',
+  'contact_no' => '1234567890',
+  'connection_key' => NULL,
+  'gid' => '1',
+  'su' => '1',
+  'subscription_expired' => '1776290400',
+  'verify_code' => '0',
+  'wp_user' => '',
+  'registered_date' => '2017-04-20 19:22:38',
+  'photo' => NULL,
+  'user_status' => 'Active',
+  'web_token' => 'dnwIpQWkxyA:APA91bFZLhdxZnPcNareTyHnJRikJGqaT7qh9DF4jSmyKSOq1rv6k7uwgmaQ4_K7jT3WNNUeKRdRQYsNf_OZaQZ7i5nKI_CjA6QGPwPsL5_D7ShPTtsuIwTkr0CuGx0RS7oAVNg_bImc',
+  'android_token' => NULL,
+  'wx_openid' => 'oXEya5QQKvvPsnmD_MR2bYo7rg1U',
+  'group_name' => 'Free',
+  'price' => '0',
+  'valid_for_days' => '0',
+  'description' => '10 Free quiz',
+  'base_url' => 'http://localhost:8081/savsoftquiz/',
+)
+'http://localhost:8081/savsoftquiz/'
+uid---------------------
+'1'
+array (
+  'first_name' => 'Admin',
+  'last_name' => 'Admin',
+  'contact_no' => '110220330',
+)
+User 登陆态array (
+  'uid' => '1',
+  'password' => '21232f297a57a5a743894a0e4a801fc3',
+  'email' => 'admin@example.com',
+  'first_name' => 'Admin',
+  'last_name' => 'Admin',
+  'contact_no' => '1234567890',
+  'connection_key' => NULL,
+  'gid' => '1',
+  'su' => '1',
+  'subscription_expired' => '1776290400',
+  'verify_code' => '0',
+  'wp_user' => '',
+  'registered_date' => '2017-04-20 19:22:38',
+  'photo' => NULL,
+  'user_status' => 'Active',
+  'web_token' => 'dnwIpQWkxyA:APA91bFZLhdxZnPcNareTyHnJRikJGqaT7qh9DF4jSmyKSOq1rv6k7uwgmaQ4_K7jT3WNNUeKRdRQYsNf_OZaQZ7i5nKI_CjA6QGPwPsL5_D7ShPTtsuIwTkr0CuGx0RS7oAVNg_bImc',
+  'android_token' => NULL,
+  'wx_openid' => 'oXEya5QQKvvPsnmD_MR2bYo7rg1U',
+  'group_name' => 'Free',
+  'price' => '0',
+  'valid_for_days' => '0',
+  'description' => '10 Free quiz',
+  'base_url' => 'http://localhost:8081/savsoftquiz/',
+)
+'http://localhost:8081/savsoftquiz/'
+uid---------------------
+'1'
+array (
+  'first_name' => 'Admin',
+  'last_name' => 'Admin',
+  'contact_no' => '1234567890',
+)
