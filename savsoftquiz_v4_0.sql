@@ -180,7 +180,7 @@ CREATE TABLE `savsoft_options` (
   `q_option` text NOT NULL,
   `q_option_match` varchar(1000) DEFAULT NULL,
   `score` float NOT NULL DEFAULT '0',
-  `q_option_match_option` text NOT NULL --new:to match the cloze test options
+  `q_option_match_option` text NOT NULL 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
