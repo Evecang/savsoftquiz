@@ -32,7 +32,7 @@
   
 	<?php 
 	if($this->session->userdata('logged_in')){
-		if($quiz['camera_req']==1 && $this->config->item('webcam')==true){	//webcamÊÇÕÕÆ¬²¶×½¹¦ÄÜ£¬ÔÚconfigÎÄ¼þÖÐÄ¬ÈÏÎªtrue
+		if($quiz['camera_req']==1 && $this->config->item('webcam')==true){	//webcamæ˜¯ç…§ç‰‡æ•æ‰åŠŸèƒ½ï¼Œåœ¨configæ–‡ä»¶ä¸­é»˜è®¤ä¸ºtrue
 	?>
 	<div style="color:#ff0000;"><?php echo $this->lang->line('camera_instructions');?></div>
 	<div id="my_photo" style="width:500px;height:500px;background:#212121;padding:2px;border:1px solid #666666;color:red"></div>
@@ -78,7 +78,7 @@
 	<?php 
 	}else{
 	?>	
-	<!-- ¿ªÊ¼²âÊÔ°´Å¥ -->
+	<!-- å¼€å§‹æµ‹è¯•æŒ‰é’® -->
 	<button class="btn btn-success" type="submit"><?php echo $this->lang->line('start_quiz');?></button>
  
 	<?php 
@@ -114,7 +114,7 @@
 
 
 
-</div>	<!--ENDOF:class="container"×îÍâ±ßµÄ-->
+</div>	<!--ENDOF:class="container"æœ€å¤–è¾¹çš„-->
 
 
 <div  id="warning_div" style="padding:10px; position:fixed;z-index:100;display:none;width:100%;border-radius:5px;height:200px; border:1px solid #dddddd;left:4px;top:70px;background:#ffffff;">

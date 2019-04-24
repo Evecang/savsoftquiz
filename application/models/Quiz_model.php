@@ -2,7 +2,7 @@
 Class Quiz_model extends CI_Model
 {
  
-  function quiz_list($limit){	//根据$limit关键词进行筛选，返回含有关键词的考试列表
+  function quiz_list($limit){	//根据$limit数目进行筛选，返回含有关键词的考试列表
 	  
 	$logged_in=$this->session->userdata('logged_in');
 	if($logged_in['su']=='0'){	//学生
@@ -372,104 +372,100 @@ function get_qcl($quid){
  }
  
  
- function insert_result($quid,$uid){
+ function insert_result($quid,$uid){	//创建结果
 	 
 	 // get quiz info
-	  $this->db->where('quid',$quid);
-	 $query=$this->db->get('savsoft_quiz');
+	$this->db->where('quid',$quid);
+	$query=$this->db->get('savsoft_quiz');
 	$quiz=$query->row_array();
 	 
-	 if($quiz['question_selection']=='0'){
+	if($quiz['question_selection']=='0'){
 		 
-	// get questions	
-$noq=$quiz['noq'];	
-	$qids=explode(',',$quiz['qids']);
-	$categories=array();
-	$category_range=array();
+		// get questions	
+		$noq=$quiz['noq'];	
+		$qids=explode(',',$quiz['qids']);
+		$categories=array();
+		$category_range=array();
 
-	$i=0;
-	$wqids=implode(',',$qids);
-	$noq=array();
-	$query=$this->db->query("select * from savsoft_qbank join savsoft_category on savsoft_category.cid=savsoft_qbank.cid where qid in ($wqids) ORDER BY FIELD(qid,$wqids)  ");	
-	$questions=$query->result_array();
-	foreach($questions as $qk => $question){
-	if(!in_array($question['category_name'],$categories)){
-		if(count($categories)!=0){
-			$i+=1;
-		}
-	$categories[]=$question['category_name'];
-	$noq[$i]+=1;
-	}else{
-	$noq[$i]+=1;
-
-	}
-	}
-	
-	$categories=array();
-	$category_range=array();
-
-	$i=-1;
-	foreach($questions as $qk => $question){
-		if(!in_array($question['category_name'],$categories)){
-		 $categories[]=$question['category_name'];
-		$i+=1;	
-		$category_range[]=$noq[$i];
-		
-		} 
-	}
- 
-	
-	}else{
-	// randomaly select qids
-	 $this->db->where('quid',$quid);
-	 $query=$this->db->get('savsoft_qcl');
-	 $qcl=$query->result_array();
-	$qids=array();
-	$categories=array();
-	$category_range=array();
-	
-	foreach($qcl as $k => $val){
-		$cid=$val['cid'];
-		$lid=$val['lid'];
-		$noq=$val['noq'];
-		
 		$i=0;
-	$query=$this->db->query("select * from savsoft_qbank join savsoft_category on savsoft_category.cid=savsoft_qbank.cid where savsoft_qbank.cid='$cid' and lid='$lid' ORDER BY RAND() limit $noq ");	
-	$questions=$query->result_array();
-	foreach($questions as $qk => $question){
-		$qids[]=$question['qid'];
-		if(!in_array($question['category_name'],$categories)){
-		$categories[]=$question['category_name'];
-		$category_range[]=$i+$noq;
+		$wqids=implode(',',$qids);
+		$noq=array();
+		$query=$this->db->query("select * from savsoft_qbank join savsoft_category on savsoft_category.cid=savsoft_qbank.cid where qid in ($wqids) ORDER BY FIELD(qid,$wqids)  ");	
+		$questions=$query->result_array();
+		foreach($questions as $qk => $question){
+			if(!in_array($question['category_name'],$categories)){
+				if(count($categories)!=0){
+					$i+=1;
+				}
+				$categories[]=$question['category_name'];
+				$noq[$i]+=1;
+			}else{
+				$noq[$i]+=1;
+			}
 		}
-	}
-	}
+		
+		$categories=array();
+		$category_range=array();
+
+		$i=-1;
+		foreach($questions as $qk => $question){
+			if(!in_array($question['category_name'],$categories)){
+				$categories[]=$question['category_name'];
+				$i+=1;	
+				$category_range[]=$noq[$i];
+			} 
+		}
+	
+	}else{
+		// randomaly select qids
+		$this->db->where('quid',$quid);
+		$query=$this->db->get('savsoft_qcl');
+		$qcl=$query->result_array();
+		$qids=array();
+		$categories=array();
+		$category_range=array();
+		
+		foreach($qcl as $k => $val){
+			$cid=$val['cid'];
+			$lid=$val['lid'];
+			$noq=$val['noq'];
+			
+			$i=0;
+			$query=$this->db->query("select * from savsoft_qbank join savsoft_category on savsoft_category.cid=savsoft_qbank.cid where savsoft_qbank.cid='$cid' and lid='$lid' ORDER BY RAND() limit $noq ");	
+			$questions=$query->result_array();
+			foreach($questions as $qk => $question){
+				$qids[]=$question['qid'];
+				if(!in_array($question['category_name'],$categories)){
+					$categories[]=$question['category_name'];
+					$category_range[]=$i+$noq;
+				}
+			}
+		}
 	}
 	$zeros=array();
-	 foreach($qids as $qidval){
-	 $zeros[]=0;
-	 }
-	 
-	 
-	 
-	 $userdata=array(
-	 'quid'=>$quid,
-	 'uid'=>$uid,
-	 'r_qids'=>implode(',',$qids),
-	 'categories'=>implode(',',$categories),
-	 'category_range'=>implode(',',$category_range),
-	 'start_time'=>time(),
-	 'individual_time'=>implode(',',$zeros),
-	 'score_individual'=>implode(',',$zeros),
-	 'attempted_ip'=>$_SERVER['REMOTE_ADDR'] 
-	 );
-	 
-	 if($this->session->userdata('photoname')){
-		 $photoname=$this->session->userdata('photoname');
-		 $userdata['photo']=$photoname;
-	 }
-	 $this->db->insert('savsoft_result',$userdata);
-	  $rid=$this->db->insert_id();
+	foreach($qids as $qidval){
+		$zeros[]=0;
+	}
+	
+	
+	$userdata=array(
+	'quid'=>$quid,
+	'uid'=>$uid,
+	'r_qids'=>implode(',',$qids),
+	'categories'=>implode(',',$categories),
+	'category_range'=>implode(',',$category_range),
+	'start_time'=>time(),
+	'individual_time'=>implode(',',$zeros),
+	'score_individual'=>implode(',',$zeros),
+	'attempted_ip'=>$_SERVER['REMOTE_ADDR'] 
+	);
+	
+	if($this->session->userdata('photoname')){
+		$photoname=$this->session->userdata('photoname');
+		$userdata['photo']=$photoname;
+	}
+	$this->db->insert('savsoft_result',$userdata);
+	$rid=$this->db->insert_id();
 	return $rid;
  }
  

@@ -668,9 +668,6 @@ $new_password=rand('1111','9999');
 
 		$this->db->where('uid',$uid);
 		
-		// 打印日志 方便查看
-		write_file('./application/logs/log.txt',var_export($userdata,true)."\n",'a+');
-
 	 if($this->db->update('savsoft_users',$userdata)){
 		 
 		 return true;

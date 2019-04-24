@@ -57,7 +57,7 @@ class Quiz extends CI_Controller {
 			return ;
 		}
 		$logged_in=$this->session->userdata('logged_in');
-			if($logged_in['base_url'] != base_url()){
+		if($logged_in['base_url'] != base_url()){
 			$this->session->unset_userdata('logged_in');		
 			echo json_encode(array(
 				'status'=>'0',
@@ -67,13 +67,23 @@ class Quiz extends CI_Controller {
 		}
 		
 		$logged_in=$this->session->userdata('logged_in');
+
+		$limit='0';
+		$data['limit']=$limit;	//条数
+
 		
-		$data['limit']=$limit;	//搜索的关键词
 		// fetching quiz list
 		$data['result']=$this->quiz_model->quiz_list($limit);	//返回含有$limit关键词的考试列表
+
+		// 打印日志 方便查看
+		// $this->load->helper('file');
+		// write_file('./application/logs/log.txt',var_export($data['result'],true)."\n",'a+');
+
 		echo json_encode(array(
-			'status'=>'0',
-			'message'=>'Fetching quiz list success!'
+			'status'=>'1',
+			'message'=>'Fetching quiz list success!',
+			'result'=>$data['result'],
+			'user'=>$logged_in
 		));
 	}
 	
@@ -171,6 +181,47 @@ function open_quiz($limit='0'){
 		$this->load->view('footer',$data);
 	}
 	
+	public function wx_edit_quiz($quid)
+	{
+				// redirect if not loggedin
+		if(!$this->session->userdata('logged_in')){
+			echo json_encode(array('success'=>false));
+			return ;
+		}
+		$logged_in=$this->session->userdata('logged_in');
+		if($logged_in['base_url'] != base_url()){
+			$this->session->unset_userdata('logged_in');		
+			echo json_encode(array('success'=>false));
+			return ;
+		}
+		
+		$logged_in=$this->session->userdata('logged_in');
+		if($logged_in['su']!='1'){
+			echo json_encode(array('success'=>false));
+			return ;
+		}
+			
+			
+	 
+		$data['title']=$this->lang->line('edit').' '.$this->lang->line('quiz');
+		// fetching group list
+		$data['group_list']=$this->user_model->group_list();
+		$data['quiz']=$this->quiz_model->get_quiz($quid);
+		if($data['quiz']['question_selection']=='0'){
+		$data['questions']=$this->quiz_model->get_questions($data['quiz']['qids']);
+			 
+		}else{
+			$this->load->model("qbank_model");
+	   $data['qcl']=$this->quiz_model->get_qcl($data['quiz']['quid']);
+		
+			 $data['category_list']=$this->qbank_model->category_list();
+		 $data['level_list']=$this->qbank_model->level_list();
+		
+		}
+		$this->load->view('header',$data);
+		$this->load->view('edit_quiz',$data);
+		$this->load->view('footer',$data);
+	}
 	
 	
 	
@@ -473,6 +524,18 @@ function open_quiz($limit='0'){
 		$this->load->view('footer',$data);
 		
 	}
+
+	public function wx_quiz_detail($quid){	//用户在考试列表点击 Attempt 按钮应用的函数，参数为quid试卷的id
+
+		$logged_in=$this->session->userdata('logged_in');
+		$gid=$logged_in['gid'];
+
+		$data['quiz']=$this->quiz_model->get_quiz($quid);	//得到指定试卷的所有信息，从savsoft_quiz表中查询
+
+		echo json_encode($data['quiz']);
+		return ;
+
+	}
 	
 	public function validate_quiz($quid){	//正式进入测试
 		$data['quiz']=$this->quiz_model->get_quiz($quid);
@@ -621,16 +684,119 @@ function open_quiz($limit='0'){
 		}
 		
 	}
+
+	public function wx_validate_quiz($quid){	//正式进入测试	code: 0-login 1-success 2-resume 3-detail 
+		$data['quiz']=$this->quiz_model->get_quiz($quid);
+		$result['code']=0;
+
+
+		// redirect if not loggedin
+		if(!$this->session->userdata('logged_in')){
+			$result['message']='please redirect to login';
+			echo json_encode($result);
+			return ;
+		}
+		$logged_in=$this->session->userdata('logged_in');
+		if($logged_in['base_url'] != base_url()){
+			$result['message']='please redirect to login';
+			echo json_encode($result);
+			return ;
+		}
+		 
+		$logged_in=$this->session->userdata('logged_in');
+		
+		$gid=$logged_in['gid'];
+		$uid=$logged_in['uid'];
+		 
+		 // 该试卷已经被用户打开了
+		 $open_result=$this->quiz_model->open_result($quid,$uid);	//在result表中，根据uid查询正在测试的用户，返回rid(result的id)
+		if($open_result != '0'){
+			redirect('quiz/wx_resume_pending/'.$open_result);	//继续作答
+			// $result['code']=2;
+			// $result['message']='redirect to resume_pending';
+			// echo json_encode($result);
+			return ;
+		}
+		$data['quiz']=$this->quiz_model->get_quiz($quid);
+		// 班级不匹配
+		if(!in_array($gid,explode(',',$data['quiz']['gids']))){
+			// redirect('quiz/quiz_detail/'.$quid);
+			$result['code']=3;
+			$result['message']='Quiz not assigned to your group';
+			echo json_encode($result);return ;
+		 }
+		// 未开始
+		if($data['quiz']['start_date'] > time()){
+		// redirect('quiz/quiz_detail/'.$quid);
+			$result['code']=3;
+			$result['message']='Quiz not start';
+			echo json_encode($result);return ;
+			
+		 }
+		// 已结束
+		if($data['quiz']['end_date'] < time()){
+		// redirect('quiz/quiz_detail/'.$quid);
+			$result['code']=3;
+			$result['message']='Quiz ended';
+			echo json_encode($result);return ;
+		 }
+
+		// 不合法的ip地址
+		if($data['quiz']['ip_address'] !=''){
+			$ip_address=explode(",",$data['quiz']['ip_address']);
+			$myip=$_SERVER['REMOTE_ADDR'];
+			if(!in_array($myip,$ip_address)){
+				// redirect('quiz/quiz_detail/'.$quid);
+				$result['code']=3;
+				$result['message']='Invalid IP Address';
+				echo json_encode($result);return ;
+		 	}
+		}
+		 // 最大参与次数
+		$maximum_attempt=$this->quiz_model->count_result($quid,$uid);
+		if($data['quiz']['maximum_attempts'] <= $maximum_attempt){
+			// redirect('quiz/quiz_detail/'.$quid);
+			$result['code']=3;
+			$result['message']='You have reached maximum attempt';
+			echo json_encode($result);return ;
+		 }
+		
+		// insert result row and get rid (result id)
+		$rid=$this->quiz_model->insert_result($quid,$uid);
+		
+		$this->session->set_userdata('rid', $rid);
+		// redirect('quiz/attempt/'.$rid);	
+		$result['code']=1;
+		$result['message']='Ready to attempt quiz';
+		$result['url']='quiz_attempt/quiz_attempt?rid='.$open_result;
+		echo json_encode($result);return ;
+		
+
+		
+	}
 	
 	function resume_pending($open_result){	//继续作答，$open_result为正在作答的用户的result表中的rid
-	$data['title']=$this->lang->line('pending_quiz');
-	$this->session->set_userdata('rid', $open_result);
+		$data['title']=$this->lang->line('pending_quiz');
+		$this->session->set_userdata('rid', $open_result);
 		$data['openquizurl']='quiz/attempt/'.$open_result;
 			 		
+		//$data['openquizurl']就是要跳转的地址
 		$this->load->view('header',$data);
 		 $this->load->view('pending_quiz_message',$data);
 		$this->load->view('footer',$data);
 	
+	}
+
+	function wx_resume_pending($open_result){	//继续作答，$open_result为正在作答的用户的result表中的rid
+		$this->session->set_userdata('rid', $open_result);
+		$data['openquizurl']='quiz_attempt/quiz_attempt?rid='.$open_result;
+		//要给pending_quiz_message传$data['openquizurl']
+		$result['code']=2;
+		$result['message']='You have a pending quiz to submit!
+		Click "Yes" redirecting to resume that quiz...';
+		$result['url']=$data['openquizurl'];
+		echo json_encode($result);
+		return ;
 	}
 	
 	function attempt($rid){	//测试界面
@@ -701,7 +867,90 @@ function open_quiz($limit='0'){
 		$this->load->view('quiz_attempt_'.$data['quiz']['quiz_template'],$data);
 		$this->load->view('footer',$data);
 			
+	}
+
+	function wx_attempt($rid){	//微信测试界面
+		$result['code']=0;
+
+		// redirect if not loggedin
+		if(!$this->session->userdata('logged_in')){
+			if(!$this->session->userdata('logged_in_raw')){
+				// redirect('login');
+				$result['message']='please redirect to login';
+				echo json_encode($result); return ;
+			}
 		}
+		
+		if(!$this->session->userdata('logged_in')){
+			$logged_in=$this->session->userdata('logged_in_raw');
+		}else{
+			$logged_in=$this->session->userdata('logged_in');
+		}
+		if($logged_in['base_url'] != base_url()){
+			$this->session->unset_userdata('logged_in');		
+			// redirect('login');
+			$result['message']='please redirect to login';
+			echo json_encode($result); return ;
+		}
+
+
+		$srid=$this->session->userdata('rid');
+		// if linked and session rid is not matched then something wrong.
+		if($rid != $srid){
+			// redirect('quiz/');
+			$result['code']=2;
+			$result['message']='Try again';
+			echo json_encode($result); return ;
+		}
+		
+		
+		// get result and quiz info and validate time period
+		$data['quiz']=$this->quiz_model->quiz_result($rid);	//根据rid得到考试结果信息result表+quiz表
+		$data['saved_answers']=$this->quiz_model->saved_answers($rid);	//在answer表中查询作答信息
+			
+			
+		// end date/time
+		if($data['quiz']['end_date'] < time()){	//end_date考试结束的时间
+			$this->quiz_model->submit_result($rid);	//更新结果。。
+			$this->session->unset_userdata('rid');
+			// redirect('quiz/quiz_detail/'.$data['quiz']['quid']);
+			$result['message']='Quiz ended';
+			$result['code']=3;
+			// $result['quid']=$data['quiz']['quid'];
+			$result['url']='quiz/quiz_list';
+			echo json_encode($result); return ;
+		}
+		
+		
+		// end date/time
+		if(($data['quiz']['start_time']+($data['quiz']['duration']*60)) < time()){
+			$this->quiz_model->submit_result($rid);
+			$this->session->unset_userdata('rid');
+			// redirect('quiz/quiz_detail/'.$data['quiz']['quid']);
+			$result['code']=3;
+			$result['message']='Time over and quiz submitted successfully';
+			$result['url']='quiz/quiz_list';
+			echo json_encode($result); return ;
+		}
+		// remaining time in seconds 
+		$data['seconds']=($data['quiz']['duration']*60) - (time()- $data['quiz']['start_time']);
+		// get questions
+		$data['questions']=$this->quiz_model->get_questions($data['quiz']['r_qids']);	//根据qid在qbank、category、level表中查
+		// get options
+		$data['options']=$this->quiz_model->get_options($data['quiz']['r_qids']);	//option
+		
+		// $this->load->view('quiz_attempt_'.$data['quiz']['quiz_template'],$data);
+		
+		$result['code']=1;
+		$result['message']='exam continue..';
+		$result['data']=$data;
+		// 打印日志 方便查看
+		// $this->load->helper('file');
+		// write_file('./application/logs/log.txt',var_export($data,true)."\n",'a+');
+
+		echo json_encode($result); return ;
+
+	}
 		
 		
 	
@@ -732,11 +981,50 @@ function open_quiz($limit='0'){
 		
 		
 	}
+
+	function wx_save_answer(){	//自动保存答案
+		$result['code'] = 0;
+		// redirect if not loggedin
+		if(!$this->session->userdata('logged_in')){
+			if(!$this->session->userdata('logged_in_raw')){
+				// redirect('login');
+				$result['message'] = 'Login again';
+				echo json_encode($result); return ;
+			}	
+		}
+		if(!$this->session->userdata('logged_in')){
+			$logged_in=$this->session->userdata('logged_in_raw');
+		}else{
+			$logged_in=$this->session->userdata('logged_in');
+		}
+		if($logged_in['base_url'] != base_url()){
+			$this->session->unset_userdata('logged_in');		
+			// redirect('login');
+			$result['message'] = 'Login again';
+			echo json_encode($result); return ;
+		}
+		
+		// 打印日志 方便查看
+		$this->load->helper('file');
+		write_file('./application/logs/log.txt',"wx_save_answer传来的参数\n",'a+');
+		write_file('./application/logs/log.txt',var_export($_POST,true)."\n\n\n",'a+');
+		
+		// insert user response and calculate scroe
+		if($this->quiz_model->insert_answer()){	//保存答案并 自动计算用户得分
+			$result['code']=1;
+			$result['message']='save answer success';
+			echo json_encode($result); return ;
+		}else{
+			$result['message']='save answer failed';
+			echo json_encode($result); return ;
+		}
+	}
+
  function set_ind_time(){
+
 		  // update questions time spent
 		$this->quiz_model->set_ind_time();
-		
-		
+
 	}
  
  
@@ -804,6 +1092,44 @@ if(isset($_FILES['webcam'])){
 	 redirect('quiz/open_quiz/0');	
 	}
  }
+
+
+
+ function wx_submit_quiz(){	//用户提交测试后
+	$result['code']=0;
+	// redirect if not loggedin
+	if(!$this->session->userdata('logged_in')){
+		if(!$this->session->userdata('logged_in_raw')){
+			// redirect('login');
+			$result['message'] = 'Login'; echo json_encode($result); return ;
+		}	
+	}
+	if(!$this->session->userdata('logged_in')){
+		$logged_in=$this->session->userdata('logged_in_raw');
+	}else{
+		$logged_in=$this->session->userdata('logged_in');
+	}
+	if($logged_in['base_url'] != base_url()){
+		$this->session->unset_userdata('logged_in');		
+		// redirect('login');
+		$result['message'] = 'Login'; echo json_encode($result); return ;
+	}
+
+	$rid=$this->session->userdata('rid');
+
+	if($this->quiz_model->submit_result()){	//submit_result()函数才是关键
+		//Quiz submitted successfully! <a href='{result_url}'>Click here</a> to view result
+		//site_url('result/view_result/'.$rid),
+		$result['code']=1; $result['message']='Quiz submitted successfully!';
+		echo json_encode($result);
+
+	}else{
+		$result['code']=2; $result['message']='Unable to submit quiz';
+		echo json_encode($result);
+	}
+
+	$this->session->unset_userdata('rid'); return ;
+}
  
  
  

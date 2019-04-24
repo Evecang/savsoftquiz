@@ -13,9 +13,9 @@ class User extends CI_Controller {
 	   $this->lang->load('basic', $this->config->item('language'));
 		
 			// 打印日志 方便查看
-			$this->load->helper('file');
-			write_file('./application/logs/log.txt','User 登陆态'.var_export($this->session->userdata('logged_in'),true)."\n",'a+');
-			write_file('./application/logs/log.txt',var_export(base_url(),true)."\n",'a+');
+			// $this->load->helper('file');
+			// write_file('./application/logs/log.txt','User 登陆态'.var_export($this->session->userdata('logged_in'),true)."\n",'a+');
+			// write_file('./application/logs/log.txt',var_export(base_url(),true)."\n",'a+');
 
 		// redirect if not loggedin
 		if(!$this->session->userdata('logged_in')){
@@ -265,8 +265,8 @@ class User extends CI_Controller {
 	{
 
 		// 打印日志 方便查看
-		$this->load->helper('file');
-		write_file('./application/logs/log.txt',"uid---------------------\n".var_export($uid,true)."\n",'a+');
+		// $this->load->helper('file');
+		// write_file('./application/logs/log.txt',"uid---------------------\n".var_export($uid,true)."\n",'a+');
 		
 		
 		$logged_in=$this->session->userdata('logged_in');

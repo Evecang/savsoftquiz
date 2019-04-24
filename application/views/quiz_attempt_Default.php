@@ -160,7 +160,7 @@ foreach($questions as $qk => $question){	//$questions include qbank,category,lev
 		 <?php echo $this->lang->line('question');?> <?php echo $qk+1;?>)<br>
 		 <?php echo $question['question'];?>
 		 
-		 </div>
+		</div>
 		<div class="option_container" style="height:40%;"><!--作答框-->
 		 <?php 
 		 // multiple single choice
@@ -458,7 +458,7 @@ foreach($questions as $qk => $question){	//$questions include qbank,category,lev
 			
 		 ?>
 
-		</div> 
+		</div> <!--end of 作答区域-->
  </div>
  
  
