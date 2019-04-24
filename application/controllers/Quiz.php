@@ -57,7 +57,7 @@ class Quiz extends CI_Controller {
 			return ;
 		}
 		$logged_in=$this->session->userdata('logged_in');
-			if($logged_in['base_url'] != base_url()){
+		if($logged_in['base_url'] != base_url()){
 			$this->session->unset_userdata('logged_in');		
 			echo json_encode(array(
 				'status'=>'0',
