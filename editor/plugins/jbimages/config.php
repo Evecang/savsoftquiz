@@ -38,7 +38,7 @@
 | -------------------------------------------------------------------*/
 
 	
-	$config['img_path'] = '/savsoftquiz_v4.0/upload'; // Relative to domain name
+	$config['img_path'] = '/savsoftquiz/upload'; // Relative to domain name
 	$config['upload_path'] = $_SERVER['DOCUMENT_ROOT'] . $config['img_path']; // Physical path. [Usually works fine like this]
 
 

@@ -340,3 +340,4 @@ $lang['subquestions']='Subquestions';
 $lang['notattempted']='Not Attempted';
 $lang['suggested_answer']='Suggested Answer';
 $lang['analyses']='Analyses';
+$lang['view_total_score']='View Total Score';

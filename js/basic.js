@@ -885,4 +885,3 @@ function update_check(sq_version){
 }
 
  
-

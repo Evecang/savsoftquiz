@@ -183,44 +183,41 @@ function open_quiz($limit='0'){
 	
 	public function wx_edit_quiz($quid)
 	{
-				// redirect if not loggedin
+		$result['code'] = 0;
+		// redirect if not loggedin
 		if(!$this->session->userdata('logged_in')){
-			echo json_encode(array('success'=>false));
-			return ;
+			$result['message']='Login is expired';
+			echo json_encode($result); return ;
 		}
 		$logged_in=$this->session->userdata('logged_in');
 		if($logged_in['base_url'] != base_url()){
-			$this->session->unset_userdata('logged_in');		
-			echo json_encode(array('success'=>false));
-			return ;
+			$this->session->unset_userdata('logged_in');
+			$result['message']='Login is expired';
+			echo json_encode($result); return ;
 		}
 		
 		$logged_in=$this->session->userdata('logged_in');
 		if($logged_in['su']!='1'){
-			echo json_encode(array('success'=>false));
-			return ;
+			$result['message']='Permission Denied!'; $result['code'] = 2;
+			echo json_encode($result); return ;
 		}
 			
-			
-	 
-		$data['title']=$this->lang->line('edit').' '.$this->lang->line('quiz');
 		// fetching group list
 		$data['group_list']=$this->user_model->group_list();
 		$data['quiz']=$this->quiz_model->get_quiz($quid);
 		if($data['quiz']['question_selection']=='0'){
-		$data['questions']=$this->quiz_model->get_questions($data['quiz']['qids']);
+			$data['questions']=$this->quiz_model->get_questions($data['quiz']['qids']);
 			 
 		}else{
 			$this->load->model("qbank_model");
-	   $data['qcl']=$this->quiz_model->get_qcl($data['quiz']['quid']);
-		
-			 $data['category_list']=$this->qbank_model->category_list();
-		 $data['level_list']=$this->qbank_model->level_list();
-		
+	   		$data['qcl']=$this->quiz_model->get_qcl($data['quiz']['quid']);
+			$data['category_list']=$this->qbank_model->category_list();
+		 	$data['level_list']=$this->qbank_model->level_list();
 		}
-		$this->load->view('header',$data);
-		$this->load->view('edit_quiz',$data);
-		$this->load->view('footer',$data);
+
+		$result['message']='Ready to edit'; $result['code'] = 1; $result['data']=$data;
+		echo json_encode($result); return ;
+
 	}
 	
 	
@@ -473,13 +470,6 @@ function open_quiz($limit='0'){
 	
 	
 	
-
-	
-	
-	
-	
-	
-	
 	public function remove_quiz($quid){
 				// redirect if not loggedin
 		if(!$this->session->userdata('logged_in')){
@@ -488,26 +478,60 @@ function open_quiz($limit='0'){
 		}
 		$logged_in=$this->session->userdata('logged_in');
 		if($logged_in['base_url'] != base_url()){
-		$this->session->unset_userdata('logged_in');		
-		redirect('login');
+			$this->session->unset_userdata('logged_in');		
+			redirect('login');
 		}
 
-			$logged_in=$this->session->userdata('logged_in');
-			if($logged_in['su']!='1'){
-				exit($this->lang->line('permission_denied'));
-			} 
+		$logged_in=$this->session->userdata('logged_in');
+		if($logged_in['su']!='1'){
+			exit($this->lang->line('permission_denied'));
+		} 
 			
-			if($this->quiz_model->remove_quiz($quid)){
-                        $this->session->set_flashdata('message', "<div class='alert alert-success'>".$this->lang->line('removed_successfully')." </div>");
-					}else{
-						    $this->session->set_flashdata('message', "<div class='alert alert-danger'>".$this->lang->line('error_to_remove')." </div>");
-						
-					}
-					redirect('quiz');
-                     
+		if($this->quiz_model->remove_quiz($quid)){
+			$this->session->set_flashdata('message', "<div class='alert alert-success'>".$this->lang->line('removed_successfully')." </div>");
+		}else{
+			$this->session->set_flashdata('message', "<div class='alert alert-danger'>".$this->lang->line('error_to_remove')." </div>");
 			
 		}
+		redirect('quiz');
+			
+	}
+
+	public function wx_remove_quiz($quid){
+		$result['code']=0;
+		// redirect if not loggedin
+		if(!$this->session->userdata('logged_in')){
+			// redirect('login');
+			$result['message']='Login is expired';
+			echo json_encode($result); return ;
+		}
+		$logged_in=$this->session->userdata('logged_in');
+		if($logged_in['base_url'] != base_url()){
+			$this->session->unset_userdata('logged_in');		
+			// redirect('login');
+			$result['message']='Login is expired';
+			echo json_encode($result); return ;
+		}
+
+		$logged_in=$this->session->userdata('logged_in');
+		if($logged_in['su']!='1'){
+			// exit($this->lang->line('permission_denied'));
+			$result['message']='Permission Denied!'; $result['code']=2;
+			echo json_encode($result); return ;
+		} 
+			
+		$result['code'] = 1;
+		if($this->quiz_model->remove_quiz($quid)){
+			$result['message'] = 'Removed Successfully';
+		}else{
+			$result['message'] = 'Error to remove';
+		}
+		// redirect('quiz');
+		echo json_encode($result); return ;
+			
+	}
 	
+
 
 
 
@@ -761,15 +785,19 @@ function open_quiz($limit='0'){
 			echo json_encode($result);return ;
 		 }
 		
+		
 		// insert result row and get rid (result id)
 		$rid=$this->quiz_model->insert_result($quid,$uid);
-		
 		$this->session->set_userdata('rid', $rid);
+		
+		// $this->load->helper('file');
+		// write_file('./application/logs/log.txt','wx_validate_quiz中的 $rid：'.var_export($this->session->userdata('rid'),true)."\n",'a+');
+
 		// redirect('quiz/attempt/'.$rid);	
 		$result['code']=1;
 		$result['message']='Ready to attempt quiz';
-		$result['url']='quiz_attempt/quiz_attempt?rid='.$open_result;
-		echo json_encode($result);return ;
+		$result['url']='quiz_attempt/quiz_attempt?rid='.$rid;
+		echo json_encode($result); return ;
 		
 
 		
@@ -789,6 +817,10 @@ function open_quiz($limit='0'){
 
 	function wx_resume_pending($open_result){	//继续作答，$open_result为正在作答的用户的result表中的rid
 		$this->session->set_userdata('rid', $open_result);
+
+		// $this->load->helper('file');
+		// write_file('./application/logs/log.txt','wx_resume_pending $rid：'.var_export($this->session->userdata('rid'),true)."\n",'a+');
+
 		$data['openquizurl']='quiz_attempt/quiz_attempt?rid='.$open_result;
 		//要给pending_quiz_message传$data['openquizurl']
 		$result['code']=2;
@@ -895,6 +927,12 @@ function open_quiz($limit='0'){
 
 
 		$srid=$this->session->userdata('rid');
+		// // 打印日志 方便查看
+		// $this->load->helper('file');
+		// write_file('./application/logs/log.txt',"wx_attempt中的数据——————————————————————————\n",'a+');
+		// write_file('./application/logs/log.txt','$srid：'.var_export($srid,true)."\n",'a+');
+		// write_file('./application/logs/log.txt','$rid：'.var_export($rid,true)."\n",'a+');
+
 		// if linked and session rid is not matched then something wrong.
 		if($rid != $srid){
 			// redirect('quiz/');
@@ -976,6 +1014,11 @@ function open_quiz($limit='0'){
 
 		echo "<pre>";
 		print_r($_POST);
+
+		// 打印日志 方便查看
+		$this->load->helper('file');
+		write_file('./application/logs/log.txt',var_export($_POST,true)."\n",'a+');
+
 		  // insert user response and calculate scroe
 		echo $this->quiz_model->insert_answer();	//保存答案并 自动计算用户得分
 		
@@ -1010,7 +1053,7 @@ function open_quiz($limit='0'){
 		write_file('./application/logs/log.txt',var_export($_POST,true)."\n\n\n",'a+');
 		
 		// insert user response and calculate scroe
-		if($this->quiz_model->insert_answer()){	//保存答案并 自动计算用户得分
+		if($this->quiz_model->wx_insert_answer()){	//保存答案并 自动计算用户得分
 			$result['code']=1;
 			$result['message']='save answer success';
 			echo json_encode($result); return ;
@@ -1128,7 +1171,12 @@ if(isset($_FILES['webcam'])){
 		echo json_encode($result);
 	}
 
-	$this->session->unset_userdata('rid'); return ;
+	$this->session->unset_userdata('rid'); // 打印日志 方便查看
+
+	$this->load->helper('file');
+	write_file('./application/logs/log.txt',var_export($this->session->userdata,true)."\n",'a+');	
+	
+	return ;
 }
  
  

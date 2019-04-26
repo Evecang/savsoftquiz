@@ -353,6 +353,9 @@ class Qbank extends CI_Controller {
 			exit($this->lang->line('permission_denied'));
 			}
 			if($this->input->post('question')){
+				// // 打印日志 方便查看
+				// $this->load->helper('file');
+				// write_file('./application/logs/log.txt',var_export($this->input->post('question'),true)."\n",'a+');
 				if($this->qbank_model->update_question_2($qid)){
                 $this->session->set_flashdata('message', "<div class='alert alert-success'>".$this->lang->line('data_updated_successfully')." </div>");
 				}else{

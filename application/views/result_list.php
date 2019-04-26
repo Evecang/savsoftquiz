@@ -51,6 +51,7 @@ foreach($group_list as $gk => $group){
 
 
 
+
 <h3><?php echo $title;?></h3>	<!--从这里开始看，管理员与学生共有的部分，也是真正有用的部分-->
  
   <div class="row">
@@ -66,7 +67,15 @@ foreach($group_list as $gk => $group){
 	  
     </div><!-- /input-group -->
 	 </form>
-  </div><!-- /.col-lg-6 -->
+	</div><!-- /.col-lg-6 -->
+
+	<div class="col-lg-4">
+	 <a href="<?php echo site_url('result/view_total_score/');?>" class="btn btn-info" ><?php echo $this->lang->line('view_total_score');?> </a>
+	</div><!-- /.col-lg-4 -->
+
+
+
+
 </div><!-- /.row -->
 
  

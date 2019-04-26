@@ -93,6 +93,85 @@ class Result extends CI_Controller {
 		));
 	}
 
+	public function view_total_score(){
+		
+		if(!$this->session->userdata('logged_in')){
+			redirect('login');
+			
+		}
+		$logged_in=$this->session->userdata('logged_in');
+		if($logged_in['base_url'] != base_url()){
+		$this->session->unset_userdata('logged_in');		
+		redirect('login');
+		}
+			
+		$data['title'] = $this->lang->line('view_total_score');
+		if($this->input->post('per')) { 
+			$data['per'] = intval($this->input->post('per')); 
+		}else{
+			$data['per'] = 100;
+		}
+
+		$uid = $logged_in['uid'];
+		$gid = $logged_in['gid'];
+		// fetching total score
+		$quizs = $this->result_model->get_quizs($gid);	//获得了 包含班级为gid的所有测试列表
+		// fetching user list
+		$allUser = $this->result_model->get_group_user($gid);		//获得了一个班级里的所有学生
+		$data['group_name'] = $this->result_model->get_group_name($gid)['group_name'];		//获得班级名称
+
+		$data['grades_average'] = $this->result_model->get_grades_average($quizs,$allUser);		//uid、user_name(名字)、attempt_number(作业提交次数)、total_score(作业总分)、average_score平时成绩。
+
+		// // 打印日志 方便查看
+		// $this->load->helper('file');
+		// write_file('./application/logs/log.txt',var_export($data,true)."\n\n",'a+');
+
+		$this->load->view('header',$data);
+		$this->load->view('view_total_score',$data);
+		$this->load->view('footer',$data);
+
+	}
+
+	
+	public function wx_view_total_score(){
+		$result['code'] = 0;
+		if(!$this->session->userdata('logged_in')){
+			// redirect('login');
+			$result['message'] = 'Login Failed';
+			echo json_encode($result); return ;
+		}
+		$logged_in=$this->session->userdata('logged_in');
+			if($logged_in['base_url'] != base_url()){
+			$this->session->unset_userdata('logged_in');		
+			// redirect('login');
+			$result['message'] = 'Login Failed';
+			echo json_encode($result); return ;
+		}
+		
+		// 打印日志 方便查看
+		$this->load->helper('file');
+		write_file('./application/logs/log.txt',var_export($this->input->post('per'),true)."\n\n",'a+');
+
+
+		if($this->input->post('per')) { 
+			$data['per'] = intval($this->input->post('per')); 
+		}else{
+			$data['per'] = 100;
+		}
+
+		$uid = $logged_in['uid'];
+		$gid = $logged_in['gid'];
+		// fetching total score
+		$quizs = $this->result_model->get_quizs($gid);	//获得了 包含班级为gid的所有测试列表
+		// fetching user list
+		$allUser = $this->result_model->get_group_user($gid);		//获得了一个班级里的所有学生
+		$data['group_name'] = $this->result_model->get_group_name($gid)['group_name'];		//获得班级名称
+
+		$data['grades_average'] = $this->result_model->get_grades_average($quizs,$allUser);		//uid、user_name(名字)、attempt_number(作业提交次数)、total_score(作业总分)、average_score平时成绩。
+
+		$result['code']=1; $result['data']=$data;
+		echo json_encode($result); return ;
+	}
 
 	
 	public function remove_result($rid){	//删除结果

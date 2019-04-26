@@ -2,10 +2,10 @@
 Powered by <a href="https://savsoftquiz.com">Savsoft Quiz</a>
 </div> -->
 
-
+<!--这里设置tinymce的使用区域-->
 <?php 
 if($this->config->item('tinymce')){
-					if($this->uri->segment(2)!='attempt'){
+					// if($this->uri->segment(2)!='attempt'){
 					if($this->uri->segment(2)!='view_result'){
 
 					if($this->uri->segment(2)!='config'){
@@ -78,7 +78,7 @@ if($this->config->item('tinymce')){
 						}
 					}
 			}
-		}
+		// }
 	}
 ?>
 
@@ -92,7 +92,7 @@ if($this->config->item('tinymce')){
 if($this->session->userdata('logged_in')){
 $logged_in=$this->session->userdata('logged_in');
 $tuid=$logged_in['uid'];
-if($this->uri->segment(2)!='attempt'){
+// if($this->uri->segment(2)!='attempt'){
 ?>
 <!-- firebase notification code starts -->
 <script src="https://www.gstatic.com/firebasejs/3.8.0/firebase.js"></script>
@@ -262,12 +262,12 @@ messaging.onTokenRefresh(function() {
 
 </script>
 <?php 
-}
+// }
 }
 ?>
 <!-- firebase notification code ends -->
 
-
+<!-- without tinymce -->
 <div id="messages"></div>
 
 <!--  firebase notification model starts -->

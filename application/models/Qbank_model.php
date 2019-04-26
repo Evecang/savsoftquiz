@@ -157,13 +157,12 @@ Class Qbank_model extends CI_Model
 	 'analyses'=>$this->input->post('analyses')	 
 	 );
 	 $this->db->insert('savsoft_qbank',$userdata);
-	 $qid=$this->db->insert_id();	//褰撴墽琛� INSERT 璇彞鏃讹紝杩欎釜鏂规硶杩斿洖鏂版彃鍏ヨ鐨処D銆�
-
-	 foreach($this->input->post('option') as $key => $val){	//鎻掑叆绛旀option涓虹涓€椤圭殑鏁扮粍
+	 $qid=$this->db->insert_id();	//返回插入的id
+	 foreach($this->input->post('option') as $key => $val){	//left match
 	  $score=(1/count($this->input->post('option')));
 	$userdata=array(
 	 'q_option'=>$val,
-	 'q_option_match'=>$_POST['option2'][$key],	//option2涓虹浜岄」鐨勬暟缁勬暟缁�
+	 'q_option_match'=>$_POST['option2'][$key],	//right match
 	 'qid'=>$qid,
 	 'score'=>$score,
 	 );

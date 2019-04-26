@@ -155,6 +155,123 @@ $res=array();
   
   
  }
+
+ 	function get_quizs($gid){	//_by_gid
+		$this->db->like('gids',$gid);
+		$query = $this->db->get('savsoft_quiz');
+
+		// 打印日志 方便查看
+		// $this->load->helper('file');
+		// write_file('./application/logs/log.txt',"2___________________________\n",'a+');
+		$like_data = $query->result_array();
+		$res = array();
+		
+		foreach($like_data as $lk => $ldata){
+			$gids = explode(',',$ldata['gids']);
+			if(in_array($gid,$gids)){
+				$res[] = $ldata;
+			}
+		}
+		return $res;
+	 }
+
+	 function get_group_user($gid){
+		 $this->db->where('gid',$gid);
+		 $query = $this->db->get('savsoft_users');
+		 return $query->result_array();
+	 }
+
+	 function get_group_name($gid){
+		 $this->db->where('gid',$gid);
+		 $query = $this->db->get('savsoft_group');
+		 return $query->row_array();
+	 }
+
+	 function get_grades_average($quizs,$allUser){
+		// 打印日志 方便查看
+		// $this->load->helper('file');
+		// write_file('./application/logs/log.txt',"get_grades_average\n\n",'a+');
+
+		$grades_average = array();
+		$topper = 0;
+		foreach($allUser as $uk => $user){
+			$uid = $user['uid'];
+			$this->db->group_by('quid');
+			$this->db->where('uid',$uid);
+			$q1 = $this->db->get('savsoft_result');
+
+			
+			// write_file('./application/logs/log.txt',"q1_______attempt_number________________________________\n",'a+');
+			// write_file('./application/logs/log.txt',var_export($q1->num_rows(),true)."\n\n",'a+');
+
+			$grades_average[$uk] = [];
+			$grades_average[$uk]['uid'] = $uid;
+			$grades_average[$uk]['user_name'] = $user['first_name']." ".$user['last_name'];
+			$grades_average[$uk]['attempt_number'] = $q1->num_rows();	//参加了考试的种数
+			$grades_average[$uk]['total_score'] = 0;
+			// $grades_average[$uk]['average_score']
+
+			// write_file('./application/logs/log.txt',"部分grades_average数据______________________________________\n",'a+');
+			// write_file('./application/logs/log.txt',var_export($grades_average[$uk]['user_name'],true)."————这个学生的名字\n\n",'a+');
+			// write_file('./application/logs/log.txt',var_export($grades_average[$uk],true)."————这个学生的部分grades_average数据\n\n",'a+');
+
+			// write_file('./application/logs/log.txt',"***************************************开始便利试卷，得出总成绩***********************\n\n",'a+');
+			// write_file('./application/logs/log.txt',var_export($quizs,true)."————这个学生的名字\n\n",'a+');
+
+
+			foreach($quizs as $qk => $quiz){	//quizs得到了学生参加了哪几种考试
+				$quid = $quiz['quid'];	//遍历 试卷的Id	
+				$this->db->where('uid',$uid);
+				$this->db->where('quid',$quid);
+				$this->db->order_by('percentage_obtained','DESC');	//降序 只取第一行
+				$q2 = ($this->db->get('savsoft_result'))->row_array();	//注意 有的学生未参与考试 则为NULL
+				
+				// write_file('./application/logs/log.txt',"查看该学生quid与最高分______________________________________\n",'a+');
+				// write_file('./application/logs/log.txt',var_export($q2,true)."————这个学生的查询试卷结果\n\n",'a+');
+				// write_file('./application/logs/log.txt',var_export($q2['quid'],true)."————这个学生的试卷quid\n\n",'a+');
+				// write_file('./application/logs/log.txt',var_export($q2['percentage_obtained'],true)."————这个学生的最高扽\n\n",'a+');
+
+				if($q2){	//没有数据时 为NULL
+					$grades_average[$uk]['total_score'] += $q2['percentage_obtained'];	//累加总分数
+				}
+			}
+
+			if($grades_average[$uk]['total_score']>$topper) {	//最高分
+				$topper = $grades_average[$uk]['total_score'];
+			}
+			
+		}
+		
+
+		$scale = $topper/100;
+		// write_file('./application/logs/log.txt',var_export($topper,true)."————最高分数\n\n",'a+');
+		// write_file('./application/logs/log.txt',var_export($scale,true)."————比例\n\n",'a+');
+
+		// write_file('./application/logs/log.txt',var_export($grades_average,true)."_____________________________________前\n\n",'a+');
+
+		
+		foreach($grades_average as $aveK => $ave){	//按照比例折算成 百分数
+
+			// write_file('./application/logs/log.txt',var_export($aveK,true)."                    ____aveK\n\n",'a+');
+			// write_file('./application/logs/log.txt',var_export($ave,true)."                       _____ave\n\n",'a+');
+			// write_file('./application/logs/log.txt',"________________________\n",'a+');
+			// write_file('./application/logs/log.txt',var_export($grades_average[$aveK],true)."_____grades_average[aveK]\n\n",'a+');
+
+			//保留四位小数？
+			$ave['average_score'] = $ave['total_score']/$scale;
+
+			$grades_average[$aveK] = $ave;
+		}
+
+		//根据字段average_score对数组$data进行降序排列
+		$average_score = array_column($grades_average,'average_score');
+		array_multisort($average_score,SORT_DESC,$grades_average);
+
+		// write_file('./application/logs/log.txt',var_export($grades_average,true)."________________________________________后\n\n",'a+');
+
+		return $grades_average;
+
+	 }
  
  
  
