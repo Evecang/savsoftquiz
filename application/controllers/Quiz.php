@@ -181,7 +181,7 @@ function open_quiz($limit='0'){
 		$this->load->view('footer',$data);
 	}
 	
-	public function wx_edit_quiz($quid)
+	public function wx_edit_quiz($quid)	//微信端 返回编辑quiz
 	{
 		$result['code'] = 0;
 		// redirect if not loggedin
@@ -465,6 +465,37 @@ function open_quiz($limit='0'){
 					redirect('quiz/edit_quiz/'.$quid);
                 }       
 
+	}
+	
+
+	public function wx_update_quiz($quid)
+	{
+		$result['code'] = 0;
+		if(!$this->session->userdata('logged_in')){
+			// redirect('login');
+			$result['message'] = 'Login failed';
+			echo json_encode($result); return ;
+		}
+		$logged_in=$this->session->userdata('logged_in');
+		if($logged_in['base_url'] != base_url()){
+			$this->session->unset_userdata('logged_in');		
+			// redirect('login');
+			$result['message'] = 'Login failed';
+			echo json_encode($result); return ;
+		}
+		
+		$logged_in=$this->session->userdata('logged_in');
+		if($logged_in['su']!='1'){
+			// exit($this->lang->line('permission_denied'));
+			$result['code']=2; $result['message']="Permission Denied!";
+			echo json_encode($result); return ;
+		}
+
+		$quid=$this->quiz_model->wx_update_quiz($quid);
+		// redirect('quiz/edit_quiz/'.$quid);
+		$result['code']=1; $result['quid']=$quid;
+		echo json_encode($result); return ;
+      
 	}
 	
 	

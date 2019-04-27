@@ -149,8 +149,8 @@ class Result extends CI_Controller {
 		}
 		
 		// 打印日志 方便查看
-		$this->load->helper('file');
-		write_file('./application/logs/log.txt',var_export($this->input->post('per'),true)."\n\n",'a+');
+		// $this->load->helper('file');
+		// write_file('./application/logs/log.txt',var_export($this->input->post('per'),true)."\n\n",'a+');
 
 
 		if($this->input->post('per')) { 

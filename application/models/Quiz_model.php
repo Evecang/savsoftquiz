@@ -134,10 +134,10 @@ Class Quiz_model extends CI_Model
 		 'noq'=>$_POST['noq'][$ck]
 		 );
 		 $this->db->insert('savsoft_qcl',$userdata);
-		  for($i=1; $i<=$_POST['noq'][$ck]; $i++){
-$correct_i[]=$_POST['i_correct'][$ck];
-$incorrect_i[]=$_POST['i_incorrect'][$ck];
-}
+		for($i=1; $i<=$_POST['noq'][$ck]; $i++){
+			$correct_i[]=$_POST['i_correct'][$ck];
+			$incorrect_i[]=$_POST['i_incorrect'][$ck];
+		}
 		 }
 		 }
 	 }
@@ -151,10 +151,10 @@ $incorrect_i[]=$_POST['i_incorrect'][$ck];
 	 }else{
 			$correct_i=array();
 			 $incorrect_i=array();
- foreach($_POST['i_correct'] as $ck =>$cv){
-$correct_i[]=$_POST['i_correct'][$ck];
-$incorrect_i[]=$_POST['i_incorrect'][$ck];
-}
+		foreach($_POST['i_correct'] as $ck =>$cv){
+		$correct_i[]=$_POST['i_correct'][$ck];
+		$incorrect_i[]=$_POST['i_incorrect'][$ck];
+		}
 
 	 $userdata=array(
 		 'correct_score'=>implode(',',$correct_i),
@@ -165,10 +165,35 @@ $incorrect_i[]=$_POST['i_incorrect'][$ck];
 	  $this->db->update('savsoft_quiz',$userdata);
 
 
-}
+	}
 	return $quid;
 	 
  }
+
+
+ function wx_update_quiz($quid){
+	 
+	$userdata=array(
+	'quiz_name'=>$this->input->post('quiz_name'),
+	'start_date'=>strtotime($this->input->post('start_date')),
+	'end_date'=>strtotime($this->input->post('end_date')),
+	'duration'=>$this->input->post('duration'),
+	'maximum_attempts'=>$this->input->post('maximum_attempts'),
+	'pass_percentage'=>$this->input->post('pass_percentage'),
+	// 'gids'=>implode(',',$this->input->post('gids'))
+	'gids'=>$this->input->post('gids')
+	);
+
+	$this->db->where('quid',$quid);
+	$this->db->update('savsoft_quiz',$userdata);
+	 
+	$this->db->where('quid',$quid);
+	$query=$this->db->get('savsoft_quiz',$userdata);
+	$quiz=$query->row_array();
+
+   	return $quid;
+	
+}
  
  function get_questions($qids){	//根据qids在qbank、category、level表中查
 	 if($qids == ''){
