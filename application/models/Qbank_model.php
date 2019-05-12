@@ -447,7 +447,6 @@ Class Qbank_model extends CI_Model
 
  function update_question_6($qid){
 	 
-	 
 	$userdata=array(
 	'question'=>$this->input->post('question'),
 	'description'=>$this->input->post('description'),
@@ -456,18 +455,19 @@ Class Qbank_model extends CI_Model
 	'lid'=>$this->input->post('lid'),
 	'analyses'=>$this->input->post('analyses')	 
 	);
-		 $this->db->where('qid',$qid);
+	$this->db->where('qid',$qid);
 	$this->db->update('savsoft_qbank',$userdata);
 
 	$this->db->where('qid',$qid);
-   $this->db->delete('savsoft_options');
+	$this->db->delete('savsoft_options');
 
-    $option = array();	//娴滃瞼娣弫鎵矋,鐎涙ê鍋嶉幍鈧張澶岀摕濡楋拷
+	$option = array();	//所有的选项集合
 	$op1 = $this->input->post('sub_option1');
 	$op2 = $this->input->post('sub_option2');
 	$op3 = $this->input->post('sub_option3');
 	$op4 = $this->input->post('sub_option4');
 	$nop = count($this->input->post('sub_option1'));
+	
 	for($i=0;$i<$nop;$i++){
 		$option[$i][0] = $op1[$i];
 		$option[$i][1] = $op2[$i];
@@ -476,16 +476,14 @@ Class Qbank_model extends CI_Model
 	}
 	$score =  1/$nop;
 	
-	//闂団偓鐟曚焦褰冮崗銉ュ煂options鐞涖劋鑵戦敍宀勬付鐟曚构id閵嗕构_option閵嗕构_option_match閵嗕够core閵嗕构_option_match_option閵嗭拷
-	
 	foreach($option as $key => $val){
 
 		$sub_answer = $this->input->post('score'.$key);
 		$sub_option = implode($option[$key],',');	//A,B,C,D
 		$userdata=array(
 			'qid'=>$qid,
-			'q_option'=>$key+1,	//鐎涙劙顣介崣锟� 1-nop
-			'q_option_match'=>$sub_answer,	//鐎涙劙顣介惄顔炬畱缁涙梹顢� 0-A 1-B 2-C 3-D
+			'q_option'=>$key+1,	//子题号 1-nop
+			'q_option_match'=>$sub_answer,	//正确的答案 0-A 1-B 2-C 3-D
 			'score'=>$score,
 			'q_option_match_option'=>$sub_option
 		);

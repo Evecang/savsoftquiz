@@ -503,15 +503,21 @@ function save_answer(qn){
 								setTimeout(function(){
 							$('#save_answer_signal1').css('backgroundColor','#666666');		//黑色
 								},5000);
-								
-								    var str = $( "form" ).serialize();	//jq中的方法，serialize() 方法通过序列化表单值，创建 URL 编码文本字符串。
- 
+										//serialize()对于file文件类型的input框并不适用
+										// var str = $( "form" ).serialize();	//jq中的方法，serialize() 方法通过序列化表单值，创建 URL 编码文本字符串。
+										
+							var form = $("#quiz_form");
+							var formData = new FormData(form[0]);
  
 						// var formData = {user_answer:str};
 						$.ajax({
 							 type: "POST",
-							 data : str,
-								url: base_url + "index.php/quiz/save_answer/",
+							 data : formData,
+							 async: false,
+							 cache: false,
+							url: base_url + "index.php/quiz/save_answer/",
+							contentType:false,
+							processData: false,
 							success: function(data){
 							// signal 1
 							$('#save_answer_signal2').css('backgroundColor','#00ff00');
@@ -599,7 +605,7 @@ function count_char(answer,span_id){
 	if(answer == ''){
 		chcount=0;
 	}
-	document.getElementById(span_id).innerHTML=chcount; 
+	document.getElementById(span_id).innerHTML=chcount; //统计字数
 	
 }
 
@@ -884,4 +890,42 @@ function update_check(sq_version){
 	
 }
 
- 
+//查看上传的图片
+function view_uploaded_img(rid,qid){
+	// var formData = {rid:rid,qid:qid};
+	$.ajax({
+		type: "POST",
+		data : {
+			rid:rid,
+			qid:qid
+		},
+		url: base_url + "index.php/quiz/view_uploaded_img",
+		success: function(data){
+			console.log(data);	// ./upload/白猫咪1.jpg
+			//如果成功直接让用户下载，如果没有文件，弹窗提示
+			if(data!=''){
+				file_name = data.split('/')[2];	//文件名 可能包含.
+				img_src = base_url + 'upload/' + file_name;
+				window.open(img_src);
+
+			}else{
+				window.alert('You have not uploaded an image..');
+			}
+			// signal 1
+			$('#save_answer_signal2').css('backgroundColor','#00ff00');
+				setTimeout(function(){
+			$('#save_answer_signal2').css('backgroundColor','#666666');		
+				},5000);
+				
+		},
+		error: function(xhr,status,strErr){
+				
+			// signal 1
+			$('#save_answer_signal2').css('backgroundColor','#ff0000');
+				setTimeout(function(){
+			$('#save_answer_signal2').css('backgroundColor','#666666');		
+				},5500);
+
+		}
+	});
+}

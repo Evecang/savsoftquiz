@@ -1,109 +1,109 @@
-£¨1£©¹ÙÍø£ºhttp://savsoftquiz.org/
-£¨2£©ÅäÖÃÒªÇó£º1¡¢PHP5+£¨¸ÃÏµÍ³Ó¦ÓÃÁËcodeigniter¿ò¼Ü£¬ÊôÓÚMVC£©  2¡¢MySql v5+ 
-£¨3£©demoÑÝÊ¾£º
-	ÍøÖ·£ºhttps://savsoftquiz.com/savsoftquiz_v4.0/ 
-	¹ÜÀíÔ±µÇÂ¼£º
-	ÓÃ»§Ãû£ºadmin@example.com 
-	ÃÜÂë£ºadmin 
+ï¼ˆ1ï¼‰å®˜ç½‘ï¼šhttp://savsoftquiz.org/
+ï¼ˆ2ï¼‰é…ç½®è¦æ±‚ï¼š1ã€PHP5+ï¼ˆè¯¥ç³»ç»Ÿåº”ç”¨äº†codeigniteræ¡†æž¶ï¼Œå±žäºŽMVCï¼‰  2ã€MySql v5+ 
+ï¼ˆ3ï¼‰demoæ¼”ç¤ºï¼š
+	ç½‘å€ï¼šhttps://savsoftquiz.com/savsoftquiz_v4.0/ 
+	ç®¡ç†å‘˜ç™»å½•ï¼š
+	ç”¨æˆ·åï¼šadmin@example.com 
+	å¯†ç ï¼šadmin 
 
-	ÓÃ»§/Ñ§ÉúµÇÂ¼
-	ÓÃ»§Ãû£ºuser@example.com 
-	ÃÜÂë£º123456
-£¨4£©ÏµÍ³ÏÂÔØµØÖ·£ºhttp://savsoftquiz.org/download.php
-£¨5£©¹Ù·½ËµÃ÷ÎÄµµ£ºhttp://savsoftquiz.org/docs/
-£¨6£©¹Ù·½ÂÛÌ³£ºhttp://savsoftquiz.org/forum/
-£¨7£©PHP¿ò¼Ü¡ª¡ªCodeIgniterÖÐÎÄËµÃ÷ÎÄµµ£ºhttp://codeigniter.org.cn/user_guide/general/welcome.html
-£¨8£©Ç°¶Ë£º
-	1¡¢bootstrap v3.3.7 (http://getbootstrap.com)£¬ÎÄµµ£ºhttp://www.bootcss.com/
-	2¡¢less²»Çå³þ£¬ÏÈÔÝÊ±²»¿´
-	3¡¢jquery.js
-	4¡¢basic.js£º²Â²âÊÇÕû¸öÏµÍ³ÖÐÍ³Ò»¹«ÓÃµ½µÄº¯Êý¡£
-	5¡¢font-awesome.css£ºÓÐ¹ØÍ¼±êµÄÍ³Ò»ÑùÊ½¡£
-£¨9£©°²×°²½Öè£º
-	·½°¸Ò»(¸Ã·½·¨²»ÄÜÖ±½Ó½«ÏîÄ¿Ö±½Ó·ÅÔÚ¸ùÄ¿Â¼ÏÂ)£º
-	1¡¢´ò¿ªapplication/config/sq_config.phpÎÄ¼þ
-		a)½«$sq_base_urlÖµÐ´Îª±¾µØ·þÎñÆ÷ÏîÄ¿Â·¾¶£¬Èç£º$sq_base_url='http://localhost:8081/'
-	2¡¢´ò¿ªÁ´½Ó£ºhttp://YOUR_DOMAIN_NAME/savsoftquiz_v4.0/index.php/install/ Èç£ºhttp://localhost:8081/savsoftquiz_v4.0/index.php/install/ 
-	3¡¢ÌîÐ´base urlºÍÊý¾Ý¿âÐÅÏ¢£¬µã»÷¡®Install Now¡¯°´Å¥¼´¿É
+	ç”¨æˆ·/å­¦ç”Ÿç™»å½•
+	ç”¨æˆ·åï¼šuser@example.com 
+	å¯†ç ï¼š123456
+ï¼ˆ4ï¼‰ç³»ç»Ÿä¸‹è½½åœ°å€ï¼šhttp://savsoftquiz.org/download.php
+ï¼ˆ5ï¼‰å®˜æ–¹è¯´æ˜Žæ–‡æ¡£ï¼šhttp://savsoftquiz.org/docs/
+ï¼ˆ6ï¼‰å®˜æ–¹è®ºå›ï¼šhttp://savsoftquiz.org/forum/
+ï¼ˆ7ï¼‰PHPæ¡†æž¶â€”â€”CodeIgniterä¸­æ–‡è¯´æ˜Žæ–‡æ¡£ï¼šhttp://codeigniter.org.cn/user_guide/general/welcome.html
+ï¼ˆ8ï¼‰å‰ç«¯ï¼š
+	1ã€bootstrap v3.3.7 (http://getbootstrap.com)ï¼Œæ–‡æ¡£ï¼šhttp://www.bootcss.com/
+	2ã€lesså…ˆæš‚æ—¶ä¸çœ‹
+	3ã€jquery.js
+	4ã€basic.jsï¼šæ•´ä¸ªç³»ç»Ÿä¸­ç»Ÿä¸€å…¬ç”¨åˆ°çš„å‡½æ•°ã€‚
+	5ã€font-awesome.cssï¼šæœ‰å…³å›¾æ ‡çš„ç»Ÿä¸€æ ·å¼ã€‚
+ï¼ˆ9ï¼‰å®‰è£…æ­¥éª¤ï¼š
+	æ–¹æ¡ˆä¸€(è¯¥æ–¹æ³•ä¸èƒ½ç›´æŽ¥å°†é¡¹ç›®ç›´æŽ¥æ”¾åœ¨æ ¹ç›®å½•ä¸‹)ï¼š
+	1ã€æ‰“å¼€application/config/sq_config.phpæ–‡ä»¶
+		a)å°†$sq_base_urlå€¼å†™ä¸ºæœ¬åœ°æœåŠ¡å™¨é¡¹ç›®è·¯å¾„ï¼Œå¦‚ï¼š$sq_base_url='http://localhost:8081/'
+	2ã€æ‰“å¼€é“¾æŽ¥ï¼šhttp://YOUR_DOMAIN_NAME/savsoftquiz_v4.0/index.php/install/ å¦‚ï¼šhttp://localhost:8081/savsoftquiz_v4.0/index.php/install/ 
+	3ã€å¡«å†™base urlå’Œæ•°æ®åº“ä¿¡æ¯ï¼Œç‚¹å‡»â€˜Install Nowâ€™æŒ‰é’®å³å¯
 
-	·½°¸¶þ£º
-	1¡¢½«ÏµÍ³µÄÎÄ¼þ·ÅÔÚxamppµÄ¸ùÄ¿Â¼(htdocs)ÏÂ
-	2¡¢ÔÚ±¾µØMySqlÏÂÒýÈëÊý¾Ý¿âÎÄ¼þ£¨savsoftquiz_v4_0.sql£©
-	3¡¢´ò¿ªapplication/config/sq_config.phpÎÄ¼þ
-		a)½«$sq_base_urlÖµÐ´Îª±¾µØ·þÎñÆ÷ÏîÄ¿Â·¾¶£¬Èç£º$sq_base_url='http://localhost:8081/';
-		b)$sq_hostname='localhost'£¨±¾µØ²»ÓÃÐÞ¸Ä£©
-		c)½«$sq_dbnameµÄÖµ¸ÄÎªµÚ¶þ²½ÖÐ±à¼­µÄÊý¾Ý¿âÃû£¬Èç£º$sq_dbname='savsoftquiz_v4_0';
-		d)ÐÞ¸ÄÊý¾Ý¿âÓÃ»§ÃûºÍÃÜÂë£¬$sq_dbusername¡¢$sq_dbpassword;
-	4¡¢½«application/controllers/Install.phpÎÄ¼þÖØÃüÃûÎªRenamed_Install.php
-	5¡¢ÉèÖÃphoto¡¢xls¡¢uploadÈý¸öÎÄ¼þ¼ÐµÄ²Ù×÷È¨ÏÞÎª¿ÉÐ´
+	æ–¹æ¡ˆäºŒï¼š
+	1ã€å°†ç³»ç»Ÿçš„æ–‡ä»¶æ”¾åœ¨xamppçš„æ ¹ç›®å½•(htdocs)ä¸‹
+	2ã€åœ¨æœ¬åœ°MySqlä¸‹å¼•å…¥æ•°æ®åº“æ–‡ä»¶ï¼ˆsavsoftquiz_v4_0.sqlï¼‰
+	3ã€æ‰“å¼€application/config/sq_config.phpæ–‡ä»¶
+		a)å°†$sq_base_urlå€¼å†™ä¸ºæœ¬åœ°æœåŠ¡å™¨é¡¹ç›®è·¯å¾„ï¼Œå¦‚ï¼š$sq_base_url='http://localhost:8081/';
+		b)$sq_hostname='localhost'ï¼ˆæœ¬åœ°ä¸ç”¨ä¿®æ”¹ï¼‰
+		c)å°†$sq_dbnameçš„å€¼æ”¹ä¸ºç¬¬äºŒæ­¥ä¸­ç¼–è¾‘çš„æ•°æ®åº“åï¼Œå¦‚ï¼š$sq_dbname='savsoftquiz_v4_0';
+		d)ä¿®æ”¹æ•°æ®åº“ç”¨æˆ·åå’Œå¯†ç ï¼Œ$sq_dbusernameã€$sq_dbpassword;
+	4ã€å°†application/controllers/Install.phpæ–‡ä»¶é‡å‘½åä¸ºRenamed_Install.php
+	5ã€è®¾ç½®photoã€xlsã€uploadä¸‰ä¸ªæ–‡ä»¶å¤¹çš„æ“ä½œæƒé™ä¸ºå¯å†™
 
-	×¢Òâ£ºÈô¾­¹ýÈÎÒ»Ò»ÖÖ·½°¸ºó£¬´ò¿ªä¯ÀÀÆ÷Ò»Ö±ÖØ¶¨Ïòµ½login½çÃæ£¬ÎÞ·¨µÇÂ¼µÄ»°£¬ºÜÓÐ¿ÉÄÜÊÇÓ¦ÓÃ²»ÄÜ¹»½¨Á¢codeigniterµÄsession£¬±ØÐëÊ¹ÓÃ³õÊ¼µÄsession¿â¡£
-	Çë½«/application/libraries/rename_to_Session_if_session_not_work.phpÖØÃüÃûÎªSession.php¡£
-	Èç¹û²»´æÔÚÕâ¸öÎÄ¼þ£¬Çëµ½¹Ù·½ÏÂÔØsessionÎÄ¼þ£¨´ó¸Å6.49KB£©²¢·ÅÈëµ½¸ÃÄ¿Â¼¡£
+	æ³¨æ„ï¼šè‹¥ç»è¿‡ä»»ä¸€ä¸€ç§æ–¹æ¡ˆåŽï¼Œæ‰“å¼€æµè§ˆå™¨ä¸€ç›´é‡å®šå‘åˆ°loginç•Œé¢ï¼Œæ— æ³•ç™»å½•çš„è¯ï¼Œå¾ˆæœ‰å¯èƒ½æ˜¯åº”ç”¨ä¸èƒ½å¤Ÿå»ºç«‹codeigniterçš„sessionï¼Œå¿…é¡»ä½¿ç”¨åˆå§‹çš„sessionåº“ã€‚
+	è¯·å°†/application/libraries/rename_to_Session_if_session_not_work.phpé‡å‘½åä¸ºSession.phpã€‚
+	å¦‚æžœä¸å­˜åœ¨è¿™ä¸ªæ–‡ä»¶ï¼Œè¯·åˆ°å®˜æ–¹ä¸‹è½½sessionæ–‡ä»¶ï¼ˆå¤§æ¦‚6.49KBï¼‰å¹¶æ”¾å…¥åˆ°è¯¥ç›®å½•ã€‚
 
-	»òÕß»¹ÓÐÁíÍâÒ»ÖÖ½â¾ö·½°¸£¨Î´²âÊÔ£©£º
-	1£©changed PHP mode from PHP-FPM to CGI. 
-	2£©downgraded from PHP 7.0 to PHP 5.6
+	æˆ–è€…è¿˜æœ‰å¦å¤–ä¸€ç§è§£å†³æ–¹æ¡ˆï¼ˆæœªæµ‹è¯•ï¼‰ï¼š
+	1ï¼‰changed PHP mode from PHP-FPM to CGI. 
+	2ï¼‰downgraded from PHP 7.0 to PHP 5.6
 
-£¨10£©ÔÚÉú²ú»·¾³ÖÐÐèÒª¶à×öÒ»²½ÊÂÇé£¬¾ÍÊÇ½ûÓÃ PHP ´íÎó±¨¸æÒÔ¼°ËùÓÐÆäËû½öÔÚ¿ª·¢»·¾³Ê¹ÓÃµÄ¹¦ÄÜ¡£
-	ÔÚ CodeIgniter ÖÐ£¬¿ÉÒÔÍ¨¹ýÉèÖÃ ENVIRONMENT ³£Á¿À´×öµ½ÕâÒ»µã£¬ÕâÔÚ °²È« ÕâÆªÖ¸ÄÏÖÐÓÐ×Å¸üÏêÏ¸µÄ½éÉÜ¡£
+ï¼ˆ10ï¼‰åœ¨ç”Ÿäº§çŽ¯å¢ƒä¸­éœ€è¦å¤šåšä¸€æ­¥äº‹æƒ…ï¼Œå°±æ˜¯ç¦ç”¨ PHP é”™è¯¯æŠ¥å‘Šä»¥åŠæ‰€æœ‰å…¶ä»–ä»…åœ¨å¼€å‘çŽ¯å¢ƒä½¿ç”¨çš„åŠŸèƒ½ã€‚
+	åœ¨ CodeIgniter ä¸­ï¼Œå¯ä»¥é€šè¿‡è®¾ç½® ENVIRONMENT å¸¸é‡æ¥åšåˆ°è¿™ä¸€ç‚¹ï¼Œè¿™åœ¨ å®‰å…¨ è¿™ç¯‡æŒ‡å—ä¸­æœ‰ç€æ›´è¯¦ç»†çš„ä»‹ç»ã€‚
 
-£¨11£©
+ï¼ˆ11ï¼‰
 
-pass_percentage Îª¼°¸ñÏß
-Êý¾Ý¿â£º
-1¡¢ÔÚoptions±íÖÐÐÂÌíµÄ×Ö¶Î q_option_match_option ÎªÍêÐÎÒ»¸ö×ÓÌâÄ¿µÄÑ¡Ïî
-2¡¢ÔÚusers±íÖÐ£¬°ó¶¨openid×Ö¶Î£¨Î¢ÐÅ¶Ë£©
+pass_percentage ä¸ºåŠæ ¼çº¿
+æ•°æ®åº“ï¼š
+1ã€åœ¨optionsè¡¨ä¸­æ–°æ·»çš„å­—æ®µ q_option_match_option ä¸ºå®Œå½¢ä¸€ä¸ªå­é¢˜ç›®çš„é€‰é¡¹
+2ã€åœ¨usersè¡¨ä¸­ï¼Œç»‘å®šopenidå­—æ®µï¼ˆå¾®ä¿¡ç«¯ï¼‰
 
-¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª
+â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”
 web:
-×îÖÕÖ§³ÖµÄÌâÐÍ£º
-£¨1£©µ¥Ñ¡£¬¶àÑ¡----------fixed
-£¨2£©Ìî¿Õ-----------fixed
-£¨3£©ÍêÐÎÌî¿Õ------------	fixed
-£¨4£©ÅÐ¶ÏÌâ->Í¨¹ýµ¥Ñ¡±äÏò-------------fixed
-µ«ÊÇÈ±ÉÙ½âÌâ·ÖÎö ---------------------fixed
+æœ€ç»ˆæ”¯æŒçš„é¢˜åž‹ï¼š
+ï¼ˆ1ï¼‰å•é€‰ï¼Œå¤šé€‰----------fixed
+ï¼ˆ2ï¼‰å¡«ç©º-----------fixed
+ï¼ˆ3ï¼‰å®Œå½¢å¡«ç©º------------	fixed
+ï¼ˆ4ï¼‰åˆ¤æ–­é¢˜->é€šè¿‡å•é€‰å˜å‘-------------fixed
+ä½†æ˜¯ç¼ºå°‘è§£é¢˜åˆ†æž ---------------------fixed
 
-1¡¢ÅúÁ¿ÒýÈëÓÃ»§----------fixed
-2¡¢ÐÂÌíÎÊÌâÊ±£¬ÉÏ´«Í¼Æ¬ÎÊÌâ-------------fixed
-3¡¢¼ÆËãÌâ£¨long answer£©ÓÃ»§²¢Ã»ÓÐÉÏ´«Í¼Æ¬¹¦ÄÜ£¬Ã»ÓÐtinyeditor
-4¡¢Í³¼ÆÑ§ÉúÆ½Ê±³É¼¨
-
-
-
-Web todo£º1¡¢EmailÎ¨Ò»£¨ÅúÁ¿ÓÃ»§£©
-2¡¢¼ÆËãÌâ Ã»ÓÐ´ð°¸£¨ÅúÁ¿ Î´ÐÞ¸Ä£©-----ok
-3¡¢ÅúÁ¿ ÍêÐÎ Î´Ìí¼Ó½øÈ¥+analyses
-4¡¢
+1ã€æ‰¹é‡å¼•å…¥ç”¨æˆ·----------fixed
+2ã€æ–°æ·»é—®é¢˜æ—¶ï¼Œä¸Šä¼ å›¾ç‰‡é—®é¢˜-------------fixed
+3ã€è®¡ç®—é¢˜ï¼ˆlong answerï¼‰ç”¨æˆ·å¹¶æ²¡æœ‰ä¸Šä¼ å›¾ç‰‡åŠŸèƒ½ï¼Œæ²¡æœ‰tinyeditor
+4ã€ç»Ÿè®¡å­¦ç”Ÿå¹³æ—¶æˆç»©
 
 
 
-
-Ð¡³ÌÐò¿ª·¢£º
-1¡¢Ñ§ÉúÇ©µ½/ÀÏÊ¦·¢²¼Ç©µ½ --
-2¡¢ÔÚÏß×öÌâ£¬Ñ¡ÔñÌâ¡¢ÅÐ¶ÏÌâ¡¢¼ÆËãÌâ --¼ÆËãÌâÃ»·¨ÉÏ´«Í¼Æ¬
-3¡¢×÷ÒµÅú¸ÄºóÑ§Éú¿É¿´¼û´ð°¸
-4¡¢´íÌâÍ³¼Æ	--
-5¡¢²é¿´ÅÅÃû	--£¡
+Web todoï¼š1ã€Emailå”¯ä¸€ï¼ˆæ‰¹é‡ç”¨æˆ·ï¼‰
+2ã€è®¡ç®—é¢˜ æ²¡æœ‰ç­”æ¡ˆï¼ˆæ‰¹é‡ æœªä¿®æ”¹ï¼‰-----ok
+3ã€æ‰¹é‡ å®Œå½¢ æœªæ·»åŠ è¿›åŽ»+analyses
+4ã€
 
 
 
 
+å°ç¨‹åºå¼€å‘ï¼š
+1ã€å­¦ç”Ÿç­¾åˆ°/è€å¸ˆå‘å¸ƒç­¾åˆ° --
+2ã€åœ¨çº¿åšé¢˜ï¼Œé€‰æ‹©é¢˜ã€åˆ¤æ–­é¢˜ã€è®¡ç®—é¢˜ --è®¡ç®—é¢˜æ²¡æ³•ä¸Šä¼ å›¾ç‰‡
+3ã€ä½œä¸šæ‰¹æ”¹åŽå­¦ç”Ÿå¯çœ‹è§ç­”æ¡ˆ
+4ã€é”™é¢˜ç»Ÿè®¡	--
+5ã€æŸ¥çœ‹æŽ’å	--ï¼
 
-ÎÊÌâ£º
+
+
+
+
+é—®é¢˜ï¼š
 web:
-1¡¢¼ÆËãÌâÎÞ·¨ÉÏ´«Í¼Æ¬ ¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª
-2¡¢Í³¼ÆÑ§Éú³É¼¨	¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª
-3¡¢emailÎ¨Ò»ÖµµÄÎÊÌâ
+1ã€è®¡ç®—é¢˜æ— æ³•ä¸Šä¼ å›¾ç‰‡ â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”
+2ã€ç»Ÿè®¡å­¦ç”Ÿæˆç»©	â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”
+3ã€emailå”¯ä¸€å€¼çš„é—®é¢˜
 
 
-Ð¡³ÌÐò£º
-1¡¢Ç©µ½
-2¡¢¼ÆËãÌâ ÈçºÎÉÏ´«Í¼Æ¬	¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª
-3¡¢×ÜÅÅÃûÎÊÌâ	¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª
-4¡¢²»ÖªµÀ ¼ÆÊ±ÊÇ·ñ×¼È·	¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª
-5¡¢´íÌâÍ³¼Æ
-6¡¢edit su==1
+å°ç¨‹åºï¼š
+1ã€ç­¾åˆ°
+2ã€è®¡ç®—é¢˜ å¦‚ä½•ä¸Šä¼ å›¾ç‰‡	â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”
+3ã€æ€»æŽ’åé—®é¢˜	â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”
+4ã€ä¸çŸ¥é“ è®¡æ—¶æ˜¯å¦å‡†ç¡®	â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”
+5ã€é”™é¢˜ç»Ÿè®¡
+6ã€edit su==1
 
 
-À´²»¼°£º1¡¢Ç©µ½ 2¡¢´íÌâÍ³¼Æ 3¡¢¼ÆËãÌâÃ»ÄÜÉÏ´«Í¼Æ¬
+æ¥ä¸åŠï¼š1ã€ç­¾åˆ°3ã€è®¡ç®—é¢˜æ²¡èƒ½ä¸Šä¼ å›¾ç‰‡

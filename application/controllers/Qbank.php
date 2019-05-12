@@ -492,13 +492,12 @@ class Qbank extends CI_Controller {
 			}
 			redirect('qbank/edit_question_6/'.$qid);
 		}
-			
-		  
+
 		//从question list 点击qid进来
 		 $data['title']=$this->lang->line('edit');
 		// fetching question
-		$data['question']=$this->qbank_model->get_question($qid);
-		$data['options']=$this->qbank_model->get_option($qid);
+		$data['question']=$this->qbank_model->get_question($qid);	//得到题目Id
+		$data['options']=$this->qbank_model->get_option($qid);		//得到所有的选项
 		foreach($data['options'] as $key => $val){
 			$data['options'][$key]['q_option_match_option'] = explode(",",$val['q_option_match_option']);	//转换为数组
 		}

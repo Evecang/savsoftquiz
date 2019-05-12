@@ -961,8 +961,6 @@ function open_quiz($limit='0'){
 		// // 打印日志 方便查看
 		// $this->load->helper('file');
 		// write_file('./application/logs/log.txt',"wx_attempt中的数据——————————————————————————\n",'a+');
-		// write_file('./application/logs/log.txt','$srid：'.var_export($srid,true)."\n",'a+');
-		// write_file('./application/logs/log.txt','$rid：'.var_export($rid,true)."\n",'a+');
 
 		// if linked and session rid is not matched then something wrong.
 		if($rid != $srid){
@@ -1013,9 +1011,6 @@ function open_quiz($limit='0'){
 		$result['code']=1;
 		$result['message']='exam continue..';
 		$result['data']=$data;
-		// 打印日志 方便查看
-		// $this->load->helper('file');
-		// write_file('./application/logs/log.txt',var_export($data,true)."\n",'a+');
 
 		echo json_encode($result); return ;
 
@@ -1042,19 +1037,25 @@ function open_quiz($limit='0'){
 		redirect('login');
 		}
 
-
 		echo "<pre>";
 		print_r($_POST);
 
-		// 打印日志 方便查看
-		$this->load->helper('file');
-		write_file('./application/logs/log.txt',var_export($_POST,true)."\n",'a+');
 
-		  // insert user response and calculate scroe
+		$this->load->helper('file');
+		// write_file('./application/logs/log.txt',"前端的数据————————————————————————————————————\n",'a+');
+		// write_file('./application/logs/log.txt',var_export($_POST,true)."\n\n",'a+');
+		// write_file('./application/logs/log.txt',var_export/($_FILES,true)."\n\n",'a+');
+
+
+		// insert user response and calculate scroe
 		echo $this->quiz_model->insert_answer();	//保存答案并 自动计算用户得分
 		
 		
 	}
+
+	function view_uploaded_img(){
+		echo $this->quiz_model->view_uploaded();
+	 }
 
 	function wx_save_answer(){	//自动保存答案
 		$result['code'] = 0;
@@ -1080,8 +1081,6 @@ function open_quiz($limit='0'){
 		
 		// 打印日志 方便查看
 		$this->load->helper('file');
-		write_file('./application/logs/log.txt',"wx_save_answer传来的参数\n",'a+');
-		write_file('./application/logs/log.txt',var_export($_POST,true)."\n\n\n",'a+');
 		
 		// insert user response and calculate scroe
 		if($this->quiz_model->wx_insert_answer()){	//保存答案并 自动计算用户得分
@@ -1093,6 +1092,24 @@ function open_quiz($limit='0'){
 			echo json_encode($result); return ;
 		}
 	}
+
+
+	function wx_upload_img(){
+		
+		// 打印日志 方便查看
+		$this->load->helper('file');
+
+		$result['code']=0;
+		if($this->quiz_model->wx_upload_img()){
+			$result['code']=1;
+			$result['message']='upload success';
+			echo json_encode($result); return ;
+		}else{
+			$result['message']='upload fail';
+			echo json_encode($result); return ;
+		}
+	}
+
 
  function set_ind_time(){
 
@@ -1130,7 +1147,7 @@ if(isset($_FILES['webcam'])){
 
 
 
- function submit_quiz(){	//用户提交测试后
+ function submit_quiz(){	//用户提交测试数据
 	 				// redirect if not loggedin
 		if(!$this->session->userdata('logged_in')){
 			if(!$this->session->userdata('logged_in_raw')){
@@ -1202,8 +1219,8 @@ if(isset($_FILES['webcam'])){
 		echo json_encode($result);
 	}
 
-	$this->session->unset_userdata('rid'); // 打印日志 方便查看
-
+	$this->session->unset_userdata('rid'); 
+	// 打印日志 方便查看
 	$this->load->helper('file');
 	write_file('./application/logs/log.txt',var_export($this->session->userdata,true)."\n",'a+');	
 	
@@ -1236,6 +1253,9 @@ if(isset($_FILES['webcam'])){
 			echo '1';
 	 
  }
+
+
+
  
  
 	

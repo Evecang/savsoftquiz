@@ -132,7 +132,12 @@ function submitform(){
  
  <div class="row"  style="margin-top:5px;">
  <div class="col-md-8">
-<form method="post" action="<?php echo site_url('quiz/submit_quiz/'.$quiz['rid']);?>" id="quiz_form" >
+<form method="post" action="<?php echo site_url('quiz/submit_quiz/'.$quiz['rid']);?>" id="quiz_form" enctype="multipart/form-data"
+>
+<?php 
+	// $attributes = array('id' => 'quiz_form');
+	// echo form_open_multipart('quiz/submit_quiz/'.$quiz['rid'], $attributes);	
+?>
 <input type="hidden" name="rid" value="<?php echo $quiz['rid'];?>">
 <input type="hidden" name="noq" value="<?php echo $quiz['noq'];?>">
 <input type="hidden" name="individual_time"  id="individual_time" value="<?php echo $quiz['individual_time'];?>">
@@ -267,6 +272,7 @@ foreach($questions as $qk => $question){	//$questions include qbank,category,lev
 			 foreach($saved_answers as $svk => $saved_answer){
 				 if($question['qid']==$saved_answer['qid']){
 					$save_ans=$saved_answer['q_option'];
+					break;
 				 }
 			 }
 			 ?>
@@ -276,8 +282,17 @@ foreach($questions as $qk => $question){	//$questions include qbank,category,lev
 			 
 			<div class="op"> 
 			<?php echo $this->lang->line('answer');?> <br>
-			<?php echo $this->lang->line('word_counts');?> <span id="char_count<?php echo $qk;?>">0</span>
-			<textarea name="answer[<?php echo $qk;?>][]" id="answer_value<?php echo $qk;?>" style="width:100%;height:100%;" onKeyup="count_char(this.value,'char_count<?php echo $qk;?>');"><?php echo $save_ans;?></textarea>
+			<!-- <?php echo $this->lang->line('word_counts');?> <span id="char_count<?php echo $qk;?>">0</span> -->
+
+				<div>
+					Click here to upload picture :(Can only upload picture)
+					<input type='file' name='answer<?php echo $qk?>file' id='answer_file<?php echo $qk; ?>'>
+
+					<a class='btn'onClick="javascript:view_uploaded_img(<?php echo $quiz['rid'];?>,<?php echo $question['qid'];?>);" id='viewImg'>查看已上传的图片（弹出的新窗口可能会被浏览器拦截，请设置取消拦截）</a>
+
+				</div>
+				<!-- <textarea name="answer[<?php echo $qk;?>][]" id="answer_value<?php echo $qk;?>" style="width:100%;height:100%;" onKeyup="count_char(this.value,'char_count<?php echo $qk;?>');" placeholder='You must write something'><?php echo $save_ans;?></textarea> -->
+				<textarea name="answer[<?php echo $qk;?>][]" id="answer_value<?php echo $qk;?>" style="width:100%;height:100%;" placeholder='You must write something'><?php echo $save_ans;?></textarea>
 			</div>
 			 
 			 

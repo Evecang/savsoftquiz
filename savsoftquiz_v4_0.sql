@@ -180,7 +180,7 @@ CREATE TABLE `savsoft_options` (
   `q_option` text NOT NULL,
   `q_option_match` varchar(1000) DEFAULT NULL,
   `score` float NOT NULL DEFAULT '0',
-  `q_option_match_option` text NOT NULL
+  `q_option_match_option` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -249,7 +249,8 @@ CREATE TABLE `savsoft_qbank` (
   `no_time_served` int(11) NOT NULL DEFAULT '0',
   `no_time_corrected` int(11) NOT NULL DEFAULT '0',
   `no_time_incorrected` int(11) NOT NULL DEFAULT '0',
-  `no_time_unattempted` int(11) NOT NULL DEFAULT '0'
+  `no_time_unattempted` int(11) NOT NULL DEFAULT '0',
+  `analyses` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --

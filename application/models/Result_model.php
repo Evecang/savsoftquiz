@@ -160,13 +160,10 @@ $res=array();
 		$this->db->like('gids',$gid);
 		$query = $this->db->get('savsoft_quiz');
 
-		// 打印日志 方便查看
-		// $this->load->helper('file');
-		// write_file('./application/logs/log.txt',"2___________________________\n",'a+');
 		$like_data = $query->result_array();
 		$res = array();
 		
-		foreach($like_data as $lk => $ldata){
+		foreach($like_data as $lk => $ldata){	//TODO:可以使用FIND_IN_SET 方法优化 $where="FIND_IN_SET('".$gid."', gids)"; 
 			$gids = explode(',',$ldata['gids']);
 			if(in_array($gid,$gids)){
 				$res[] = $ldata;
@@ -192,8 +189,8 @@ $res=array();
 		// $this->load->helper('file');
 		// write_file('./application/logs/log.txt',"get_grades_average\n\n",'a+');
 
-		$grades_average = array();
-		$topper = 0;
+		$grades_average = array();	//存储学期中成绩
+		$topper = 0;	//最高分
 		foreach($allUser as $uk => $user){
 			$uid = $user['uid'];
 			$this->db->group_by('quid');

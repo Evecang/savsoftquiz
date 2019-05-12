@@ -114,7 +114,7 @@
 				<div style="clear:both;"></div>
 				<input type="submit" value="Import" style="margin-top:5px;" class="btn btn-default">
 				
-				<a href="<?php echo base_url();?>sample/import_user.xls" target="new">Click here</a> <?php echo $this->lang->line('upload_excel_info');?> 
+				<a href="<?php echo base_url();?>sample/user.xlsx" target="new">Click here</a> <?php echo $this->lang->line('upload_excel_info');?> 
 
 				
 				</form><!-- 对应form_open的form -->

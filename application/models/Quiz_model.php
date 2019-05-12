@@ -761,9 +761,17 @@ if($this->config->item('allow_result_email')){
 	$correct_incorrect=explode(',',$quiz['score_individual']);
 	
 	
-	// remove existing answers
+	//删除原来的图片 有重新上传的才删
 	$this->db->where('rid',$rid);
+	$this->db->where('img_src !=',null);	//找到img_src不为空的项
+	$q1 = $this->db->get('savsoft_answers');
+	$img_not_null = $q1->result_array();
+
+	// remove existing answers
+	$this->db->where('rid',$rid);	
 	$this->db->delete('savsoft_answers');	//不断在answer表中更新数据
+
+
 	
 	 foreach($_POST['answer'] as $ak => $answer){	//$answer = 前端的answer[qk],qk在试卷中对应的题目顺序，从0开始
 		//$_POST['question_type'][$ak]->value: 1-单选 2-多选 3-short 4-long 5-match 6-cloze  
@@ -858,29 +866,92 @@ if($this->config->item('allow_result_email')){
 		 
 		 // long answer
 		 if($_POST['question_type'][$ak] == '4'){
-			  $attempted=0;
-			 $marks=0;
-			  $qid=$qids[$ak];
-					foreach($answer as $sk => $ansval){
-						if($ansval != ''){
-							$userdata=array(
-							'rid'=>$rid,
-							'qid'=>$qid,
-							'uid'=>$uid,
-							'q_option'=>$ansval,
-							'score_u'=>0
-							);
-							$this->db->insert('savsoft_answers',$userdata);
-							$attempted=1;
+			//answer + qk + file => qp=ak
+			$data_name = 'answer'.$ak.'file';
+			$file = $_FILES[$data_name];
+			$file_path = null;
+			if($file['error']>0){	//sth wrong 4-空	没有上传图片（已经上传 或者 用户的答案写在了textarea中） 或者 上传为空
+				//echo $file['error'];	
+				//数据库中已经有图片了，但是没上传新的图片
+				foreach($img_not_null as $q_index => $q_item){
+					if($q_item['qid']==$qids[$ak]){
+						$file_path = $q_item['img_src'];
+						break;
+					}
+				}
+			}
+			else	//上传了新的图片，需要先把原来的图片删除掉。
+			{
+				//上传文件名: ["name"]	文件类型:["type"]	文件大小:["size"]/1024(kb)	文件临时存储的位置: ["tmp_name"]
+				$allowedExts = array("gif", "jpeg", "jpg", "png");
+				$temp = explode(".", $file["name"]);
+				$extension = end($temp);        // 获取文件后缀名
+				if (( ($file["type"] == "image/gif")
+				|| ($file["type"] == "image/jpeg")
+				|| ($file["type"] == "image/jpg")
+				|| ($file["type"] == "image/pjpeg")
+				|| ($file["type"] == "image/x-png")
+				|| ($file["type"] == "image/png"))
+				// && ($file["size"] < 204800)    // 小于 200 kb
+				&& in_array($extension, $allowedExts))
+				{
+					//删除原来的照片	$img_not_null在answers中取出img_src不为空的项
+					foreach($img_not_null as $q_index => $q_item){
+						if($q_item['qid']==$qids[$ak]){	//只删除改题目对应的那一项
+							unlink($q_item['img_src']);	//文件=$q_item['img_src'] 绝对路径
+							break;
 						}
 					}
-				if($attempted==1){
-					
-					$correct_incorrect[$ak]=3;							
-					
-				}else{
-					$correct_incorrect[$ak]=0;
+					$extension_len = strlen($extension) + 1;
+					$filename_len = strlen($file["name"]);
+					$fix_name = substr($file["name"],0,$filename_len-$extension_len);
+					$file_name = $file["name"];
+					$num = 1;
+					// 判断当期目录下的 upload 目录是否存在该文件
+					while(file_exists("./upload/".$file_name)){
+						$file_name = $fix_name.$num.'.'.$extension;
+						$num++;
+					}
+					// upload 目录不存在该文件（命名后）则将文件上传到 upload 目录下
+					move_uploaded_file($file["tmp_name"], "./upload/".$file_name);
+					$file_path = "./upload/".$file_name;
+
 				}
+				else
+				{
+					write_file('./application/logs/log.txt',"非法的文件格式\n",'a+');
+				}	
+			}
+
+			$attempted=0;
+			$marks=0;
+			$qid=$qids[$ak];
+			foreach($answer as $sk => $ansval){
+				//如果用户的答案只写在了图片中
+				if($ansval == '' && $file_path!=null){
+					$ansval = 'The answer is in the picture';
+				}
+
+				if($ansval != ''){
+					$userdata=array(
+					'rid'=>$rid,
+					'qid'=>$qid,
+					'uid'=>$uid,
+					'q_option'=>$ansval,
+					'score_u'=>0,
+					'img_src'=>$file_path
+					);
+					$this->db->insert('savsoft_answers',$userdata);
+					$attempted=1;
+				}
+			}
+			if($attempted==1){
+				
+				$correct_incorrect[$ak]=3;							
+				
+			}else{
+				$correct_incorrect[$ak]=0;
+			}
 		 }
 		 
 		 // match
@@ -1006,6 +1077,7 @@ if($this->config->item('allow_result_email')){
 	 
  }
  
+ 
 
  function wx_insert_answer(){	//保存答案 并且 自动计算得分
 	$rid=$_POST['rid'];
@@ -1029,7 +1101,12 @@ if($this->config->item('allow_result_email')){
    $vqids=$quiz['r_qids'];
    $correct_incorrect=explode(',',$quiz['score_individual']);
    
-   
+	//获取在数据库中原有的图片 不覆盖
+	$this->db->where('rid',$rid);
+	$this->db->where('img_src !=',null);	//找到img_src不为空的项
+	$q1 = $this->db->get('savsoft_answers');
+	$img_not_null = $q1->result_array();
+
    // remove existing answers
    $this->db->where('rid',$rid);
    $this->db->delete('savsoft_answers');	//不断在answer表中更新数据
@@ -1049,16 +1126,8 @@ if($this->config->item('allow_result_email')){
 			}
 			$attempted=0;
 			$marks=0;
-			
-			//    write_file('./application/logs/log.txt','问题类型"\n"'.var_export($_POST['question_type'][$ak],true)."\n",'a+');
-			//    write_file('./application/logs/log.txt',$ak.'题目作答的情况"\n"'.var_export($answer,true)."\n",'a+');
-			//    write_file('./application/logs/log.txt','正确选项情况"\n"'.var_export($options,true)."\n\n",'a+');
-
 
 		   foreach($answer as $sk => $ansval){//多选时要foreach TODO:多选时，若正确个数比错误的多1个则有分？？
-			   
-			//    write_file('./application/logs/log.txt','ansval'.'\n'.var_export($ansval,true)."\n\n",'a+');
-			//    write_file('./application/logs/log.txt','$options[$ansval]'.'\n'.var_export($options[$ansval],true)."\n\n",'a+');
 
 			   if($options[$ansval] <= 0 ){	//$ansval=前端的radio/checkbox的value为oid
 				   $marks+=-1;	
@@ -1099,18 +1168,12 @@ if($this->config->item('allow_result_email')){
 			}
 			$attempted=0;
 			$marks=0;
-			
-			//    write_file('./application/logs/log.txt','问题类型"\n"'.var_export($_POST['question_type'][$ak],true)."\n",'a+');
-			//    write_file('./application/logs/log.txt',$ak.'题目作答的情况"\n"'.var_export($answer,true)."\n",'a+');
-			//    write_file('./application/logs/log.txt','正确选项情况"\n"'.var_export($options,true)."\n\n",'a+');
+
 
 		   $ans_str = $answer[0];	//'86,87'
 		   $ans_arr = explode(',',$ans_str);	//[86,87,99]
 		   
 		   foreach($ans_arr as $sk => $ansval){//多选时要foreach TODO:多选时，若正确个数比错误的多1个则有分？？
-			   
-			//    write_file('./application/logs/log.txt','ansval'.'\n'.var_export($ansval,true)."\n\n",'a+');
-			//    write_file('./application/logs/log.txt','$options[$ansval]'.'\n'.var_export($options[$ansval],true)."\n\n",'a+');
 
 			   if($options[$ansval] <= 0 ){	//$ansval=前端的radio/checkbox的value为oid
 				   $marks+=-1;	
@@ -1189,29 +1252,43 @@ if($this->config->item('allow_result_email')){
 		
 		// long answer
 		if($_POST['question_type'][$ak] == '4'){
-			 $attempted=0;
+			$qid=$qids[$ak];
+			// img_not_null
+			$file_path = null;
+			foreach($img_not_null as $ik => $iv){
+				if($iv['qid']==$qid){
+					$file_path = $iv['img_src'];
+					break;
+				}
+			}
+			$attempted=0;
 			$marks=0;
-			 $qid=$qids[$ak];
-				   foreach($answer as $sk => $ansval){
-					   if($ansval != ''){
-						   $userdata=array(
-						   'rid'=>$rid,
-						   'qid'=>$qid,
-						   'uid'=>$uid,
-						   'q_option'=>$ansval,
-						   'score_u'=>0
-						   );
-						   $this->db->insert('savsoft_answers',$userdata);
-						   $attempted=1;
-					   }
-				   }
-			   if($attempted==1){
-				   
-				   $correct_incorrect[$ak]=3;							
-				   
-			   }else{
-				   $correct_incorrect[$ak]=0;
-			   }
+			foreach($answer as $sk => $ansval){
+				//如果用户的答案只写在了图片中
+				if($ansval == '' && $file_path!=null){
+					$ansval = 'The answer is in the picture';
+				}
+
+				if($ansval != ''){
+					$userdata=array(
+					'rid'=>$rid,
+					'qid'=>$qid,
+					'uid'=>$uid,
+					'q_option'=>$ansval,
+					'score_u'=>0,
+					'img_src'=>$file_path
+					);
+					$this->db->insert('savsoft_answers',$userdata);
+					$attempted=1;
+				}
+			}
+			if($attempted==1){
+				
+				$correct_incorrect[$ak]=3;							
+				
+			}else{
+				$correct_incorrect[$ak]=0;
+			}
 		}
 		
 		// match
@@ -1337,19 +1414,163 @@ if($this->config->item('allow_result_email')){
 	
 }
 
+
+
+function wx_upload_img(){
+	if(!$this->session->userdata('logged_in')){
+		$logged_in=$this->session->userdata('logged_in_raw');
+	}else{
+		$logged_in=$this->session->userdata('logged_in');
+	}
+	$uid=$logged_in['uid'];
+	$rid = intval($_POST['rid']);
+	$qid = intval($_POST['qid']);
+	$qk = intval($_POST['qk']);
+
+	//删除原来的图片  有重新上传的才删
+	$this->db->where('rid',$rid);
+	$this->db->where('qid',$qid);
+	$q1 = $this->db->get('savsoft_answers');
+	$db_num = $q1->num_rows();	//0无数据 1-有数据
+	$db_data = $q1->row_array();
+
+	$file = $_FILES['file'];
+	$file_path = null;
+	if($file['error']>0 || count($_FILES) == 0){	//sth wrong 4-空
+		write_file('./application/logs/log.txt',"没有上传文件\n",'a+');
+		return false;
+	}
+	else	//上传了新的图片，需要先把原来的图片删除掉。
+	{
+		//上传文件名: ["name"]	文件类型:["type"]	文件大小:["size"]/1024(kb)	文件临时存储的位置: ["tmp_name"]
+		$allowedExts = array("gif", "jpeg", "jpg", "png");
+		$temp = explode(".", $file["name"]);
+		$extension = end($temp);        // 获取文件后缀名
+		if (( ($file["type"] == "image/gif")
+		|| ($file["type"] == "image/jpeg")
+		|| ($file["type"] == "image/jpg")
+		|| ($file["type"] == "image/pjpeg")
+		|| ($file["type"] == "image/x-png")
+		|| ($file["type"] == "image/png"))
+		// && ($file["size"] < 204800)    // 小于 200 kb
+		&& in_array($extension, $allowedExts))
+		{
+
+			if($db_num == 0){//学生暂未作答 需要插入一条新的数据
+
+				$extension_len = strlen($extension) + 1;
+				$filename_len = strlen($file["name"]);
+				$fix_name = substr($file["name"],0,$filename_len-$extension_len);
+				$file_name = $file["name"];
+				$num = 1;
+				// 判断当期目录下的 upload 目录是否存在该文件
+				while(file_exists("./upload/".$file_name)){
+					$file_name = $fix_name.$num.'.'.$extension;
+					$num++;
+				}
+				// upload 目录不存在该文件（命名后）则将文件上传到 upload 目录下
+				move_uploaded_file($file["tmp_name"], "./upload/".$file_name);
+				$file_path = "./upload/".$file_name;
+				
+				$userdata=array(
+					'rid'=>$rid,
+					'qid'=>$qid,
+					'uid'=>$uid,
+					'q_option'=>'The answer is in the picture',
+					'score_u'=>0,
+					'img_src'=>$file_path
+				);
+				$this->db->insert('savsoft_answers',$userdata);
+				//做题状态更改为3
+				$this->db->where('rid',$rid);
+				$q2 = $this->db->get('savsoft_result');
+				$new_score_ind = explode(',',$q2->row_array()['score_individual']);
+				$new_score_ind[$qk] = 3;
+				$scoredata=array(
+					'score_individual'=>implode(',',$new_score_ind)
+				);
+				$this->db->where('rid',$rid);
+				$this->db->update('savsoft_result',$scoredata);
+
+
+			}else{
+			
+				//删除原来的照片
+				unlink($db_data['img_src']);	//文件=['img_src'] 绝对路径
+
+				$extension_len = strlen($extension) + 1;
+				$filename_len = strlen($file["name"]);
+				$fix_name = substr($file["name"],0,$filename_len-$extension_len);
+				$file_name = $file["name"];
+				$num = 1;
+				// 判断当期目录下的 upload 目录是否存在该文件
+				while(file_exists("./upload/".$file_name)){
+					$file_name = $fix_name.$num.'.'.$extension;
+					$num++;
+				}
+				// upload 目录不存在该文件（命名后）则将文件上传到 upload 目录下
+				move_uploaded_file($file["tmp_name"], "./upload/".$file_name);
+				$file_path = "./upload/".$file_name;
+
+				$userdata=array(
+					'score_u'=>0,
+					'img_src'=>$file_path
+				);
+				$this->db->where('rid',$rid);
+				$this->db->where('qid',$qid);
+				// $this->db->replace('savsoft_answers',$userdata);
+				$this->db->update('savsoft_answers',$userdata);
+
+			}
+			return true;
+
+		}
+		else
+		{
+			write_file('./application/logs/log.txt',"非法的文件格式\n",'a+');
+			return false;
+		}	
+	}
+
+}
+
  
  
  function set_ind_time(){
-	 	$rid=$this->session->userdata('rid');
+	$rid=$this->session->userdata('rid');
 
 	 $userdata=array(
 	 'individual_time'=>$_POST['individual_time'],
 	 
 	 );
+	 //TODO：网页与手机不能共存啊
+	 // 打印日志 方便查看
+	// $this->load->helper('file');
+	// write_file('./application/logs/log.txt',var_export($this->input->user_agent(),true)."\n",'a+');
+	// write_file('./application/logs/log.txt',var_export($this->input->ip_address(),true)."\n",'a+');
+	// write_file('./application/logs/log.txt',var_export($_POST['individual_time'],true)."\n\n",'a+');
+
 	 $this->db->where('rid',$rid);
 	 $this->db->update('savsoft_result',$userdata);
 	 
 	 return true;
+ }
+
+
+ function view_uploaded(){
+	$rid = $_POST['rid'];
+	$qid = $_POST['qid'];
+
+	$this->db->where('rid',$rid);
+	$this->db->where('qid',$qid);
+	$query = $this->db->get('savsoft_answers');
+	$data = $query->row_array();
+
+	if($data['img_src']){
+		return $data['img_src'];
+	}else{
+		return '';
+	}
  }
  
  
